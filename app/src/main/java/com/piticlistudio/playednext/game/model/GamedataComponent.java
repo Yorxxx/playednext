@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.game.model;
 
 
 import com.piticlistudio.playednext.di.module.NetModule;
+import com.piticlistudio.playednext.game.model.entity.GameMapper;
 import com.piticlistudio.playednext.game.model.repository.datasource.GamedataRepository;
 
 import dagger.Component;
@@ -10,4 +11,5 @@ import dagger.Component;
 public interface GamedataComponent {
 
     GamedataRepository repository();
+    GameMapper mapper();
 }
