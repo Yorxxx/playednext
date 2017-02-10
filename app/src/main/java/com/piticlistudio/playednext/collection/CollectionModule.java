@@ -1,7 +1,10 @@
 package com.piticlistudio.playednext.collection;
 
+import com.piticlistudio.playednext.collection.model.entity.CollectionMapper;
 import com.piticlistudio.playednext.collection.model.entity.datasource.NetCollection;
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
+import com.piticlistudio.playednext.collection.model.repository.CollectionRepository;
+import com.piticlistudio.playednext.collection.model.repository.ICollectionRepository;
 import com.piticlistudio.playednext.collection.model.repository.datasource.ICollectionRepositoryDatasource;
 import com.piticlistudio.playednext.collection.model.repository.datasource.NetCollectionRepositoryImpl;
 import com.piticlistudio.playednext.collection.model.repository.datasource.RealmCollectionRepositoryImpl;
@@ -51,5 +54,12 @@ public class CollectionModule {
     @Named("db")
     public ICollectionRepositoryDatasource<RealmCollection> provideDBRepository() {
         return new RealmCollectionRepositoryImpl();
+    }
+
+    @Provides
+    public ICollectionRepository provideRepository(@Named("db") ICollectionRepositoryDatasource<RealmCollection> local,
+                                                   @Named("net") ICollectionRepositoryDatasource<NetCollection> remote,
+                                                   CollectionMapper mapper) {
+        return new CollectionRepository(local, remote, mapper);
     }
 }
