@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.game.model;
 
 
+import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.di.module.NetModule;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
@@ -10,7 +11,7 @@ import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRe
 
 import dagger.Component;
 
-@Component(modules = {GamedataModule.class, NetModule.class})
+@Component(modules = {GamedataModule.class, NetModule.class, CollectionModule.class})
 public interface GamedataComponent {
 
     GamedataRepository repository();

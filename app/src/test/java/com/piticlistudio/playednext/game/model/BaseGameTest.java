@@ -6,6 +6,11 @@ import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.utils.StringUtils;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 public class BaseGameTest extends BaseTest {
 
     protected static boolean equalsGame(Game data, IGameDatasource remoteData) {
@@ -27,10 +32,15 @@ public class BaseGameTest extends BaseTest {
             assertEquals(data.cover.get().thumbUrl(), remoteData.getCover().get().getUrl());
             assertEquals(data.cover.get().fullWidth(), remoteData.getCover().get().getWidth());
             assertEquals(data.cover.get().fullHeight(), remoteData.getCover().get().getHeight());
-        }
+        }*/
 
         assertNotNull(data.collection);
-        assertEquals(data.collection.isPresent(), remoteData.getCollection().isPresent());
+        if (remoteData.getCollection().isPresent() && remoteData.getCollection().get().data.isPresent()) {
+            assertTrue(data.collection.isPresent());
+        }
+        else {
+            assertFalse(data.collection.isPresent());
+        }
         if (data.collection.isPresent()) {
             assertTrue(remoteData.getCollection().get().data.isPresent());
             assertEquals(data.collection.get().id(), remoteData.getCollection().get().id);
@@ -38,7 +48,7 @@ public class BaseGameTest extends BaseTest {
             assertEquals(data.collection.get().name(), remoteData.getCollection().get().data.get().getName());
         }
 
-        if (data.developers == null)
+       /* if (data.developers == null)
             assertTrue(remoteData.getDevelopers().isEmpty());
         else {
             assertEquals(data.developers.size(), remoteData.getDevelopers().size());

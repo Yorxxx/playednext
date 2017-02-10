@@ -17,4 +17,8 @@ public class NetworkEntityIdRelation<T> {
         this.id = id;
         this.data = data;
     }
+
+    public T getData() {
+        return data.get();
+    }
 }
