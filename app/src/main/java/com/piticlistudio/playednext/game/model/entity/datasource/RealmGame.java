@@ -13,11 +13,11 @@ import io.realm.annotations.Required;
 public class RealmGame extends RealmObject implements IGameDatasource {
 
     @PrimaryKey
-    public int id;
+    private int id;
     @Required
-    public String name;
-    public String summary;
-    public String storyline;
+    private String name;
+    private String summary;
+    private String storyline;
 
     public RealmGame() {
     }
@@ -60,5 +60,21 @@ public class RealmGame extends RealmObject implements IGameDatasource {
     @Override
     public String getStoryline() {
         return storyline;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public void setStoryline(String storyline) {
+        this.storyline = storyline;
     }
 }

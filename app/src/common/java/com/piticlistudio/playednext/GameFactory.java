@@ -96,10 +96,10 @@ public class GameFactory {
      */
     public static RealmGame provideRealmGame(int id, String title) {
         RealmGame data = new RealmGame();
-        data.id = id;
-        data.name = title;
-        data.storyline = "storyline";
-        data.summary = "summary";
+        data.setId(id);
+        data.setName(title);
+        data.setStoryline("storyline");
+        data.setSummary("summary");
         return data;
     }
 
