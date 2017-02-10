@@ -1,8 +1,12 @@
 package com.piticlistudio.playednext.game.model.repository;
 
+import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.collection.CollectionModule;
+import com.piticlistudio.playednext.collection.model.entity.Collection;
+import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
+import com.piticlistudio.playednext.collection.model.entity.datasource.NetCollection;
 import com.piticlistudio.playednext.collection.model.repository.ICollectionRepository;
 import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.BaseGameTest;
@@ -18,6 +22,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +39,9 @@ import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -107,7 +116,47 @@ public class GameRepositoryTest extends BaseGameTest {
         result.assertError(Throwable.class)
                 .assertNoValues()
                 .assertNotComplete();
+    }
 
+    @Test
+    public void load_requestsAggregatedData() throws Exception {
+
+        final int gameId = 50;
+
+        IGameDatasource source = GameFactory.provideNetGame(gameId, "title");
+        assertTrue(source.getCollection().isPresent());
+        assertFalse(source.getCollection().get().data.isPresent());
+
+        Collection collection = Collection.create(10, "name");
+        when(collectionRepository.load(anyInt())).thenReturn(Observable.just(collection).delay(5, TimeUnit.SECONDS));
+        when(dataRepository.load(source.getId())).thenReturn(Observable.just(source).delay(2, TimeUnit.SECONDS));
+
+        // Act
+        TestObserver<Game> result = repository.load(gameId).test();
+        testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
+
+        // Assert
+        result.assertNoErrors()
+                .assertNotComplete()
+                .assertValueCount(1)
+                .assertValue(check(game -> {
+                    assertFalse(game.collection.isPresent());
+                }));
+
+        // Advance time
+        testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(2)
+                .assertValueAt(1, check(game -> {
+                    assertTrue(game.collection.isPresent());
+                    assertEquals(collection, game.collection.get());
+                }));
+
+
+        verify(collectionRepository).load(source.getCollection().get().id);
     }
 
     @Test
@@ -179,5 +228,72 @@ public class GameRepositoryTest extends BaseGameTest {
         result.assertNoValues()
                 .assertNotComplete()
                 .assertError(Throwable.class);
+    }
+
+    @Test
+    public void loadCollection_noCollection() throws Exception {
+
+        NetGame source = GameFactory.provideNetGame(10, "title");
+        source.collection = -1;
+        Game to = Game.create(10, "title");
+
+        // Act
+        TestObserver<Game> result = repository.loadCollection(source, to).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertNoValues();
+        verifyZeroInteractions(collectionRepository);
+    }
+
+    @Test
+    public void loadCollection_collectionAlreadyLoaded() throws Exception {
+
+        RealmGame source = GameFactory.provideRealmGame(10, "title");
+        assertTrue(source.getCollection().isPresent());
+        assertTrue(source.getCollection().get().data.isPresent());
+
+        Game to = Game.create(10, "title");
+        Collection collection = Collection.create(11, "collection");
+        to.collection = Optional.of(collection);
+
+        // Act
+        TestObserver<Game> result = repository.loadCollection(source, to).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertNoValues();
+        verifyZeroInteractions(collectionRepository);
+    }
+
+    @Test
+    public void loadCollection_requestsCollection() throws Exception {
+
+        NetGame source = GameFactory.provideNetGame(10, "title");
+        assertTrue(source.getCollection().isPresent());
+        assertFalse(source.getCollection().get().data.isPresent());
+
+        Game to = Game.create(10, "title");
+
+        Collection collection = Collection.create(10, "name");
+        when(collectionRepository.load(anyInt())).thenReturn(Observable.just(collection).delay(1, TimeUnit.SECONDS));
+
+        // Act
+        TestObserver<Game> result = repository.loadCollection(source, to).test();
+        testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(1)
+                .assertValue(to);
+
+        assertTrue(to.collection.isPresent());
+        assertEquals(collection, to.collection.get());
+        verify(collectionRepository).load(source.getCollection().get().id);
     }
 }
