@@ -1,10 +1,9 @@
 package com.piticlistudio.playednext.collection.model.entity;
 
 import com.google.auto.value.AutoValue;
-import com.piticlistudio.playednext.utils.AutoGson;
 
 /**
- * Entity that defines a collection
+ * Domain entity that defines a collection
  * Created by jorge.garcia on 10/02/2017.
  */
 @AutoValue
