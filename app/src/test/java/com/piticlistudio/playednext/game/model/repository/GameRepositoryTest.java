@@ -2,6 +2,8 @@ package com.piticlistudio.playednext.game.model.repository;
 
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.TestSchedulerRule;
+import com.piticlistudio.playednext.collection.CollectionModule;
+import com.piticlistudio.playednext.collection.model.repository.ICollectionRepository;
 import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.BaseGameTest;
 import com.piticlistudio.playednext.game.model.GamedataComponent;
@@ -43,12 +45,14 @@ public class GameRepositoryTest extends BaseGameTest {
     public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
     @Mock
     IGamedataRepository dataRepository;
+    @Mock
+    ICollectionRepository collectionRepository;
 
     private GameRepository repository;
     @Rule
     public DaggerMockRule<GamedataComponent> rule = new DaggerMockRule<>(GamedataComponent.class, new GamedataModule())
             .set(component -> {
-                repository = component.plus(new GameModule()).repository();
+                repository = component.plus(new GameModule(), new CollectionModule()).repository();
             });
     private RealmGame localData = GameFactory.provideRealmGame(50, "title");
     private NetGame remoteData = GameFactory.provideNetGame(50, "title");

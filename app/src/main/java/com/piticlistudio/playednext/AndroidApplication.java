@@ -3,6 +3,7 @@ package com.piticlistudio.playednext;
 import android.app.Application;
 import android.util.Log;
 
+import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.di.module.NetModule;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
@@ -45,7 +46,7 @@ public class AndroidApplication extends Application {
                 .netModule(new NetModule())
                 .build();
 
-        gameComponent = gamedataComponent.plus(new GameModule());
+        gameComponent = gamedataComponent.plus(new GameModule(), new CollectionModule());
 
         // TODO: 10/02/2017 remove
         final GameRepository repository = gameComponent.repository();

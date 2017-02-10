@@ -11,11 +11,11 @@ import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRe
 
 import dagger.Component;
 
-@Component(modules = {GamedataModule.class, NetModule.class, CollectionModule.class})
+@Component(modules = {GamedataModule.class, NetModule.class})
 public interface GamedataComponent {
 
     GamedataRepository repository();
     GameMapper mapper();
 
-    GameComponent plus(GameModule module);
+    GameComponent plus(GameModule module, CollectionModule cm);
 }

@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.game.model.repository;
 
 import com.fernandocejas.arrow.optional.Optional;
+import com.piticlistudio.playednext.collection.model.repository.ICollectionRepository;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.entity.GameMapper;
 import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
@@ -22,11 +23,13 @@ public class GameRepository implements IGameRepository {
 
     private final IGamedataRepository repository;
     private final GameMapper mapper;
+    private final ICollectionRepository collectionRepository;
 
     @Inject
-    public GameRepository(IGamedataRepository repository, GameMapper mapper) {
+    public GameRepository(IGamedataRepository repository, GameMapper mapper, ICollectionRepository collectionRepository) {
         this.repository = repository;
         this.mapper = mapper;
+        this.collectionRepository = collectionRepository;
     }
 
     /**
@@ -57,13 +60,11 @@ public class GameRepository implements IGameRepository {
     @Override
     public Observable<List<Game>> search(String query, int offset, int limit) {
         return repository.search(query, offset, limit)
-                .flatMap(sources -> {
-                    return Observable.fromIterable(sources)
-                            .map(mapper::transform)
-                            .onErrorReturn(throwable -> Optional.absent())
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .toList().toObservable();
-                });
+                .flatMap(sources -> Observable.fromIterable(sources)
+                        .map(mapper::transform)
+                        .onErrorReturn(throwable -> Optional.absent())
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .toList().toObservable());
     }
 }
