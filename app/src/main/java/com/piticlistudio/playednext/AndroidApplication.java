@@ -50,7 +50,7 @@ public class AndroidApplication extends Application {
 
         // TODO: 10/02/2017 remove
         final GameRepository repository = gameComponent.repository();
-        repository.load(10)
+        repository.load(1000)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Game>() {

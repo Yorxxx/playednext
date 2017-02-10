@@ -26,7 +26,7 @@ public abstract class NetGame implements IGameDatasource {
     public abstract long updated_at();
     public String summary;
     public String storyline;
-    public int collection = -1;
+    public int collection;
     public int franchise = -1;
     public int hypes = -1;
     public double rating = -1;
@@ -97,7 +97,7 @@ public abstract class NetGame implements IGameDatasource {
      */
     @Override
     public Optional<NetworkEntityIdRelation<ICollectionData>> getCollection() {
-        if (collection != -1)
+        if (collection > 0)
             return Optional.of(new NetworkEntityIdRelation<>(collection, Optional.absent()));
         return Optional.absent();
     }

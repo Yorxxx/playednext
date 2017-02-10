@@ -45,6 +45,8 @@ public abstract class BaseRealmRepository<R extends RealmObject> implements Base
         return getManagedRealm()
                 .map(realm -> {
                     R data = realm.where(realmTypeClass).equalTo("id", id).findFirst();
+                    if (data == null)
+                        throw new RuntimeException("Not found");
                     return realm.copyFromRealm(data);
                 })
                 .firstOrError();
