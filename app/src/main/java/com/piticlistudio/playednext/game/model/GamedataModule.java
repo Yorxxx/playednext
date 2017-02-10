@@ -1,6 +1,8 @@
 package com.piticlistudio.playednext.game.model;
 
 import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
+import com.piticlistudio.playednext.game.model.repository.datasource.GamedataRepository;
+import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
 import com.piticlistudio.playednext.game.model.repository.datasource.IGamedatasourceRepository;
 import com.piticlistudio.playednext.game.model.repository.datasource.NetGameRepositoryImpl;
 import com.piticlistudio.playednext.game.model.repository.datasource.RealmGameRepositoryImpl;
@@ -57,5 +59,11 @@ public class GamedataModule {
     @Named("db")
     public IGamedatasourceRepository provideDBRepository() {
         return new RealmGameRepositoryImpl();
+    }
+
+    @Provides
+    public IGamedataRepository provideRepository(@Named("db") IGamedatasourceRepository dbImpl,
+                                                 @Named("net") IGamedatasourceRepository netImpl) {
+        return new GamedataRepository(dbImpl, netImpl);
     }
 }
