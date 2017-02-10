@@ -3,18 +3,32 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'me.tatarka:gradle-retrolambda:3.3.0'
+        classpath "io.realm:realm-gradle-plugin:1.2.0"
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
     }
 }
 
 allprojects {
     repositories {
         jcenter()
+        maven {
+            // For icepick
+            url 'https://clojars.org/repo/'
+        }
+        maven {
+            url "https://jitpack.io"
+        }
     }
 }
 
