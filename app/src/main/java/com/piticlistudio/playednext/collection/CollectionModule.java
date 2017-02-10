@@ -1,8 +1,10 @@
 package com.piticlistudio.playednext.collection;
 
 import com.piticlistudio.playednext.collection.model.entity.datasource.NetCollection;
+import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 import com.piticlistudio.playednext.collection.model.repository.datasource.ICollectionRepositoryDatasource;
 import com.piticlistudio.playednext.collection.model.repository.datasource.NetCollectionRepositoryImpl;
+import com.piticlistudio.playednext.collection.model.repository.datasource.RealmCollectionRepositoryImpl;
 
 import java.util.List;
 
@@ -45,4 +47,9 @@ public class CollectionModule {
         return new NetCollectionRepositoryImpl(service);
     }
 
+    @Provides
+    @Named("db")
+    public ICollectionRepositoryDatasource<RealmCollection> provideDBRepository() {
+        return new RealmCollectionRepositoryImpl();
+    }
 }
