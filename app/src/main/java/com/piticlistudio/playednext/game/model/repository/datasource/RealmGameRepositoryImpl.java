@@ -2,7 +2,6 @@ package com.piticlistudio.playednext.game.model.repository.datasource;
 
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
-import com.piticlistudio.playednext.mvp.model.repository.datasource.BaseRealmRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import io.realm.RealmResults;
  * Repository for Realm entities
  * Created by jorge.garcia on 10/02/2017.
  */
-public class RealmGameRepositoryImpl implements IGamedataRepository {
+public class RealmGameRepositoryImpl implements IGamedatasourceRepository {
 
     /**
      * Returns a Realm instance.

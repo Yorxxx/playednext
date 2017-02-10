@@ -10,7 +10,6 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 
 /**
@@ -18,7 +17,7 @@ import io.reactivex.functions.Function;
  * Created by jorge.garcia on 10/02/2017.
  */
 
-public class NetGameRepositoryImpl implements IGamedataRepository {
+public class NetGameRepositoryImpl implements IGamedatasourceRepository {
 
     private final GamedataModule.NetService service;
 

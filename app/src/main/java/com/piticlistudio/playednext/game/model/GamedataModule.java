@@ -1,12 +1,9 @@
 package com.piticlistudio.playednext.game.model;
 
-import com.piticlistudio.playednext.collection.CollectionModule;
-import com.piticlistudio.playednext.collection.model.entity.datasource.NetCollection;
-import com.piticlistudio.playednext.collection.model.repository.datasource.ICollectionRepositoryDatasource;
-import com.piticlistudio.playednext.collection.model.repository.datasource.NetCollectionRepositoryImpl;
 import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
-import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
+import com.piticlistudio.playednext.game.model.repository.datasource.IGamedatasourceRepository;
 import com.piticlistudio.playednext.game.model.repository.datasource.NetGameRepositoryImpl;
+import com.piticlistudio.playednext.game.model.repository.datasource.RealmGameRepositoryImpl;
 
 import java.util.List;
 
@@ -52,7 +49,13 @@ public class GamedataModule {
 
     @Provides
     @Named("net")
-    public IGamedataRepository provideNetRepository(NetService service) {
+    public IGamedatasourceRepository provideNetRepository(NetService service) {
         return new NetGameRepositoryImpl(service);
+    }
+
+    @Provides
+    @Named("db")
+    public IGamedatasourceRepository provideDBRepository() {
+        return new RealmGameRepositoryImpl();
     }
 }

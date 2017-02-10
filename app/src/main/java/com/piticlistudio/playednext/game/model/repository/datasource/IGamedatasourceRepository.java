@@ -1,20 +1,13 @@
 package com.piticlistudio.playednext.game.model.repository.datasource;
 
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
+import com.piticlistudio.playednext.mvp.model.repository.datasource.BaseRepositoryDataSource;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
-public interface IGamedataRepository {
-
-    /**
-     * Loads the game with the specified id.
-     *
-     * @param id the id to load.
-     * @return an Observable that emits the game loaded
-     */
-    Observable<IGameDatasource> load(int id);
+public interface IGamedatasourceRepository extends BaseRepositoryDataSource<IGameDatasource> {
 
     /**
      * Searches game that matches the specified query name
@@ -24,5 +17,5 @@ public interface IGamedataRepository {
      * @param limit  the max amount of items to return
      * @return a list of games matching the query.
      */
-    Observable<List<IGameDatasource>> search(String query, int offset, int limit);
+    Single<List<IGameDatasource>> search(String query, int offset, int limit);
 }
