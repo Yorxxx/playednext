@@ -1,5 +1,10 @@
 package com.piticlistudio.playednext.game.model.entity.datasource;
 
+import com.fernandocejas.arrow.optional.Optional;
+import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
+import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
+import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -18,6 +23,7 @@ public class RealmGame extends RealmObject implements IGameDatasource {
     private String name;
     private String summary;
     private String storyline;
+    public RealmCollection collection;
 
     public RealmGame() {
     }
@@ -76,5 +82,21 @@ public class RealmGame extends RealmObject implements IGameDatasource {
 
     public void setStoryline(String storyline) {
         this.storyline = storyline;
+    }
+
+    public void setCollection(RealmCollection collection) {
+        this.collection = collection;
+    }
+
+    /**
+     * Returns the collection
+     *
+     * @return the collection
+     */
+    @Override
+    public Optional<NetworkEntityIdRelation<ICollectionData>> getCollection() {
+        if (collection == null)
+            return Optional.absent();
+        return Optional.of(new NetworkEntityIdRelation<>(collection.getId(), Optional.of(collection)));
     }
 }

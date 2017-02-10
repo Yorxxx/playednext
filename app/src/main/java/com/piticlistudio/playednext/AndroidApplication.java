@@ -47,6 +47,7 @@ public class AndroidApplication extends Application {
 
         gameComponent = gamedataComponent.plus(new GameModule());
 
+        // TODO: 10/02/2017 remove
         final GameRepository repository = gameComponent.repository();
         repository.load(10)
                 .observeOn(AndroidSchedulers.mainThread())

@@ -36,4 +36,20 @@ public class RealmGameTest {
         assertEquals("storyline", data.getStoryline());
     }
 
+    @Test
+    public void getCollection() throws Exception {
+        assertNotNull(data.getCollection());
+        assertTrue(data.getCollection().isPresent());
+        assertEquals(data.collection.id, data.getCollection().get().id);
+        assertTrue(data.getCollection().get().data.isPresent());
+        assertEquals(data.collection.id, data.getCollection().get().data.get().getId());
+        assertEquals(data.collection.getName(), data.getCollection().get().data.get().getName());
+
+        // Arrange
+        data.setCollection(null);
+
+        // Assert
+        assertNotNull(data.getCollection());
+        assertFalse(data.getCollection().isPresent());
+    }
 }

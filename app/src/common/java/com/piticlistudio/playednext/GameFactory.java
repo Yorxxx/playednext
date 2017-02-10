@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext;
 
+import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 
@@ -100,6 +101,7 @@ public class GameFactory {
         data.setName(title);
         data.setStoryline("storyline");
         data.setSummary("summary");
+        data.setCollection(new RealmCollection(50, "collection"));
         return data;
     }
 

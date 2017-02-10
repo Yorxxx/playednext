@@ -35,4 +35,19 @@ public class NetGameTest {
         assertEquals(data.storyline, data.getStoryline());
     }
 
+    @Test
+    public void getCollection() throws Exception {
+        data.collection = 10;
+        assertNotNull(data.getCollection());
+        assertTrue(data.getCollection().isPresent());
+        assertEquals(data.collection, data.getCollection().get().id);
+        assertFalse(data.getCollection().get().data.isPresent());
+
+        // Arrange
+        data.collection = -1;
+
+        // Assert
+        assertNotNull(data.getCollection());
+        assertFalse(data.getCollection().isPresent());
+    }
 }

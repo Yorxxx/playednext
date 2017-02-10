@@ -1,6 +1,9 @@
 package com.piticlistudio.playednext.game.model.entity.datasource;
 
+import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
+import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
+import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 import com.piticlistudio.playednext.utils.AutoGson;
 
 import java.util.ArrayList;
@@ -85,5 +88,17 @@ public abstract class NetGame implements IGameDatasource {
     @Override
     public String getStoryline() {
         return storyline;
+    }
+
+    /**
+     * Returns the collection
+     *
+     * @return the collection
+     */
+    @Override
+    public Optional<NetworkEntityIdRelation<ICollectionData>> getCollection() {
+        if (collection != -1)
+            return Optional.of(new NetworkEntityIdRelation<>(collection, Optional.absent()));
+        return Optional.absent();
     }
 }
