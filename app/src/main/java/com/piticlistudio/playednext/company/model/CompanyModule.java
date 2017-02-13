@@ -60,7 +60,7 @@ public class CompanyModule {
                 "Accept: application/json",
                 "X-Mashape-Key: XxTvUubZsDmshGVnDjpP4ZnVFfaLp1FLO7Vjsnzi8CSsAfuObi"
         })
-        @GET("/collections/{id}/")
+        @GET("/companies/{id}/")
         Observable<List<NetCompany>> load(@Path("id") int id, @Query("fields") String fields);
     }
 }
