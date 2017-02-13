@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.game.model.entity.datasource;
 import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
+import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
@@ -127,5 +128,21 @@ public abstract class NetGame implements IGameDatasource {
         if (screenshots == null)
             return new ArrayList<>();
         return new ArrayList<>(screenshots);
+    }
+
+    /**
+     * Returns the list of developers.
+     *
+     * @return the developers
+     */
+    @Override
+    public List<NetworkEntityIdRelation<ICompanyData>> getDevelopers() {
+        List<NetworkEntityIdRelation<ICompanyData>> data = new ArrayList<>();
+        if (developers != null) {
+            for (Integer developer : developers) {
+                data.add(new NetworkEntityIdRelation<>(developer, Optional.absent()));
+            }
+        }
+        return data;
     }
 }

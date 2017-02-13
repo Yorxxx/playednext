@@ -56,4 +56,6 @@ public abstract class NetCompany implements ICompanyData {
     public String getName() {
         return name();
     }
+
+
 }

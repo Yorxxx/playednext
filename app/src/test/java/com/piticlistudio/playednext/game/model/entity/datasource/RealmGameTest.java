@@ -2,8 +2,11 @@ package com.piticlistudio.playednext.game.model.entity.datasource;
 
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.GameFactory;
+import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
+import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
+import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 
 import org.junit.Test;
 
@@ -11,7 +14,10 @@ import java.util.List;
 
 import io.realm.RealmList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test cases
@@ -111,6 +117,28 @@ public class RealmGameTest {
         // Assert
         assertNotNull(result);
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void getDevelopers() throws Exception {
+
+        RealmList<RealmCompany> developers = new RealmList<>();
+        developers.add(new RealmCompany(1, "1"));
+        developers.add(new RealmCompany(2, "2"));
+        developers.add(new RealmCompany(3, "3"));
+        data.setDevelopers(developers);
+
+        // Act
+        List<NetworkEntityIdRelation<ICompanyData>> result = data.getDevelopers();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(developers.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertTrue(result.get(i).data.isPresent());
+            assertEquals(result.get(i).getData(), developers.get(i));
+            assertEquals(result.get(i).id, developers.get(i).getId());
+        }
 
     }
 }

@@ -3,6 +3,8 @@ package com.piticlistudio.playednext.game.model.entity.datasource;
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
+import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
+import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
@@ -17,21 +19,23 @@ import io.realm.annotations.Required;
 
 /**
  * Representation of a IGameDataSource on Realm
+ *
  * @see IGameDatasource
  * Created by jorge.garcia on 10/02/2017.
  */
 
 public class RealmGame extends RealmObject implements IGameDatasource {
 
+    public RealmCollection collection;
     @PrimaryKey
     private int id;
     @Required
     private String name;
     private String summary;
     private String storyline;
-    public RealmCollection collection;
     private RealmImageData cover;
     private RealmList<RealmImageData> screenshots;
+    private RealmList<RealmCompany> developers = new RealmList<>();
 
     public RealmGame() {
     }
@@ -46,6 +50,10 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     /**
      * Returns the name
      *
@@ -54,6 +62,10 @@ public class RealmGame extends RealmObject implements IGameDatasource {
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -66,6 +78,10 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         return summary;
     }
 
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
     /**
      * Returns the storyline
      *
@@ -76,24 +92,8 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         return storyline;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
     public void setStoryline(String storyline) {
         this.storyline = storyline;
-    }
-
-    public void setCollection(RealmCollection collection) {
-        this.collection = collection;
     }
 
     /**
@@ -108,8 +108,8 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         return Optional.of(new NetworkEntityIdRelation<>(collection.getId(), Optional.of(collection)));
     }
 
-    public void setCover(RealmImageData cover) {
-        this.cover = cover;
+    public void setCollection(RealmCollection collection) {
+        this.collection = collection;
     }
 
     /**
@@ -122,8 +122,8 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         return Optional.fromNullable(cover);
     }
 
-    public void setScreenshots(RealmList<RealmImageData> screenshots) {
-        this.screenshots = screenshots;
+    public void setCover(RealmImageData cover) {
+        this.cover = cover;
     }
 
     /**
@@ -136,5 +136,29 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         if (this.screenshots == null)
             return new ArrayList<>();
         return new ArrayList<>(screenshots);
+    }
+
+    public void setScreenshots(RealmList<RealmImageData> screenshots) {
+        this.screenshots = screenshots;
+    }
+
+    public void setDevelopers(RealmList<RealmCompany> developers) {
+        this.developers = developers;
+    }
+
+    /**
+     * Returns the list of developers.
+     *
+     * @return the developers
+     */
+    @Override
+    public List<NetworkEntityIdRelation<ICompanyData>> getDevelopers() {
+        List<NetworkEntityIdRelation<ICompanyData>> data = new ArrayList<>();
+        if (this.developers != null) {
+            for (RealmCompany developer : developers) {
+                data.add(new NetworkEntityIdRelation<>(developer.getId(), Optional.of(developer)));
+            }
+        }
+        return data;
     }
 }

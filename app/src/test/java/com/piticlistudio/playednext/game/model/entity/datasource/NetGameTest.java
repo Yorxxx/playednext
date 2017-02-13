@@ -1,14 +1,19 @@
 package com.piticlistudio.playednext.game.model.entity.datasource;
 
+import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
+import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test cases
@@ -100,6 +105,27 @@ public class NetGameTest {
         // Assert
         assertNotNull(result);
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void getDevelopers() throws Exception {
+        List<Integer> developers = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            developers.add(i);
+        }
+        data.developers = developers;
+
+        // Act
+        List<NetworkEntityIdRelation<ICompanyData>> result = data.getDevelopers();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(developers.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals((int) developers.get(i), (int) result.get(i).id);
+            assertNotNull(result.get(i).data);
+            assertFalse(result.get(i).data.isPresent());
+        }
 
     }
 }
