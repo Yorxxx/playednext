@@ -2,8 +2,11 @@ package com.piticlistudio.playednext.game.model.entity.datasource;
 
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
+import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
+
+import java.util.List;
 
 /**
  * Definition methods for game entities from datasources
@@ -53,4 +56,11 @@ public interface IGameDatasource {
      * @return the cover
      */
     Optional<IImageData> getCover();
+
+    /**
+     * Returns all available screenshots.
+     *
+     * @return the list of screenshots
+     */
+    List<IImageData> getScreenshots();
 }

@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.game.model.entity.datasource;
 import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
+import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
@@ -48,6 +49,7 @@ public abstract class NetGame implements IGameDatasource {
     public List<Integer> genres;
     public long first_release_date;
     public NetImageData cover;
+    public List<NetImageData> screenshots;
 
     public static NetGame create(int id, String name, String slug, String url, long createdAt, long updatedAt) {
         return new AutoValue_NetGame(id, name, slug, url, createdAt, updatedAt);
@@ -113,5 +115,17 @@ public abstract class NetGame implements IGameDatasource {
     @Override
     public Optional<IImageData> getCover() {
         return Optional.fromNullable(cover);
+    }
+
+    /**
+     * Returns all available screenshots.
+     *
+     * @return the list of screenshots
+     */
+    @Override
+    public List<IImageData> getScreenshots() {
+        if (screenshots == null)
+            return new ArrayList<>();
+        return new ArrayList<>(screenshots);
     }
 }

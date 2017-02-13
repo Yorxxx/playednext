@@ -7,6 +7,10 @@ import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -27,6 +31,7 @@ public class RealmGame extends RealmObject implements IGameDatasource {
     private String storyline;
     public RealmCollection collection;
     private RealmImageData cover;
+    private RealmList<RealmImageData> screenshots;
 
     public RealmGame() {
     }
@@ -115,5 +120,21 @@ public class RealmGame extends RealmObject implements IGameDatasource {
     @Override
     public Optional<IImageData> getCover() {
         return Optional.fromNullable(cover);
+    }
+
+    public void setScreenshots(RealmList<RealmImageData> screenshots) {
+        this.screenshots = screenshots;
+    }
+
+    /**
+     * Returns all available screenshots.
+     *
+     * @return the list of screenshots
+     */
+    @Override
+    public List<IImageData> getScreenshots() {
+        if (this.screenshots == null)
+            return new ArrayList<>();
+        return new ArrayList<>(screenshots);
     }
 }

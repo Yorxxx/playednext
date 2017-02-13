@@ -7,6 +7,10 @@ import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData
 
 import org.junit.Test;
 
+import java.util.List;
+
+import io.realm.RealmList;
+
 import static org.junit.Assert.*;
 
 /**
@@ -77,6 +81,36 @@ public class RealmGameTest {
         // Assert
         assertNotNull(result);
         assertFalse(result.isPresent());
+
+    }
+
+    @Test
+    public void getScreenshots() throws Exception {
+        RealmImageData screen1 = new RealmImageData("id1", "url", 200, 33);
+        RealmImageData screen2 = new RealmImageData("id2", "url2", 200, 33);
+        RealmImageData screen3 = new RealmImageData("id3", "url3", 200, 33);
+        RealmList<RealmImageData> screens = new RealmList<>();
+        screens.add(screen1);
+        screens.add(screen2);
+        screens.add(screen3);
+        data.setScreenshots(screens);
+
+        // Act
+        List<IImageData> result = data.getScreenshots();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(screens, result);
+
+        // Arrange
+        data.setScreenshots(null);
+
+        // Act
+        result = data.getScreenshots();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
 
     }
 }

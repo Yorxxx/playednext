@@ -5,6 +5,9 @@ import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -68,6 +71,35 @@ public class NetGameTest {
         // Assert
         assertNotNull(data.getCover());
         assertFalse(data.getCover().isPresent());
+
+    }
+
+    @Test
+    public void getScreenshots() throws Exception {
+        final NetImageData screen1 = NetImageData.create("url", 200, 300, "id");
+        final NetImageData screen2 = NetImageData.create("url2", 200, 300, "id2");
+        final NetImageData screen3 = NetImageData.create("url3", 200, 300, "id3");
+        List<NetImageData> screens = new ArrayList<>();
+        screens.add(screen1);
+        screens.add(screen2);
+        screens.add(screen3);
+        data.screenshots = screens;
+
+        // Act
+        List<IImageData> result = data.getScreenshots();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(screens, result);
+
+        // Arrange
+        data.screenshots = null;
+
+        result = data.getScreenshots();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
 
     }
 }
