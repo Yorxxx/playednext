@@ -9,6 +9,8 @@ import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import io.realm.RealmList;
+
 /**
  * Factory for game entities
  * Created by jorge.garcia on 10/02/2017.
@@ -105,6 +107,11 @@ public class GameFactory {
         data.setSummary("summary");
         data.setCollection(new RealmCollection(50, "collection"));
         data.setCover(new RealmImageData("id", "url", 75, 100));
+
+        RealmList<RealmImageData> screens = new RealmList<>();
+        screens.add(new RealmImageData("1", "url1", 50, 150));
+        screens.add(new RealmImageData("2", "url2", 50, 150));
+        data.setScreenshots(screens);
         return data;
     }
 
@@ -128,10 +135,10 @@ public class GameFactory {
         response.popularity = 2.0d;
         Integer[] publishers = {20, 21, 22};
         response.publishers = new ArrayList<>(Arrays.asList(publishers));
-//        response.screenshots = new ArrayList<>();
-//        for (int i = 0; i < 5; i++) {
-//            response.screenshots.add(IGDBImageData.create("url", 800, 500, "i"));
-//        }
+        response.screenshots = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            response.screenshots.add(NetImageData.create("url", 800, 500, "i"));
+        }
         response.rating = 88;
         response.rating_count = 99;
 //        response.release_dates = new ArrayList<>();

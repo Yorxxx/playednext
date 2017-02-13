@@ -4,6 +4,7 @@ package com.piticlistudio.playednext.game.model;
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
+import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.utils.StringUtils;
 
 import static org.junit.Assert.assertEquals;
@@ -85,7 +86,7 @@ public class BaseGameTest extends BaseTest {
                 assertEquals(datagenre.id(), remoteData.getGenres().get(i).data.get().getId());
                 assertEquals(datagenre.name(), remoteData.getGenres().get(i).data.get().getName());
             }
-        }
+        }*/
 
         if (data.screenshots == null)
             assertTrue(remoteData.getScreenshots().isEmpty());
@@ -100,7 +101,7 @@ public class BaseGameTest extends BaseTest {
             }
         }
 
-        if (data.platforms == null)
+        /*if (data.platforms == null)
             assertTrue(remoteData.getPlatforms().isEmpty());
         else {
             assertEquals(data.platforms.size(), remoteData.getPlatforms().size());
