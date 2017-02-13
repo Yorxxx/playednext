@@ -3,6 +3,8 @@ package com.piticlistudio.playednext.game.model.entity.datasource;
 import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
+import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
+import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 import com.piticlistudio.playednext.utils.AutoGson;
 
@@ -45,6 +47,7 @@ public abstract class NetGame implements IGameDatasource {
     public List<Integer> themes = new ArrayList<>();
     public List<Integer> genres;
     public long first_release_date;
+    public NetImageData cover;
 
     public static NetGame create(int id, String name, String slug, String url, long createdAt, long updatedAt) {
         return new AutoValue_NetGame(id, name, slug, url, createdAt, updatedAt);
@@ -100,5 +103,15 @@ public abstract class NetGame implements IGameDatasource {
         if (collection > 0)
             return Optional.of(new NetworkEntityIdRelation<>(collection, Optional.absent()));
         return Optional.absent();
+    }
+
+    /**
+     * Returns the cover
+     *
+     * @return the cover
+     */
+    @Override
+    public Optional<IImageData> getCover() {
+        return Optional.fromNullable(cover);
     }
 }

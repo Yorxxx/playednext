@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.game.model.entity.datasource;
 
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
+import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 
 /**
@@ -46,4 +47,10 @@ public interface IGameDatasource {
      * @return the collection
      */
     Optional<NetworkEntityIdRelation<ICollectionData>> getCollection();
+
+    /**
+     * Returns the cover
+     * @return the cover
+     */
+    Optional<IImageData> getCover();
 }

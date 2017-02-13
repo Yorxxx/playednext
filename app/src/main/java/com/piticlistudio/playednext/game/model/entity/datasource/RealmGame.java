@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.game.model.entity.datasource;
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
+import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 
 import io.realm.RealmObject;
@@ -98,5 +99,15 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         if (collection == null)
             return Optional.absent();
         return Optional.of(new NetworkEntityIdRelation<>(collection.getId(), Optional.of(collection)));
+    }
+
+    /**
+     * Returns the cover
+     *
+     * @return the cover
+     */
+    @Override
+    public Optional<IImageData> getCover() {
+        return null;
     }
 }

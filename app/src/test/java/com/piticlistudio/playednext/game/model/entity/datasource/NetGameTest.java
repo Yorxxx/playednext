@@ -1,5 +1,8 @@
 package com.piticlistudio.playednext.game.model.entity.datasource;
 
+import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
+import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -49,5 +52,22 @@ public class NetGameTest {
         // Assert
         assertNotNull(data.getCollection());
         assertFalse(data.getCollection().isPresent());
+    }
+
+    @Test
+    public void getCover() throws Exception {
+        final NetImageData cover = NetImageData.create("url", 200, 300, "id");
+
+        data.cover = cover;
+        assertNotNull(data.getCover());
+        assertTrue(data.getCover().isPresent());
+        assertEquals(cover, data.getCover().get());
+
+        data.cover = null;
+
+        // Assert
+        assertNotNull(data.getCover());
+        assertFalse(data.getCover().isPresent());
+
     }
 }
