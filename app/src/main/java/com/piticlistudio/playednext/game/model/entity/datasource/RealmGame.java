@@ -4,6 +4,7 @@ import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
+import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 
 import io.realm.RealmObject;
@@ -25,6 +26,7 @@ public class RealmGame extends RealmObject implements IGameDatasource {
     private String summary;
     private String storyline;
     public RealmCollection collection;
+    private RealmImageData cover;
 
     public RealmGame() {
     }
@@ -101,6 +103,10 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         return Optional.of(new NetworkEntityIdRelation<>(collection.getId(), Optional.of(collection)));
     }
 
+    public void setCover(RealmImageData cover) {
+        this.cover = cover;
+    }
+
     /**
      * Returns the cover
      *
@@ -108,6 +114,6 @@ public class RealmGame extends RealmObject implements IGameDatasource {
      */
     @Override
     public Optional<IImageData> getCover() {
-        return null;
+        return Optional.fromNullable(cover);
     }
 }

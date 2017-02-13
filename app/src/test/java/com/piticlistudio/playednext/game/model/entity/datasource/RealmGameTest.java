@@ -1,6 +1,9 @@
 package com.piticlistudio.playednext.game.model.entity.datasource;
 
+import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.GameFactory;
+import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
+import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 
 import org.junit.Test;
 
@@ -51,5 +54,29 @@ public class RealmGameTest {
         // Assert
         assertNotNull(data.getCollection());
         assertFalse(data.getCollection().isPresent());
+    }
+
+    @Test
+    public void getCover() throws Exception {
+
+        RealmImageData cover = new RealmImageData("id", "url", 200, 500);
+        data.setCover(cover);
+
+        // Act
+        Optional<IImageData> result = data.getCover();
+        assertNotNull(result);
+        assertTrue(result.isPresent());
+        assertEquals(cover, data.getCover().get());
+
+        // Arrange
+        data.setCover(null);
+
+        // Act
+        result = data.getCover();
+
+        // Assert
+        assertNotNull(result);
+        assertFalse(result.isPresent());
+
     }
 }
