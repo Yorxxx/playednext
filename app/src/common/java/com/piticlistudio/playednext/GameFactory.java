@@ -3,6 +3,8 @@ package com.piticlistudio.playednext;
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
+import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,6 +104,7 @@ public class GameFactory {
         data.setStoryline("storyline");
         data.setSummary("summary");
         data.setCollection(new RealmCollection(50, "collection"));
+        data.setCover(new RealmImageData("id", "url", 75, 100));
         return data;
     }
 
@@ -114,7 +117,7 @@ public class GameFactory {
     public static NetGame provideNetGame(int id, String title) {
 
         NetGame response = NetGame.create(id, title, "slug", "url", 1000, 2500);
-//        response.cover = IGDBImageData.create("url", 800, 500, "imageid");
+        response.cover = NetImageData.create("url", 800, 500, "imageid");
         response.category = 100;
         response.collection = 200;
         response.hypes = 179;

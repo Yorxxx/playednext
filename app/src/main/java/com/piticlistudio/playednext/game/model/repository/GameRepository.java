@@ -1,7 +1,6 @@
 package com.piticlistudio.playednext.game.model.repository;
 
 import com.fernandocejas.arrow.optional.Optional;
-import com.piticlistudio.playednext.collection.model.entity.Collection;
 import com.piticlistudio.playednext.collection.model.repository.ICollectionRepository;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.entity.GameMapper;
@@ -14,9 +13,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
-import io.reactivex.subjects.PublishSubject;
 
 /**
  * Repository for Game entities.
@@ -30,8 +27,6 @@ public class GameRepository implements IGameRepository {
     private final IGamedataRepository repository;
     private final GameMapper mapper;
     private final ICollectionRepository collectionRepository;
-
-    private final PublishSubject<Game> publishSubject = PublishSubject.create();
 
     @Inject
     public GameRepository(IGamedataRepository repository, GameMapper mapper, ICollectionRepository collectionRepository) {

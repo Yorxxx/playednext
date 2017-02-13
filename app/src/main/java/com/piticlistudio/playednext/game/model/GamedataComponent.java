@@ -7,7 +7,7 @@ import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.entity.GameMapper;
 import com.piticlistudio.playednext.game.model.repository.datasource.GamedataRepository;
-import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
+import com.piticlistudio.playednext.image.ImageModule;
 
 import dagger.Component;
 

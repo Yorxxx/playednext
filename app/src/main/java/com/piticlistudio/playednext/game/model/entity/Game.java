@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.game.model.entity;
 import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.collection.model.entity.Collection;
+import com.piticlistudio.playednext.image.model.entity.ImageData;
 
 /**
  * Domain entity representing a Game
@@ -14,6 +15,7 @@ public abstract class Game {
     public String summary;
     public String storyline;
     public Optional<Collection> collection = Optional.absent();
+    public Optional<ImageData> cover = Optional.absent();
 
     public static Game create(int id, String title) {
         return new AutoValue_Game(id, title);

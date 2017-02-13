@@ -23,7 +23,7 @@ public class BaseGameTest extends BaseTest {
         if (!StringUtils.equalsIgnoreCase(data.storyline, remoteData.getStoryline()))
             return false;
        /* assertEquals(data.hypes, remoteData.getHypes());
-        assertEquals(data.rating, remoteData.getRating(), 0);
+        assertEquals(data.rating, remoteData.getRating(), 0);*/
 
         assertNotNull(data.cover);
         assertEquals(data.cover.isPresent(), remoteData.getCover().isPresent());
@@ -32,7 +32,7 @@ public class BaseGameTest extends BaseTest {
             assertEquals(data.cover.get().thumbUrl(), remoteData.getCover().get().getUrl());
             assertEquals(data.cover.get().fullWidth(), remoteData.getCover().get().getWidth());
             assertEquals(data.cover.get().fullHeight(), remoteData.getCover().get().getHeight());
-        }*/
+        }
 
         assertNotNull(data.collection);
         if (remoteData.getCollection().isPresent() && remoteData.getCollection().get().data.isPresent()) {

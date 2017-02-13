@@ -4,6 +4,7 @@ import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.collection.model.entity.Collection;
 import com.piticlistudio.playednext.collection.model.entity.CollectionMapper;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
+import com.piticlistudio.playednext.image.model.entity.ImageDataMapper;
 import com.piticlistudio.playednext.mvp.model.entity.Mapper;
 
 import javax.inject.Inject;
@@ -11,10 +12,12 @@ import javax.inject.Inject;
 public class GameMapper implements Mapper<Game, IGameDatasource> {
 
     private final CollectionMapper collectionMapper;
+    private final ImageDataMapper imageMapper;
 
     @Inject
-    public GameMapper(CollectionMapper collectionMapper) {
+    public GameMapper(CollectionMapper collectionMapper, ImageDataMapper imageMapper) {
         this.collectionMapper = collectionMapper;
+        this.imageMapper = imageMapper;
     }
 
     /**
@@ -33,6 +36,9 @@ public class GameMapper implements Mapper<Game, IGameDatasource> {
 
         if (data.getCollection().isPresent() && data.getCollection().get().data.isPresent()) {
             result.collection = collectionMapper.transform(data.getCollection().get().getData());
+        }
+        if (data.getCover().isPresent()) {
+            result.cover = imageMapper.transform(data.getCover().get());
         }
 
         return Optional.of(result);
