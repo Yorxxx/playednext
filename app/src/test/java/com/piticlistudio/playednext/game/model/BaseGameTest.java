@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.game.model;
 
 
 import com.piticlistudio.playednext.BaseTest;
+import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
@@ -49,7 +50,7 @@ public class BaseGameTest extends BaseTest {
             assertEquals(data.collection.get().name(), remoteData.getCollection().get().data.get().getName());
         }
 
-       /* if (data.developers == null)
+        if (data.developers == null)
             assertTrue(remoteData.getDevelopers().isEmpty());
         else {
             assertEquals(data.developers.size(), remoteData.getDevelopers().size());
@@ -62,7 +63,7 @@ public class BaseGameTest extends BaseTest {
             }
         }
 
-        if (data.publishers == null)
+       /* if (data.publishers == null)
             assertTrue(remoteData.getPublishers().isEmpty());
         else {
             assertEquals(data.publishers.size(), remoteData.getPublishers().size());

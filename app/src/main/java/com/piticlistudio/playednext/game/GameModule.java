@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.game;
 
 import com.piticlistudio.playednext.collection.model.repository.CollectionRepository;
 import com.piticlistudio.playednext.collection.model.repository.ICollectionRepository;
+import com.piticlistudio.playednext.company.model.repository.ICompanyRepository;
 import com.piticlistudio.playednext.game.model.entity.GameMapper;
 import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
@@ -19,7 +20,8 @@ public class GameModule {
     @Provides
     public GameRepository provideRepository(IGamedataRepository repository,
                                             GameMapper mapper,
-                                            ICollectionRepository collectionRepository) {
-        return new GameRepository(repository, mapper, collectionRepository);
+                                            ICollectionRepository collectionRepository,
+                                            ICompanyRepository companyRepository) {
+        return new GameRepository(repository, mapper, collectionRepository, companyRepository);
     }
 }

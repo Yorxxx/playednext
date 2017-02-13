@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext;
 
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
+import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
@@ -112,6 +113,11 @@ public class GameFactory {
         screens.add(new RealmImageData("1", "url1", 50, 150));
         screens.add(new RealmImageData("2", "url2", 50, 150));
         data.setScreenshots(screens);
+
+        RealmList<RealmCompany> developers = new RealmList<>();
+        developers.add(new RealmCompany(1, "company_1"));
+        developers.add(new RealmCompany(2, "company_2"));
+        data.setDevelopers(developers);
         return data;
     }
 

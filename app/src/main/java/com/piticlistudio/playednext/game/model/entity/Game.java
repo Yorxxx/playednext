@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.game.model.entity;
 import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.collection.model.entity.Collection;
+import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public abstract class Game {
     public Optional<Collection> collection = Optional.absent();
     public Optional<ImageData> cover = Optional.absent();
     public List<ImageData> screenshots = new ArrayList<>();
+    public List<Company> developers = new ArrayList<>();
 
     public static Game create(int id, String title) {
         return new AutoValue_Game(id, title);

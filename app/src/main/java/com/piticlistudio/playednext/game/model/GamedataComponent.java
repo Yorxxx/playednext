@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.game.model;
 
 
 import com.piticlistudio.playednext.collection.CollectionModule;
+import com.piticlistudio.playednext.company.model.CompanyModule;
 import com.piticlistudio.playednext.di.module.NetModule;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
@@ -17,5 +18,5 @@ public interface GamedataComponent {
     GamedataRepository repository();
     GameMapper mapper();
 
-    GameComponent plus(GameModule module, CollectionModule cm);
+    GameComponent plus(GameModule module, CollectionModule cm, CompanyModule com);
 }
