@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.company.model.repository.datasource;
 
 import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.company.model.CompanyModule;
+import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.company.model.entity.datasource.NetCompany;
 
 import org.junit.Rule;
@@ -50,7 +51,7 @@ public class NetCompanyRepositoryImplTest {
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
         // Act
-        TestObserver<NetCompany> result = repository.load(1).test();
+        TestObserver<ICompanyData> result = repository.load(1).test();
         testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
 
 
@@ -80,7 +81,7 @@ public class NetCompanyRepositoryImplTest {
                 }));
 
         // Act
-        TestObserver<NetCompany> result = repository.load(1).test();
+        TestObserver<ICompanyData> result = repository.load(1).test();
 
         result.awaitTerminalEvent();
 
@@ -96,7 +97,7 @@ public class NetCompanyRepositoryImplTest {
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
         // Act
-        TestObserver<NetCompany> result = repository.load(1).test();
+        TestObserver<ICompanyData> result = repository.load(1).test();
 
         testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
 

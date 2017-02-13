@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.company.model;
 
 import com.piticlistudio.playednext.company.model.entity.CompanyMapper;
+import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.company.model.entity.datasource.NetCompany;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.company.model.repository.CompanyRepository;
@@ -36,19 +37,19 @@ public class CompanyModule {
 
     @Provides
     @Named("net")
-    public ICompanyRepositoryDataSource<NetCompany> provideNetRepository(NetService service) {
+    public ICompanyRepositoryDataSource<ICompanyData> provideNetRepository(NetService service) {
         return new NetCompanyRepositoryImpl(service);
     }
 
     @Provides
     @Named("db")
-    public ICompanyRepositoryDataSource<RealmCompany> provideDBRepository() {
+    public ICompanyRepositoryDataSource<ICompanyData> provideDBRepository() {
         return new RealmCompanyRepositoryImpl();
     }
 
     @Provides
-    public ICompanyRepository provideRepository(@Named("db") ICompanyRepositoryDataSource<RealmCompany> local,
-                                                @Named("net") ICompanyRepositoryDataSource<NetCompany> remote,
+    public ICompanyRepository provideRepository(@Named("db") ICompanyRepositoryDataSource<ICompanyData> local,
+                                                @Named("net") ICompanyRepositoryDataSource<ICompanyData> remote,
                                                 CompanyMapper mapper) {
         return new CompanyRepository(local, remote, mapper);
     }

@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.collection.model.repository.datasource;
 
 import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.collection.CollectionModule;
+import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
 import com.piticlistudio.playednext.collection.model.entity.datasource.NetCollection;
 
 import org.junit.Rule;
@@ -50,7 +51,7 @@ public class NetCollectionRepositoryImplTest {
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
         // Act
-        TestObserver<NetCollection> result = repository.load(1).test();
+        TestObserver<ICollectionData> result = repository.load(1).test();
         testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
 
 
@@ -80,7 +81,7 @@ public class NetCollectionRepositoryImplTest {
                 }));
 
         // Act
-        TestObserver<NetCollection> result = repository.load(1).test();
+        TestObserver<ICollectionData> result = repository.load(1).test();
 
         result.awaitTerminalEvent();
 
@@ -96,7 +97,7 @@ public class NetCollectionRepositoryImplTest {
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
         // Act
-        TestObserver<NetCollection> result = repository.load(1).test();
+        TestObserver<ICollectionData> result = repository.load(1).test();
 
         testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
 

@@ -10,7 +10,7 @@ import io.realm.RealmObject;
  * A base realmRepository
  * Created by jorge.garcia on 16/01/2017.
  */
-public abstract class BaseRealmRepository<R extends RealmObject> implements BaseRepositoryDataSource<R> {
+public abstract class BaseRealmRepository<R extends RealmObject> {
 
     private Class<R> realmTypeClass;
 
@@ -40,8 +40,8 @@ public abstract class BaseRealmRepository<R extends RealmObject> implements Base
      * @param id the id to load.
      * @return an Observable that emits the model loaded
      */
-    @Override
-    public Single<R> load(int id) {
+//    @Override
+    public Single<R> find(int id) {
         return getManagedRealm()
                 .map(realm -> {
                     R data = realm.where(realmTypeClass).equalTo("id", id).findFirst();

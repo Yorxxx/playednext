@@ -5,8 +5,6 @@ import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.collection.model.entity.Collection;
-import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
-import com.piticlistudio.playednext.collection.model.entity.datasource.NetCollection;
 import com.piticlistudio.playednext.collection.model.repository.ICollectionRepository;
 import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.BaseGameTest;
@@ -22,8 +20,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +35,6 @@ import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -64,7 +59,6 @@ public class GameRepositoryTest extends BaseGameTest {
                 repository = component.plus(new GameModule(), new CollectionModule()).repository();
             });
     private RealmGame localData = GameFactory.provideRealmGame(50, "title");
-    private NetGame remoteData = GameFactory.provideNetGame(50, "title");
 
     @Before
     public void setUp() throws Exception {
