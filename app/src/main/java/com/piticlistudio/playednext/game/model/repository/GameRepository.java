@@ -11,6 +11,9 @@ import com.piticlistudio.playednext.game.model.entity.RealmGameMapper;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
+import com.piticlistudio.playednext.genre.model.entity.Genre;
+import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
+import com.piticlistudio.playednext.genre.model.repository.IGenreRepository;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 
 import java.util.ArrayList;
@@ -36,14 +39,17 @@ public class GameRepository implements IGameRepository {
     private final RealmGameMapper realmMapper;
     private final ICollectionRepository collectionRepository;
     private final ICompanyRepository companyRepository;
+    private final IGenreRepository genreRepository;
 
     @Inject
-    public GameRepository(IGamedataRepository repository, GameMapper mapper, RealmGameMapper realmMapper, ICollectionRepository collectionRepository, ICompanyRepository companyRepository) {
+    public GameRepository(IGamedataRepository repository, GameMapper mapper, RealmGameMapper realmMapper,
+                          ICollectionRepository collectionRepository, ICompanyRepository companyRepository, IGenreRepository genreRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.realmMapper = realmMapper;
         this.collectionRepository = collectionRepository;
         this.companyRepository = companyRepository;
+        this.genreRepository = genreRepository;
     }
 
     /**
@@ -62,10 +68,13 @@ public class GameRepository implements IGameRepository {
                                 .flatMap(new Function<Game, ObservableSource<Game>>() {
                                     @Override
                                     public ObservableSource<Game> apply(Game game) throws Exception {
-                                        return Observable.merge(Observable.just(game),
-                                                loadCollection(iGameDatasource, game),
-                                                loadDevelopers(iGameDatasource, game),
-                                                loadPublishers(iGameDatasource, game));
+                                        List<Observable<Game>> operators = new ArrayList<>();
+                                        operators.add(Observable.just(game));
+                                        operators.add(loadCollection(iGameDatasource, game));
+                                        operators.add(loadDevelopers(iGameDatasource, game));
+                                        operators.add(loadPublishers(iGameDatasource, game));
+                                        operators.add(loadGenres(iGameDatasource, game));
+                                        return Observable.merge(operators);
                                     }
                                 });
                     }
@@ -104,8 +113,7 @@ public class GameRepository implements IGameRepository {
         if (model.isPresent()) {
             return repository.save(model.get())
                     .flatMap(this::mapSource);
-        }
-        else return Observable.error(new Exception("Cannot map"));
+        } else return Observable.error(new Exception("Cannot map"));
     }
 
     private Observable<Game> mapSource(IGameDatasource iGameDatasource) {
@@ -165,12 +173,7 @@ public class GameRepository implements IGameRepository {
         if (missingIds.size() == 0)
             return Observable.empty();
         return Observable.fromIterable(missingIds)
-                .flatMap(new Function<Integer, ObservableSource<Company>>() {
-                    @Override
-                    public ObservableSource<Company> apply(Integer integer) throws Exception {
-                        return companyRepository.load(integer);
-                    }
-                })
+                .flatMap(companyRepository::load)
                 .toList()
                 .toObservable();
     }
@@ -197,7 +200,7 @@ public class GameRepository implements IGameRepository {
      * Will only request the publishers that are present in source but not on destination
      * If source has no publishers, does not emit anything.
      *
-     * @param from the source containing the developers info
+     * @param from the source containing the publishers info
      * @param to   the entity in which to set the data
      * @return an Observable that emits the request with the publishers on the source, loaded.
      */
@@ -208,5 +211,40 @@ public class GameRepository implements IGameRepository {
                     return to;
                 });
 
+    }
+
+    /**
+     * Loads the genres from the supplied source
+     * Will only request the genres that are present in source but not on destination
+     * If source has no genres, does not emit anything.
+     *
+     * @param from the source containing the genres info
+     * @param dest the entity in which to set the data
+     * @return an Observable that emits the request with the genres on the source, loaded.
+     */
+    Observable<Game> loadGenres(IGameDatasource from, Game dest) {
+        if (from.getGenres().isEmpty())
+            return Observable.empty();
+        List<Integer> missingIds = new ArrayList<>();
+        for (NetworkEntityIdRelation<IGenreData> iGenreDataNetworkEntityIdRelation : from.getGenres()) {
+            int requestedId = iGenreDataNetworkEntityIdRelation.id;
+            boolean found = false;
+            for (Genre genre : dest.genres) {
+                if (genre.id() == requestedId)
+                    found = true;
+            }
+            if (!found)
+                missingIds.add(requestedId);
+        }
+        if (missingIds.size() == 0)
+            return Observable.empty();
+        return Observable.fromIterable(missingIds)
+                .flatMap(genreRepository::load)
+                .toList()
+                .map(list -> {
+                    dest.genres.addAll(list);
+                    return dest;
+                })
+                .toObservable();
     }
 }

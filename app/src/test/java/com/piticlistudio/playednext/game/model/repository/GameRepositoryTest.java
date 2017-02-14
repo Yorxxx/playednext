@@ -20,6 +20,10 @@ import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource
 import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
+import com.piticlistudio.playednext.genre.GenreModule;
+import com.piticlistudio.playednext.genre.model.entity.Genre;
+import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
+import com.piticlistudio.playednext.genre.model.repository.IGenreRepository;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 
 import org.junit.Before;
@@ -63,11 +67,14 @@ public class GameRepositoryTest extends BaseGameTest {
     ICollectionRepository collectionRepository;
     @Mock
     ICompanyRepository companyRepository;
+    @Mock
+    IGenreRepository genreRepository;
 
     private GameRepository repository;
     @Rule
     public DaggerMockRule<GamedataComponent> rule = new DaggerMockRule<>(GamedataComponent.class, new GamedataModule())
-            .set(component -> repository = component.plus(new GameModule(), new CollectionModule(), new CompanyModule()).repository());
+            .set(component -> repository = component.plus(new GameModule(), new CollectionModule(), new CompanyModule(), new GenreModule())
+                    .repository());
     private RealmGame localData = GameFactory.provideRealmGame(50, "title");
 
     @Before
@@ -166,6 +173,8 @@ public class GameRepositoryTest extends BaseGameTest {
         assertTrue(source.getCollection().isPresent());
         assertFalse(source.getCollection().get().data.isPresent());
         assertEquals(3, source.getDevelopers().size());
+        assertEquals(3, source.getPublishers().size());
+        assertEquals(3, source.getGenres().size());
 
         Collection collection = Collection.create(10, "name");
         when(collectionRepository.load(anyInt())).thenReturn(Observable.just(collection).delay(5, TimeUnit.SECONDS));
@@ -175,6 +184,11 @@ public class GameRepositoryTest extends BaseGameTest {
             int id = (int) invocation.getArguments()[0];
             return Observable.just(Company.create(id, "company_" + id)).delay(10, TimeUnit.SECONDS);
         }).when(companyRepository).load(anyInt());
+
+        doAnswer(invocation -> {
+            int id = (int) invocation.getArguments()[0];
+            return Observable.just(Genre.create(id, "genre_" + id)).delay(15, TimeUnit.SECONDS);
+        }).when(genreRepository).load(anyInt());
 
         // Act
         TestObserver<Game> result = repository.load(gameId).test();
@@ -202,16 +216,36 @@ public class GameRepositoryTest extends BaseGameTest {
         verify(collectionRepository).load(source.getCollection().get().id);
 
         // Advance time
-        testSchedulerRule.getTestScheduler().advanceTimeBy(11, TimeUnit.SECONDS);
+        testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
 
         // Check if developers and publishers have been loaded
         result.assertNoErrors()
-                .assertComplete()
+                .assertNotComplete()
                 .assertValueCount(4)
-                .assertValueAt(2, check(game -> {
+                .assertValueAt(3, check(game -> {
+                    assertTrue(game.collection.isPresent());
+                    assertEquals(collection, game.collection.get());
                     assertEquals(source.getDevelopers().size(), game.developers.size());
                     assertEquals(source.getPublishers().size(), game.publishers.size());
                 }));
+        verify(companyRepository, times(6)).load(anyInt());
+
+
+        // Advance time
+        testSchedulerRule.getTestScheduler().advanceTimeBy(6, TimeUnit.SECONDS);
+
+        // Check if genres have been loaded
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(5)
+                .assertValueAt(4, check(game -> {
+                    assertTrue(game.collection.isPresent());
+                    assertEquals(collection, game.collection.get());
+                    assertEquals(source.getDevelopers().size(), game.developers.size());
+                    assertEquals(source.getPublishers().size(), game.publishers.size());
+                    assertEquals(source.getGenres().size(), game.genres.size());
+                }));
+        verify(genreRepository, times(3)).load(anyInt());
     }
 
     @Test
@@ -492,5 +526,78 @@ public class GameRepositoryTest extends BaseGameTest {
 
         assertEquals(to.developers.size(), source.getDevelopers().size());
         verify(companyRepository, times(source.getDevelopers().size())).load(anyInt());
+    }
+
+    @Test
+    public void loadGenres_empty() throws Exception {
+
+        NetGame from = GameFactory.provideNetGame(10, "title");
+        from.genres.clear();
+        Game dest = Game.create(10, "title");
+
+        // Act
+        TestObserver<Game> result = repository.loadGenres(from, dest).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertNoValues();
+        verifyZeroInteractions(genreRepository);
+    }
+
+    @Test
+    public void loadGenres_genresAlreadyLoaded() throws Exception {
+        Game to = Game.create(10, "title");
+        List<Genre> genres = new ArrayList<>();
+        Genre genre1 = Genre.create(1, "name1");
+        Genre genre2 = Genre.create(2, "name2");
+        genres.add(genre1);
+        genres.add(genre2);
+        to.genres = genres;
+
+        RealmGame source = GameFactory.provideRealmGame(10, "title");
+        RealmList<RealmGenre> realmGenres = new RealmList<>();
+        realmGenres.add(new RealmGenre(1, "name1"));
+        realmGenres.add(new RealmGenre(2, "name2"));
+        source.setGenres(realmGenres);
+
+        // Act
+        TestObserver<Game> result = repository.loadGenres(source, to).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertNoValues();
+        verifyZeroInteractions(genreRepository);
+    }
+
+    @Test
+    public void loadGenre_requestsGenre() throws Exception {
+
+        doAnswer(invocation -> {
+            int id = (int) invocation.getArguments()[0];
+            return Observable.just(Genre.create(id, "genre_" + id));
+        }).when(genreRepository).load(anyInt());
+
+        Game to = Game.create(10, "title");
+        to.genres = new ArrayList<>();
+
+        NetGame source = GameFactory.provideNetGame(10, "title");
+        assertTrue(source.getGenres().size() > 0);
+
+        // Act
+        TestObserver<Game> result = repository.loadGenres(source, to).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(1)
+                .assertValue(to);
+
+        assertEquals(to.genres.size(), source.getGenres().size());
+        verify(genreRepository, times(source.getGenres().size())).load(anyInt());
     }
 }

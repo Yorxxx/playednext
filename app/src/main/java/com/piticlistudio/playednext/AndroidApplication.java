@@ -13,6 +13,7 @@ import com.piticlistudio.playednext.game.model.GamedataComponent;
 import com.piticlistudio.playednext.game.model.GamedataModule;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.repository.GameRepository;
+import com.piticlistudio.playednext.genre.GenreModule;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -50,7 +51,7 @@ public class AndroidApplication extends Application {
                 .netModule(new NetModule())
                 .build();
 
-        gameComponent = gamedataComponent.plus(new GameModule(), new CollectionModule(), new CompanyModule());
+        gameComponent = gamedataComponent.plus(new GameModule(), new CollectionModule(), new CompanyModule(), new GenreModule());
 
         // TODO: 10/02/2017 remove
         final GameRepository repository = gameComponent.repository();
