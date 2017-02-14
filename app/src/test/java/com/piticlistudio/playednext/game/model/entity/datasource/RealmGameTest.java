@@ -141,4 +141,26 @@ public class RealmGameTest {
         }
 
     }
+
+    @Test
+    public void getPublishers() throws Exception {
+
+        RealmList<RealmCompany> publishers = new RealmList<>();
+        publishers.add(new RealmCompany(1, "1"));
+        publishers.add(new RealmCompany(2, "2"));
+        publishers.add(new RealmCompany(3, "3"));
+        data.setPublishers(publishers);
+
+        // Act
+        List<NetworkEntityIdRelation<ICompanyData>> result = data.getPublishers();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(publishers.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertTrue(result.get(i).data.isPresent());
+            assertEquals(result.get(i).getData(), publishers.get(i));
+            assertEquals(result.get(i).id, publishers.get(i).getId());
+        }
+    }
 }

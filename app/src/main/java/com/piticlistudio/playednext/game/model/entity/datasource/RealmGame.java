@@ -36,6 +36,7 @@ public class RealmGame extends RealmObject implements IGameDatasource {
     private RealmImageData cover;
     private RealmList<RealmImageData> screenshots;
     private RealmList<RealmCompany> developers = new RealmList<>();
+    private RealmList<RealmCompany> publishers = new RealmList<>();
 
     public RealmGame() {
     }
@@ -157,6 +158,26 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         if (this.developers != null) {
             for (RealmCompany developer : developers) {
                 data.add(new NetworkEntityIdRelation<>(developer.getId(), Optional.of(developer)));
+            }
+        }
+        return data;
+    }
+
+    public void setPublishers(RealmList<RealmCompany> publishers) {
+        this.publishers = publishers;
+    }
+
+    /**
+     * Returns the list of publishers
+     *
+     * @return the publishers
+     */
+    @Override
+    public List<NetworkEntityIdRelation<ICompanyData>> getPublishers() {
+        List<NetworkEntityIdRelation<ICompanyData>> data = new ArrayList<>();
+        if (this.publishers != null) {
+            for (RealmCompany publisher : publishers) {
+                data.add(new NetworkEntityIdRelation<>(publisher.getId(), Optional.of(publisher)));
             }
         }
         return data;

@@ -71,4 +71,11 @@ public interface IGameDatasource {
      * @return the developers
      */
     List<NetworkEntityIdRelation<ICompanyData>> getDevelopers();
+
+    /**
+     * Returns the list of publishers
+     *
+     * @return the publishers
+     */
+    List<NetworkEntityIdRelation<ICompanyData>> getPublishers();
 }

@@ -145,4 +145,20 @@ public abstract class NetGame implements IGameDatasource {
         }
         return data;
     }
+
+    /**
+     * Returns the list of publishers
+     *
+     * @return the publishers
+     */
+    @Override
+    public List<NetworkEntityIdRelation<ICompanyData>> getPublishers() {
+        List<NetworkEntityIdRelation<ICompanyData>> data = new ArrayList<>();
+        if (publishers != null) {
+            for (Integer publisher : publishers) {
+                data.add(new NetworkEntityIdRelation<>(publisher, Optional.absent()));
+            }
+        }
+        return data;
+    }
 }
