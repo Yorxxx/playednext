@@ -8,6 +8,8 @@ import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.genre.model.entity.Genre;
+import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
@@ -58,14 +60,14 @@ public class GameFactory {
         publishers.add(publisher1);
         data.publishers = publishers;
 
-       /* Genre genre1 = Genre.create(1, "genre1");
+        Genre genre1 = Genre.create(1, "genre1");
         Genre genre2 = Genre.create(2, "genre2");
         Genre genre3 = Genre.create(3, "genre3");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre1);
         genres.add(genre2);
         genres.add(genre3);
-        data.genres = genres;*/
+        data.genres = genres;
 
         ImageData screen1 = ImageData.create("screenshot1", 101, 78, "screenshot1Url");
         ImageData screen2 = ImageData.create("screenshot2", 201, 78, "screenshot2Url");
@@ -129,6 +131,10 @@ public class GameFactory {
         publishers.add(new RealmCompany(4, "company_4"));
         publishers.add(new RealmCompany(5, "company_5"));
         data.setPublishers(publishers);
+
+        RealmList<RealmGenre> genres = new RealmList<>();
+        genres.add(new RealmGenre(1, "platform"));
+        data.setGenres(genres);
 
         return data;
     }

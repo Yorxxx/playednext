@@ -7,6 +7,9 @@ import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.company.model.entity.RealmCompanyMapper;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.genre.model.entity.Genre;
+import com.piticlistudio.playednext.genre.model.entity.RealmGenreMapper;
+import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.model.entity.RealmImageDataMapper;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
@@ -26,12 +29,14 @@ public class RealmGameMapper implements Mapper<RealmGame, Game> {
     private final RealmImageDataMapper imageMapper;
     private final RealmCollectionMapper collectionMapper;
     private final RealmCompanyMapper companyMapper;
+    private final RealmGenreMapper genreMapper;
 
     @Inject
-    public RealmGameMapper(RealmImageDataMapper imageMapper, RealmCollectionMapper collectionMapper, RealmCompanyMapper companyMapper) {
+    public RealmGameMapper(RealmImageDataMapper imageMapper, RealmCollectionMapper collectionMapper, RealmCompanyMapper companyMapper, RealmGenreMapper genreMapper) {
         this.imageMapper = imageMapper;
         this.collectionMapper = collectionMapper;
         this.companyMapper = companyMapper;
+        this.genreMapper = genreMapper;
     }
 
     /**
@@ -85,6 +90,14 @@ public class RealmGameMapper implements Mapper<RealmGame, Game> {
                 screens.add(image.get());
         }
         result.setScreenshots(screens);
+
+        RealmList<RealmGenre> genres = new RealmList<>();
+        for (Genre genre : data.genres) {
+            Optional<RealmGenre> genredata = genreMapper.transform(genre);
+            if (genredata.isPresent())
+                genres.add(genredata.get());
+        }
+        result.setGenres(genres);
 
         return Optional.of(result);
     }

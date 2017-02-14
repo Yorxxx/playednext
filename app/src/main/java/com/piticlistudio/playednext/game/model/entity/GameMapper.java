@@ -1,12 +1,14 @@
 package com.piticlistudio.playednext.game.model.entity;
 
 import com.fernandocejas.arrow.optional.Optional;
-import com.piticlistudio.playednext.collection.model.entity.Collection;
 import com.piticlistudio.playednext.collection.model.entity.CollectionMapper;
 import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.company.model.entity.CompanyMapper;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
+import com.piticlistudio.playednext.genre.model.entity.Genre;
+import com.piticlistudio.playednext.genre.model.entity.GenreMapper;
+import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.model.entity.ImageDataMapper;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
@@ -23,12 +25,14 @@ public class GameMapper implements Mapper<Game, IGameDatasource> {
     private final CollectionMapper collectionMapper;
     private final ImageDataMapper imageMapper;
     private final CompanyMapper companyMapper;
+    private final GenreMapper genreMapper;
 
     @Inject
-    public GameMapper(CollectionMapper collectionMapper, ImageDataMapper imageMapper, CompanyMapper companyMapper) {
+    public GameMapper(CollectionMapper collectionMapper, ImageDataMapper imageMapper, CompanyMapper companyMapper, GenreMapper genreMapper) {
         this.collectionMapper = collectionMapper;
         this.imageMapper = imageMapper;
         this.companyMapper = companyMapper;
+        this.genreMapper = genreMapper;
     }
 
     /**
@@ -77,6 +81,16 @@ public class GameMapper implements Mapper<Game, IGameDatasource> {
             }
         }
         result.publishers = publishers;
+
+        List<Genre> genres = new ArrayList<>();
+        for (NetworkEntityIdRelation<IGenreData> iGenreDataNetworkEntityIdRelation : data.getGenres()) {
+            if (iGenreDataNetworkEntityIdRelation.data.isPresent()) {
+                Optional<Genre> genre = genreMapper.transform(iGenreDataNetworkEntityIdRelation.data.get());
+                if (genre.isPresent())
+                    genres.add(genre.get());
+            }
+        }
+        result.genres = genres;
 
         return Optional.of(result);
     }

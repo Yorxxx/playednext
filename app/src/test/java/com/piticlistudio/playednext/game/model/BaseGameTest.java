@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
+import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.utils.StringUtils;
 
@@ -75,7 +76,6 @@ public class BaseGameTest extends BaseTest {
                 assertEquals(datacompany.name(), remoteData.getPublishers().get(i).data.get().getName());
             }
         }
-        /*
 
         if (data.genres == null)
             assertTrue(remoteData.getGenres().isEmpty());
@@ -88,7 +88,7 @@ public class BaseGameTest extends BaseTest {
                 assertEquals(datagenre.id(), remoteData.getGenres().get(i).data.get().getId());
                 assertEquals(datagenre.name(), remoteData.getGenres().get(i).data.get().getName());
             }
-        }*/
+        }
 
         if (data.screenshots == null)
             assertTrue(remoteData.getScreenshots().isEmpty());
