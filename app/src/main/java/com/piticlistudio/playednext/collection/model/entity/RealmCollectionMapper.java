@@ -4,11 +4,17 @@ import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 import com.piticlistudio.playednext.mvp.model.entity.Mapper;
 
+import javax.inject.Inject;
+
 /**
  * Class that allows to map an Collection entity into a RealmCollection entity
  * Created by jorge.garcia on 10/02/2017.
  */
 public class RealmCollectionMapper implements Mapper<RealmCollection, Collection> {
+
+    @Inject
+    public RealmCollectionMapper() {
+    }
 
     /**
      * Transforms the data into an Optional model.

@@ -26,7 +26,7 @@ import io.realm.annotations.Required;
 
 public class RealmGame extends RealmObject implements IGameDatasource {
 
-    public RealmCollection collection;
+    private RealmCollection collection;
     @PrimaryKey
     private int id;
     @Required

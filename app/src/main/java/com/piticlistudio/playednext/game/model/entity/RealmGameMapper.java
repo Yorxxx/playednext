@@ -1,6 +1,8 @@
 package com.piticlistudio.playednext.game.model.entity;
 
 import com.fernandocejas.arrow.optional.Optional;
+import com.piticlistudio.playednext.collection.model.entity.RealmCollectionMapper;
+import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.image.model.entity.RealmImageDataMapper;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
@@ -16,10 +18,12 @@ import javax.inject.Inject;
 public class RealmGameMapper implements Mapper<RealmGame, Game> {
 
     private final RealmImageDataMapper imageMapper;
+    private final RealmCollectionMapper collectionMapper;
 
     @Inject
-    public RealmGameMapper(RealmImageDataMapper imageMapper) {
+    public RealmGameMapper(RealmImageDataMapper imageMapper, RealmCollectionMapper collectionMapper) {
         this.imageMapper = imageMapper;
+        this.collectionMapper = collectionMapper;
     }
 
     /**
@@ -42,6 +46,12 @@ public class RealmGameMapper implements Mapper<RealmGame, Game> {
             Optional<RealmImageData> image = imageMapper.transform(data.cover.get());
             if (image.isPresent())
                 result.setCover(image.get());
+        }
+
+        if (data.collection != null && data.collection.isPresent()) {
+            Optional<RealmCollection> collection = collectionMapper.transform(data.collection.get());
+            if (collection.isPresent())
+                result.setCollection(collection.get());
         }
 
         return Optional.of(result);
