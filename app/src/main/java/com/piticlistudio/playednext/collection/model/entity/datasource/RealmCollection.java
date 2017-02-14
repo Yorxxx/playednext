@@ -13,10 +13,10 @@ import io.realm.annotations.Required;
 public class RealmCollection extends RealmObject implements ICollectionData {
 
     @PrimaryKey
-    public int id;
+    private int id;
 
     @Required
-    public String name;
+    private String name;
 
     public RealmCollection() {
         // Empty
@@ -45,5 +45,13 @@ public class RealmCollection extends RealmObject implements ICollectionData {
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

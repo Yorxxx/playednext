@@ -23,4 +23,16 @@ public class RealmCollectionRepositoryImpl extends BaseRealmRepository<RealmColl
         return super.find(id)
                 .map(data -> data);
     }
+
+    /**
+     * Saves the data
+     *
+     * @param data the data to save
+     * @return an Observable that emits the saved data
+     */
+    @Override
+    public Single<ICollectionData> save(ICollectionData data) {
+        return super.store((RealmCollection) data)
+                .map(result -> result);
+    }
 }
