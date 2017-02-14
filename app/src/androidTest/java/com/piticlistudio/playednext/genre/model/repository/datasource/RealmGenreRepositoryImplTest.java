@@ -1,0 +1,92 @@
+package com.piticlistudio.playednext.genre.model.repository.datasource;
+
+import com.piticlistudio.playednext.BaseAndroidTest;
+import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
+import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
+
+import io.reactivex.observers.TestObserver;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
+import static org.junit.Assert.assertEquals;
+
+/**
+ * Test cases for RealmGenreRepository
+ * Created by jorge.garcia on 14/02/2017.
+ */
+public class RealmGenreRepositoryImplTest extends BaseAndroidTest {
+
+
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
+    private RealmGenreRepositoryImpl repository;
+
+    @Before
+    public void setUp() throws Exception {
+        File tempFolder = testFolder.newFolder("realmdata");
+        RealmConfiguration config = new RealmConfiguration.Builder(tempFolder).build();
+        Realm.setDefaultConfiguration(config);
+        repository = new RealmGenreRepositoryImpl();
+    }
+
+    @Test
+    public void load() throws Exception {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmGenre data = realm.createObject(RealmGenre.class);
+        data.setName("name");
+        data.setId(0);
+        realm.commitTransaction();
+
+        // Act
+        TestObserver<IGenreData> result = repository.load(data.getId()).test();
+
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors();
+        result.assertComplete();
+        result.assertValueCount(1);
+        result.assertValue(check(value -> {
+            assertEquals(data.getId(), value.getId());
+            assertEquals(data.getName(), value.getName());
+        }));
+    }
+
+    @Test
+    public void load_notFound() throws Exception {
+        // Act
+        TestObserver<IGenreData> result = repository.load(10).test();
+
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertError(Throwable.class);
+        result.assertNoValues();
+        result.assertNotComplete();
+    }
+
+    @Test
+    public void save() throws Exception {
+
+        RealmGenre data = new RealmGenre(50, "name");
+
+        // Act
+        TestObserver<IGenreData> result = repository.save(data).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValue(data);
+
+    }
+
+}
