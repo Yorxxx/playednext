@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext;
+package com.piticlistudio.playednext.genre.model.entity.datasource;
 
 /**
  * Requirement methods for genre datasources

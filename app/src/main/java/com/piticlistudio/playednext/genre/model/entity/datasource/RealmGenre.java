@@ -1,7 +1,5 @@
 package com.piticlistudio.playednext.genre.model.entity.datasource;
 
-import com.piticlistudio.playednext.IGenreData;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;

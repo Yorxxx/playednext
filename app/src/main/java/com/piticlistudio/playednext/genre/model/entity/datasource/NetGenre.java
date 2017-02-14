@@ -1,7 +1,6 @@
 package com.piticlistudio.playednext.genre.model.entity.datasource;
 
 import com.google.auto.value.AutoValue;
-import com.piticlistudio.playednext.IGenreData;
 import com.piticlistudio.playednext.utils.AutoGson;
 
 /**
