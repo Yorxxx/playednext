@@ -4,6 +4,8 @@ import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
+import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
+import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
@@ -159,5 +161,28 @@ public class RealmGameTest {
             assertEquals(result.get(i).getData(), publishers.get(i));
             assertEquals(result.get(i).id, publishers.get(i).getId());
         }
+    }
+
+    @Test
+    public void getGenres() throws Exception {
+
+        RealmList<RealmGenre> genres = new RealmList<>();
+        genres.add(new RealmGenre(1, "1"));
+        genres.add(new RealmGenre(2, "2"));
+        genres.add(new RealmGenre(3, "3"));
+        data.setGenres(genres);
+
+        // Act
+        List<NetworkEntityIdRelation<IGenreData>> result = data.getGenres();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(genres.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertTrue(result.get(i).data.isPresent());
+            assertEquals(genres.get(i), result.get(i).getData());
+            assertEquals(genres.get(i).getId(), result.get(i).id);
+        }
+
     }
 }

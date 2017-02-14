@@ -6,6 +6,7 @@ import com.piticlistudio.playednext.collection.model.entity.datasource.RealmColl
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
+import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
@@ -38,6 +39,7 @@ public class RealmGame extends RealmObject implements IGameDatasource {
     private RealmList<RealmImageData> screenshots;
     private RealmList<RealmCompany> developers = new RealmList<>();
     private RealmList<RealmCompany> publishers = new RealmList<>();
+    private RealmList<RealmGenre> genres = new RealmList<>();
 
     public RealmGame() {
     }
@@ -144,10 +146,6 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         this.screenshots = screenshots;
     }
 
-    public void setDevelopers(RealmList<RealmCompany> developers) {
-        this.developers = developers;
-    }
-
     /**
      * Returns the list of developers.
      *
@@ -164,8 +162,8 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         return data;
     }
 
-    public void setPublishers(RealmList<RealmCompany> publishers) {
-        this.publishers = publishers;
+    public void setDevelopers(RealmList<RealmCompany> developers) {
+        this.developers = developers;
     }
 
     /**
@@ -184,6 +182,10 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         return data;
     }
 
+    public void setPublishers(RealmList<RealmCompany> publishers) {
+        this.publishers = publishers;
+    }
+
     /**
      * Returns the genres
      *
@@ -191,6 +193,16 @@ public class RealmGame extends RealmObject implements IGameDatasource {
      */
     @Override
     public List<NetworkEntityIdRelation<IGenreData>> getGenres() {
-        return null;
+        List<NetworkEntityIdRelation<IGenreData>> data = new ArrayList<>();
+        if (this.genres != null) {
+            for (RealmGenre genre : genres) {
+                data.add(new NetworkEntityIdRelation<>(genre.getId(), Optional.of(genre)));
+            }
+        }
+        return data;
+    }
+
+    public void setGenres(RealmList<RealmGenre> genres) {
+        this.genres = genres;
     }
 }
