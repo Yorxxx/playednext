@@ -13,7 +13,6 @@ import com.piticlistudio.playednext.game.model.GamedataComponent;
 import com.piticlistudio.playednext.game.model.GamedataModule;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.repository.GameRepository;
-import com.piticlistudio.playednext.image.ImageModule;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -24,10 +23,9 @@ import io.realm.RealmConfiguration;
 
 public class AndroidApplication extends Application {
 
+    private static final String TAG = "AndroidApplication";
     public GamedataComponent gamedataComponent;
     public GameComponent gameComponent;
-
-    private static final String TAG = "AndroidApplication";
 
     @Override
     public void onCreate() {
@@ -53,6 +51,7 @@ public class AndroidApplication extends Application {
         // TODO: 10/02/2017 remove
         final GameRepository repository = gameComponent.repository();
         repository.load(1000)
+                .flatMap(repository::save)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Game>() {
@@ -63,7 +62,7 @@ public class AndroidApplication extends Application {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Log.e(TAG, "accept: "  + throwable.getLocalizedMessage() );
+                        Log.e(TAG, "accept: " + throwable.getLocalizedMessage());
                     }
                 });
     }
