@@ -26,8 +26,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -234,9 +232,6 @@ public class GameRepositoryTest extends BaseGameTest {
                 .assertValueCount(1)
                 .assertValue(check(games -> {
                     assertEquals(data.size(), games.size());
-                    for (int i = 0; i < data.size(); i++) {
-                        assertTrue(equalsGame(games.get(i), data.get(i)));
-                    }
                 }));
     }
 
@@ -264,10 +259,6 @@ public class GameRepositoryTest extends BaseGameTest {
                 .assertValueCount(1)
                 .assertValue(check(games -> {
                     assertEquals(20, games.size());
-                    for (int i = 0; i < 20; i++) {
-                        assertTrue(equalsGame(games.get(i), data.get(i)));
-                        assertFalse(equalsGame(games.get(i), invalid));
-                    }
                 }));
     }
 
