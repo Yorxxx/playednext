@@ -7,7 +7,7 @@ import java.util.List;
 
 import io.reactivex.Single;
 
-public interface IGamedatasourceRepository extends BaseRepositoryDataSource<IGameDatasource> {
+public interface IGamedatasourceRepository<T> extends BaseRepositoryDataSource<T> {
 
     /**
      * Searches game that matches the specified query name

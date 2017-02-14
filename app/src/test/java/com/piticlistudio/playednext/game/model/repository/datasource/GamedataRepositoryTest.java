@@ -11,7 +11,6 @@ import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
@@ -41,11 +40,11 @@ public class GamedataRepositoryTest extends BaseTest {
 
     @Mock
     @Named("db")
-    public IGamedatasourceRepository dbImpl;
+    public IGamedatasourceRepository<IGameDatasource> dbImpl;
 
     @Mock
     @Named("net")
-    public IGamedatasourceRepository netImpl;
+    public IGamedatasourceRepository<IGameDatasource> netImpl;
 
     @InjectFromComponent
     private GamedataRepository repository;
@@ -146,5 +145,23 @@ public class GamedataRepositoryTest extends BaseTest {
                 .assertNotComplete()
                 .assertError(Throwable.class);
         verifyZeroInteractions(dbImpl);
+    }
+
+    @Test
+    public void save() throws Exception {
+
+        IGameDatasource data = GameFactory.provideRealmGame(50, "title");
+        when(dbImpl.save(data)).thenReturn(Single.just(data));
+
+        // Act
+        TestObserver<IGameDatasource> result = repository.save(data).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(1)
+                .assertValue(data);
+        verifyZeroInteractions(netImpl);
     }
 }

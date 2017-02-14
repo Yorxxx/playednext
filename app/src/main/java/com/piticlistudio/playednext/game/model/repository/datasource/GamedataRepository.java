@@ -16,12 +16,12 @@ import io.reactivex.Observable;
 
 public class GamedataRepository implements IGamedataRepository {
 
-    private final IGamedatasourceRepository dbImpl;
-    private final IGamedatasourceRepository netImpl;
+    private final IGamedatasourceRepository<IGameDatasource> dbImpl;
+    private final IGamedatasourceRepository<IGameDatasource> netImpl;
 
     @Inject
-    public GamedataRepository(@Named("db") IGamedatasourceRepository dbImpl,
-                              @Named("net") IGamedatasourceRepository netImpl) {
+    public GamedataRepository(@Named("db") IGamedatasourceRepository<IGameDatasource> dbImpl,
+                              @Named("net") IGamedatasourceRepository<IGameDatasource> netImpl) {
         this.dbImpl = dbImpl;
         this.netImpl = netImpl;
     }
@@ -51,5 +51,16 @@ public class GamedataRepository implements IGamedataRepository {
     public Observable<List<IGameDatasource>> search(String query, int offset, int limit) {
         return netImpl.search(query, offset, limit)
                 .toObservable();
+    }
+
+    /**
+     * Saves the data
+     *
+     * @param data the data to save
+     * @return an Observable that emits the saved data.
+     */
+    @Override
+    public Observable<IGameDatasource> save(IGameDatasource data) {
+        return dbImpl.save(data).toObservable();
     }
 }

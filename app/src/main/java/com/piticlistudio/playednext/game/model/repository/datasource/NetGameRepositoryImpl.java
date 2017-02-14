@@ -68,7 +68,7 @@ public class NetGameRepositoryImpl implements IGamedatasourceRepository<IGameDat
      * @return an Observable that emits the saved data
      */
     @Override
-    public Single save(IGameDatasource data) {
+    public Single<IGameDatasource> save(IGameDatasource data) {
         return Single.error(new Exception("Forbidden"));
     }
 }
