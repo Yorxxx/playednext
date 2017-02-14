@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.image;
 
 import com.piticlistudio.playednext.image.model.entity.ImageDataMapper;
+import com.piticlistudio.playednext.image.model.entity.RealmImageDataMapper;
 
 import dagger.Module;
 import dagger.Provides;
@@ -15,5 +16,10 @@ public class ImageModule {
     @Provides
     public ImageDataMapper provideMapper() {
         return new ImageDataMapper();
+    }
+
+    @Provides
+    public RealmImageDataMapper provideRealmMapper() {
+        return new RealmImageDataMapper();
     }
 }

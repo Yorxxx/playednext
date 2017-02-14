@@ -2,6 +2,8 @@ package com.piticlistudio.playednext.game.model.entity;
 
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.image.model.entity.RealmImageDataMapper;
+import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.Mapper;
 
 import javax.inject.Inject;
@@ -13,8 +15,11 @@ import javax.inject.Inject;
 
 public class RealmGameMapper implements Mapper<RealmGame, Game> {
 
+    private final RealmImageDataMapper imageMapper;
+
     @Inject
-    public RealmGameMapper() {
+    public RealmGameMapper(RealmImageDataMapper imageMapper) {
+        this.imageMapper = imageMapper;
     }
 
     /**
@@ -32,6 +37,13 @@ public class RealmGameMapper implements Mapper<RealmGame, Game> {
         result.setName(data.title());
         result.setStoryline(data.storyline);
         result.setSummary(data.summary);
+
+        if (data.cover != null && data.cover.isPresent()) {
+            Optional<RealmImageData> image = imageMapper.transform(data.cover.get());
+            if (image.isPresent())
+                result.setCover(image.get());
+        }
+
         return Optional.of(result);
     }
 }
