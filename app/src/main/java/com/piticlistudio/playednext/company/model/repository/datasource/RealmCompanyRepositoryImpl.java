@@ -28,4 +28,16 @@ public class RealmCompanyRepositoryImpl extends BaseRealmRepository<RealmCompany
         return super.find(id)
                 .map(realmCompany -> realmCompany);
     }
+
+    /**
+     * Saves the data
+     *
+     * @param data the data to save
+     * @return an Observable that emits the saved data
+     */
+    @Override
+    public Single<ICompanyData> save(ICompanyData data) {
+        return super.store((RealmCompany)data)
+                .map(result -> result);
+    }
 }
