@@ -67,6 +67,17 @@ public class GameMapper implements Mapper<Game, IGameDatasource> {
         }
         result.developers = developers;
 
+        List<Company> publishers = new ArrayList<>();
+        for (NetworkEntityIdRelation<ICompanyData> iCompanyDataNetworkEntityIdRelation : data.getPublishers()) {
+            if (iCompanyDataNetworkEntityIdRelation.data.isPresent()) {
+                Optional<Company> company = companyMapper.transform(iCompanyDataNetworkEntityIdRelation.data.get());
+                if (company.isPresent()) {
+                    publishers.add(company.get());
+                }
+            }
+        }
+        result.publishers = publishers;
+
         return Optional.of(result);
     }
 }

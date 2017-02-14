@@ -63,7 +63,7 @@ public class BaseGameTest extends BaseTest {
             }
         }
 
-       /* if (data.publishers == null)
+       if (data.publishers == null)
             assertTrue(remoteData.getPublishers().isEmpty());
         else {
             assertEquals(data.publishers.size(), remoteData.getPublishers().size());
@@ -75,6 +75,7 @@ public class BaseGameTest extends BaseTest {
                 assertEquals(datacompany.name(), remoteData.getPublishers().get(i).data.get().getName());
             }
         }
+        /*
 
         if (data.genres == null)
             assertTrue(remoteData.getGenres().isEmpty());
