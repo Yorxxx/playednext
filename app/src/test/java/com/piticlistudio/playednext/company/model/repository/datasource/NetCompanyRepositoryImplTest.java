@@ -106,4 +106,19 @@ public class NetCompanyRepositoryImplTest {
         result.assertNoValues();
     }
 
+    @Test
+    public void save() throws Exception {
+
+        NetCompany data = NetCompany.create(10, "name", "url", "slug", 1000, 2000);
+
+        // Act
+        TestObserver<ICompanyData> result = repository.save(data).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertError(Throwable.class)
+                .assertNotComplete()
+                .assertNoValues();
+
+    }
 }

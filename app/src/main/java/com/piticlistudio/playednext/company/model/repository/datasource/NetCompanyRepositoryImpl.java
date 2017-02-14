@@ -38,4 +38,15 @@ public class NetCompanyRepositoryImpl implements ICompanyRepositoryDataSource<IC
                     return (ICompanyData)responses.get(0);
                 }).firstOrError();
     }
+
+    /**
+     * Saves the data
+     *
+     * @param data the data to save
+     * @return an Observable that emits the saved data
+     */
+    @Override
+    public Single<ICompanyData> save(ICompanyData data) {
+        return Single.error(new Exception("Forbidden"));
+    }
 }
