@@ -19,6 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.DynamicRealm;
+import io.realm.FieldAttribute;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
@@ -36,7 +37,7 @@ public class AndroidApplication extends Application {
         super.onCreate();
 
         RealmConfiguration config = new RealmConfiguration.Builder(this)
-                .schemaVersion(1)
+                .schemaVersion(2)
                 .migration(migration)
                 .build();
         Realm.setDefaultConfiguration(config);
@@ -78,9 +79,15 @@ public class AndroidApplication extends Application {
             // DynamicRealm exposes an editable schema
             Log.d(TAG, "migrate() called with: realm = [" + realm + "], oldVersion = [" + oldVersion + "], newVersion = [" + newVersion + "]");
             RealmSchema schema = realm.getSchema();
-            if (oldVersion == 0) {
-
-            }
+//            if (oldVersion == 1) {
+//                schema.create("RealmGenre")
+//                        .addField("id", int.class, FieldAttribute.PRIMARY_KEY)
+//                        .addField("name", String.class, FieldAttribute.REQUIRED);
+//
+//                schema.get("RealmGame")
+//                        .addRealmListField("genres", schema.get("RealmGenre"));
+//                oldVersion++;
+//            }
         }
     };
 }
