@@ -118,6 +118,12 @@ public class GameFactory {
         developers.add(new RealmCompany(1, "company_1"));
         developers.add(new RealmCompany(2, "company_2"));
         data.setDevelopers(developers);
+
+        RealmList<RealmCompany> publishers = new RealmList<>();
+        publishers.add(new RealmCompany(4, "company_4"));
+        publishers.add(new RealmCompany(5, "company_5"));
+        data.setPublishers(publishers);
+
         return data;
     }
 

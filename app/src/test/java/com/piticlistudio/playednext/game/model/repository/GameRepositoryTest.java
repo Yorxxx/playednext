@@ -8,6 +8,7 @@ import com.piticlistudio.playednext.collection.model.entity.Collection;
 import com.piticlistudio.playednext.collection.model.repository.ICollectionRepository;
 import com.piticlistudio.playednext.company.model.CompanyModule;
 import com.piticlistudio.playednext.company.model.entity.Company;
+import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.company.model.repository.ICompanyRepository;
 import com.piticlistudio.playednext.game.GameModule;
@@ -19,13 +20,12 @@ import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource
 import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
+import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +66,7 @@ public class GameRepositoryTest extends BaseGameTest {
     private GameRepository repository;
     @Rule
     public DaggerMockRule<GamedataComponent> rule = new DaggerMockRule<>(GamedataComponent.class, new GamedataModule())
-            .set(component -> {
-                repository = component.plus(new GameModule(), new CollectionModule(), new CompanyModule()).repository();
-            });
+            .set(component -> repository = component.plus(new GameModule(), new CollectionModule(), new CompanyModule()).repository());
     private RealmGame localData = GameFactory.provideRealmGame(50, "title");
 
     @Before
@@ -137,12 +135,9 @@ public class GameRepositoryTest extends BaseGameTest {
         when(collectionRepository.load(anyInt())).thenReturn(Observable.just(collection).delay(5, TimeUnit.SECONDS));
         when(dataRepository.load(source.getId())).thenReturn(Observable.just(source).delay(2, TimeUnit.SECONDS));
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                int id = (int) invocation.getArguments()[0];
-                return Observable.just(Company.create(id, "company_" + id)).delay(10, TimeUnit.SECONDS);
-            }
+        doAnswer(invocation -> {
+            int id = (int) invocation.getArguments()[0];
+            return Observable.just(Company.create(id, "company_" + id)).delay(10, TimeUnit.SECONDS);
         }).when(companyRepository).load(anyInt());
 
         // Act
@@ -153,9 +148,7 @@ public class GameRepositoryTest extends BaseGameTest {
         result.assertNoErrors()
                 .assertNotComplete()
                 .assertValueCount(1)
-                .assertValue(check(game -> {
-                    assertFalse(game.collection.isPresent());
-                }));
+                .assertValue(check(game -> assertFalse(game.collection.isPresent())));
 
         // Advance time
         testSchedulerRule.getTestScheduler().advanceTimeBy(6, TimeUnit.SECONDS);
@@ -175,12 +168,13 @@ public class GameRepositoryTest extends BaseGameTest {
         // Advance time
         testSchedulerRule.getTestScheduler().advanceTimeBy(11, TimeUnit.SECONDS);
 
-        // Check if developers have been loaded
+        // Check if developers and publishers have been loaded
         result.assertNoErrors()
                 .assertComplete()
-                .assertValueCount(3)
+                .assertValueCount(4)
                 .assertValueAt(2, check(game -> {
                     assertEquals(source.getDevelopers().size(), game.developers.size());
+                    assertEquals(source.getPublishers().size(), game.publishers.size());
                 }));
     }
 
@@ -320,6 +314,81 @@ public class GameRepositoryTest extends BaseGameTest {
         assertTrue(to.collection.isPresent());
         assertEquals(collection, to.collection.get());
         verify(collectionRepository).load(source.getCollection().get().id);
+    }
+
+    @Test
+    public void loadMissingCompanies_empty() throws Exception {
+
+        // Act
+        TestObserver<List<Company>> result = repository.loadMissingCompanies(new ArrayList<>(), new ArrayList<>()).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertNoValues();
+        verifyZeroInteractions(companyRepository);
+    }
+
+    @Test
+    public void loadMissingCompanies_allLoaded() throws Exception {
+
+        List<Company> loaded = new ArrayList<>();
+        Company dev1 = Company.create(1, "name1");
+        Company dev2 = Company.create(2, "name2");
+        loaded.add(dev1);
+        loaded.add(dev2);
+
+        List<NetworkEntityIdRelation<ICompanyData>> request = new ArrayList<>();
+        request.add(new NetworkEntityIdRelation<>(1, Optional.of(new RealmCompany(1, "name1"))));
+        request.add(new NetworkEntityIdRelation<>(2, Optional.of(new RealmCompany(2, "name2"))));
+
+        // Act
+        TestObserver<List<Company>> result = repository.loadMissingCompanies(request, loaded).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertNoValues();
+        verifyZeroInteractions(companyRepository);
+    }
+
+    @Test
+    public void loadMissingCompanies_requestsMissing() throws Exception {
+
+        doAnswer(invocation -> {
+            int id = (int) invocation.getArguments()[0];
+            return Observable.just(Company.create(id, "company_" + id));
+        }).when(companyRepository).load(anyInt());
+
+        List<Company> loaded = new ArrayList<>();
+        Company dev1 = Company.create(1, "name1");
+        Company dev2 = Company.create(2, "name2");
+        loaded.add(dev1);
+        loaded.add(dev2);
+
+        List<NetworkEntityIdRelation<ICompanyData>> request = new ArrayList<>();
+        request.add(new NetworkEntityIdRelation<>(1, Optional.of(new RealmCompany(1, "name1"))));
+        request.add(new NetworkEntityIdRelation<>(2, Optional.of(new RealmCompany(2, "name2"))));
+        request.add(new NetworkEntityIdRelation<>(3, Optional.absent()));
+        request.add(new NetworkEntityIdRelation<>(4, Optional.absent()));
+
+        // Act
+        TestObserver<List<Company>> result = repository.loadMissingCompanies(request, loaded).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertComplete()
+                .assertNoErrors()
+                .assertValueCount(1)
+                .assertValue(check(data -> {
+                    assertEquals(2, data.size());
+                    assertEquals(3, data.get(0).id());
+                    assertEquals(4, data.get(1).id());
+                }));
+
+        verify(companyRepository, times(2)).load(anyInt());
     }
 
     @Test

@@ -61,7 +61,8 @@ public class GameRepository implements IGameRepository {
                                     public ObservableSource<Game> apply(Game game) throws Exception {
                                         return Observable.merge(Observable.just(game),
                                                 loadCollection(iGameDatasource, game),
-                                                loadDevelopers(iGameDatasource, game));
+                                                loadDevelopers(iGameDatasource, game),
+                                                loadPublishers(iGameDatasource, game));
                                     }
                                 });
                     }
@@ -71,6 +72,7 @@ public class GameRepository implements IGameRepository {
     /**
      * Searches game that matches the specified query name
      * TODO should retrieve all aggregated data??
+     *
      * @param query  the name to query.
      * @param offset the offset of the query
      * @param limit  the max amount of items to return
@@ -119,6 +121,42 @@ public class GameRepository implements IGameRepository {
     }
 
     /**
+     * Loads the missing companies that are not present on the loaded list
+     * If companies is empty or loadedList has every data loaded, does not emit anything
+     *
+     * @param companies  the list of companies to request
+     * @param loadedList the list of already loaded companies.
+     * @return an Observable that emits the new loaded companies
+     */
+    Observable<List<Company>> loadMissingCompanies(List<NetworkEntityIdRelation<ICompanyData>> companies, List<Company> loadedList) {
+        if (companies.isEmpty())
+            return Observable.empty();
+
+        List<Integer> missingIds = new ArrayList<>();
+        for (NetworkEntityIdRelation<ICompanyData> iCompanyDataNetworkEntityIdRelation : companies) {
+            int requestedId = iCompanyDataNetworkEntityIdRelation.id;
+            boolean found = false;
+            for (Company company : loadedList) {
+                if (company.id() == requestedId)
+                    found = true;
+            }
+            if (!found)
+                missingIds.add(requestedId);
+        }
+        if (missingIds.size() == 0)
+            return Observable.empty();
+        return Observable.fromIterable(missingIds)
+                .flatMap(new Function<Integer, ObservableSource<Company>>() {
+                    @Override
+                    public ObservableSource<Company> apply(Integer integer) throws Exception {
+                        return companyRepository.load(integer);
+                    }
+                })
+                .toList()
+                .toObservable();
+    }
+
+    /**
      * Loads the developers from the supplied source
      * Will only request the developers that are present in source but not on destination
      * If source has no developers, does not emit anything.
@@ -128,29 +166,28 @@ public class GameRepository implements IGameRepository {
      * @return an Observable that emits the request with the developers on the source, loaded.
      */
     Observable<Game> loadDevelopers(IGameDatasource from, Game to) {
-        if (from.getDevelopers().size() == 0)
-            return Observable.empty();
-        List<Integer> missingIds = new ArrayList<>();
-        for (NetworkEntityIdRelation<ICompanyData> iCompanyDataNetworkEntityIdRelation : from.getDevelopers()) {
-            int requestedId = iCompanyDataNetworkEntityIdRelation.id;
-            boolean found = false;
-            for (Company developer : to.developers) {
-                if (developer.id() == requestedId)
-                    found = true;
-            }
-            if (!found)
-                missingIds.add(requestedId);
-        }
-        if (missingIds.size() == 0)
-            return Observable.empty();
-        return Observable.fromIterable(missingIds)
-                .flatMap(integer -> companyRepository.load(integer)
-                        .map(company -> {
-                            to.developers.add(company);
-                            return company;
-                        }))
-                .lastOrError()
-                .map(company -> to).toObservable();
+        return loadMissingCompanies(from.getDevelopers(), to.developers)
+                .map(companies -> {
+                    to.developers.addAll(companies);
+                    return to;
+                });
+    }
+
+    /**
+     * Loads the publishers from the supplied source
+     * Will only request the publishers that are present in source but not on destination
+     * If source has no publishers, does not emit anything.
+     *
+     * @param from the source containing the developers info
+     * @param to   the entity in which to set the data
+     * @return an Observable that emits the request with the publishers on the source, loaded.
+     */
+    Observable<Game> loadPublishers(IGameDatasource from, Game to) {
+        return loadMissingCompanies(from.getPublishers(), to.publishers)
+                .map(companies -> {
+                    to.publishers.addAll(companies);
+                    return to;
+                });
 
     }
 }

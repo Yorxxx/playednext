@@ -22,6 +22,7 @@ public abstract class Game {
     public Optional<ImageData> cover = Optional.absent();
     public List<ImageData> screenshots = new ArrayList<>();
     public List<Company> developers = new ArrayList<>();
+    public List<Company> publishers = new ArrayList<>();
 
     public static Game create(int id, String title) {
         return new AutoValue_Game(id, title);

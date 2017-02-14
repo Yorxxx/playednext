@@ -126,6 +126,27 @@ public class NetGameTest {
             assertNotNull(result.get(i).data);
             assertFalse(result.get(i).data.isPresent());
         }
+    }
+
+    @Test
+    public void getPublishers() throws Exception {
+        List<Integer> publishers = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            publishers.add(i);
+        }
+        data.publishers = publishers;
+
+        // Act
+        List<NetworkEntityIdRelation<ICompanyData>> result = data.getPublishers();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(publishers.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals((int) publishers.get(i), (int) result.get(i).id);
+            assertNotNull(result.get(i).data);
+            assertFalse(result.get(i).data.isPresent());
+        }
 
     }
 }
