@@ -79,15 +79,15 @@ public class AndroidApplication extends Application {
             // DynamicRealm exposes an editable schema
             Log.d(TAG, "migrate() called with: realm = [" + realm + "], oldVersion = [" + oldVersion + "], newVersion = [" + newVersion + "]");
             RealmSchema schema = realm.getSchema();
-//            if (oldVersion == 1) {
-//                schema.create("RealmGenre")
-//                        .addField("id", int.class, FieldAttribute.PRIMARY_KEY)
-//                        .addField("name", String.class, FieldAttribute.REQUIRED);
-//
-//                schema.get("RealmGame")
-//                        .addRealmListField("genres", schema.get("RealmGenre"));
-//                oldVersion++;
-//            }
+            if (oldVersion == 1) {
+                schema.create("RealmGenre")
+                        .addField("id", int.class, FieldAttribute.PRIMARY_KEY)
+                        .addField("name", String.class, FieldAttribute.REQUIRED);
+
+                schema.get("RealmGame")
+                        .addRealmListField("genres", schema.get("RealmGenre"));
+                oldVersion++;
+            }
         }
     };
 }
