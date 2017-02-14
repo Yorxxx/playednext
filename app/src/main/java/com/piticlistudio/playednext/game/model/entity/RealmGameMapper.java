@@ -7,6 +7,7 @@ import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.company.model.entity.RealmCompanyMapper;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.model.entity.RealmImageDataMapper;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.Mapper;
@@ -76,6 +77,14 @@ public class RealmGameMapper implements Mapper<RealmGame, Game> {
                 publishers.add(company.get());
         }
         result.setPublishers(publishers);
+
+        RealmList<RealmImageData> screens = new RealmList<>();
+        for (ImageData screenshot : data.screenshots) {
+            Optional<RealmImageData> image = imageMapper.transform(screenshot);
+            if (image.isPresent())
+                screens.add(image.get());
+        }
+        result.setScreenshots(screens);
 
         return Optional.of(result);
     }
