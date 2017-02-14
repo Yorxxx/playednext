@@ -2,37 +2,23 @@ package com.piticlistudio.playednext.game.model.repository.datasource;
 
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.mvp.model.repository.datasource.BaseRealmRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.functions.Function;
 import io.realm.Case;
-import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
  * Repository for Realm entities
  * Created by jorge.garcia on 10/02/2017.
  */
-public class RealmGameRepositoryImpl implements IGamedatasourceRepository {
+public class RealmGameRepositoryImpl extends BaseRealmRepository<RealmGame> implements IGamedatasourceRepository<IGameDatasource> {
 
-    /**
-     * Returns a Realm instance.
-     *
-     * @return an Observable with a Realm instance.
-     */
-    protected static Observable<Realm> getManagedRealm() {
-        return Observable.using(
-                Realm::getDefaultInstance,
-                Observable::just,
-                realm -> {
-                    if (!realm.isClosed())
-                        realm.close();
-                }
-        );
+    public RealmGameRepositoryImpl() {
+        super(RealmGame.class);
     }
 
     /**
@@ -43,13 +29,8 @@ public class RealmGameRepositoryImpl implements IGamedatasourceRepository {
      */
     @Override
     public Single<IGameDatasource> load(int id) {
-        return getManagedRealm()
-                .map(realm -> {
-                    RealmGame data = realm.where(RealmGame.class).equalTo("id", id).findFirst();
-                    return realm.copyFromRealm(data);
-                })
-                .map((Function<RealmGame, IGameDatasource>) realmGame -> realmGame)
-                .firstOrError();
+        return super.find(id)
+                .map(data -> data);
     }
 
     /**
@@ -77,5 +58,17 @@ public class RealmGameRepositoryImpl implements IGamedatasourceRepository {
                     return data;
                 })
                 .firstOrError();
+    }
+
+    /**
+     * Saves the data
+     *
+     * @param data the data to save
+     * @return an Observable that emits the saved data
+     */
+    @Override
+    public Single<IGameDatasource> save(IGameDatasource data) {
+        return super.store((RealmGame)data)
+                .map(result -> result);
     }
 }

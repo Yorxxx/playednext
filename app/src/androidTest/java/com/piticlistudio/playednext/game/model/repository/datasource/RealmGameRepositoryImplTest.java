@@ -106,4 +106,19 @@ public class RealmGameRepositoryImplTest extends BaseAndroidTest {
                 }));
     }
 
+    @Test
+    public void save() throws Exception {
+
+        RealmGame data = GameFactory.provideRealmGame(50, "name");
+
+        // Act
+        TestObserver<IGameDatasource> result = repository.save(data).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValue(data);
+
+    }
 }
