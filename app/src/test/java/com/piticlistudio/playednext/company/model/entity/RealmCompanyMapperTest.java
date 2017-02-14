@@ -29,6 +29,18 @@ public class RealmCompanyMapperTest extends BaseTest {
         // Assert
         assertNotNull(result);
         assertFalse(result.isPresent());
+
+        // Arrange
+        data = Company.create(50, "name");
+
+        // Act
+        result = mapper.transform(data);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isPresent());
+        assertEquals(data.id(), result.get().getId());
+        assertEquals(data.name(), result.get().getName());
     }
 
 }

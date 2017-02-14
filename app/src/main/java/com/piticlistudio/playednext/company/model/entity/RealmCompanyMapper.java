@@ -27,6 +27,6 @@ public class RealmCompanyMapper implements Mapper<RealmCompany, Company> {
     public Optional<RealmCompany> transform(Company data) {
         if (data == null)
             return Optional.absent();
-        return null;
+        return Optional.of(new RealmCompany(data.id(), data.name()));
     }
 }
