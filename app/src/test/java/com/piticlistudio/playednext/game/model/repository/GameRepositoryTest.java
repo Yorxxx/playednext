@@ -26,6 +26,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
@@ -72,6 +75,41 @@ public class GameRepositoryTest extends BaseGameTest {
     @Before
     public void setUp() throws Exception {
         assertNotNull(repository);
+    }
+
+    @Test
+    public void save() throws Exception {
+        Game data = GameFactory.provide(50, "name");
+        doAnswer(invocation -> Observable.just(invocation.getArguments()[0])).when(dataRepository).save(any());
+
+        // Act
+        TestObserver<Game> result = repository.save(data).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(1)
+                .assertValue(check(value -> {
+                    assertEquals(data, value);
+                }));
+        verify(dataRepository).save(any(RealmGame.class));
+    }
+
+    @Test
+    public void save_mapInvalid() throws Exception {
+
+        Game data = null;
+
+        // Act
+        TestObserver<Game> result = repository.save(data).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertError(Throwable.class)
+                .assertNoValues()
+                .assertNotComplete();
+        verifyZeroInteractions(dataRepository);
     }
 
     @Test

@@ -17,11 +17,11 @@ import dagger.Provides;
 @Module
 public class GameModule {
 
-    @Provides
-    public GameRepository provideRepository(IGamedataRepository repository,
-                                            GameMapper mapper,
-                                            ICollectionRepository collectionRepository,
-                                            ICompanyRepository companyRepository) {
-        return new GameRepository(repository, mapper, collectionRepository, companyRepository);
-    }
+//    @Provides
+//    public GameRepository provideRepository(IGamedataRepository repository,
+//                                            GameMapper mapper,
+//                                            ICollectionRepository collectionRepository,
+//                                            ICompanyRepository companyRepository) {
+//        return new GameRepository(repository, mapper, collectionRepository, companyRepository);
+//    }
 }

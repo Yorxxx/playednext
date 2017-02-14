@@ -7,7 +7,9 @@ import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData
 import com.piticlistudio.playednext.company.model.repository.ICompanyRepository;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.entity.GameMapper;
+import com.piticlistudio.playednext.game.model.entity.RealmGameMapper;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
+import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 
@@ -31,14 +33,15 @@ public class GameRepository implements IGameRepository {
 
     private final IGamedataRepository repository;
     private final GameMapper mapper;
+    private final RealmGameMapper realmMapper;
     private final ICollectionRepository collectionRepository;
     private final ICompanyRepository companyRepository;
 
     @Inject
-    public GameRepository(IGamedataRepository repository, GameMapper mapper, ICollectionRepository collectionRepository,
-                          ICompanyRepository companyRepository) {
+    public GameRepository(IGamedataRepository repository, GameMapper mapper, RealmGameMapper realmMapper, ICollectionRepository collectionRepository, ICompanyRepository companyRepository) {
         this.repository = repository;
         this.mapper = mapper;
+        this.realmMapper = realmMapper;
         this.collectionRepository = collectionRepository;
         this.companyRepository = companyRepository;
     }
@@ -87,6 +90,22 @@ public class GameRepository implements IGameRepository {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .toList().toObservable());
+    }
+
+    /**
+     * Saves the data
+     *
+     * @param data the data to save
+     * @return the saved data.
+     */
+    @Override
+    public Observable<Game> save(Game data) {
+        Optional<RealmGame> model = realmMapper.transform(data);
+        if (model.isPresent()) {
+            return repository.save(model.get())
+                    .flatMap(this::mapSource);
+        }
+        else return Observable.error(new Exception("Cannot map"));
     }
 
     private Observable<Game> mapSource(IGameDatasource iGameDatasource) {

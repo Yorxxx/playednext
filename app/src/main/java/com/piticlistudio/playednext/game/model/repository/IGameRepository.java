@@ -31,5 +31,13 @@ public interface IGameRepository {
      * @return a list of games matching the query.
      */
     Observable<List<Game>> search(String query, int offset, int limit);
+
+    /**
+     * Saves the data
+     *
+     * @param data the data to save
+     * @return the saved data.
+     */
+    Observable<Game> save(Game data);
 }
 
