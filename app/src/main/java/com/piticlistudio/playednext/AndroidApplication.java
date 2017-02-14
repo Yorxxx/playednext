@@ -17,8 +17,11 @@ import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmMigration;
+import io.realm.RealmSchema;
 
 
 public class AndroidApplication extends Application {
@@ -32,7 +35,8 @@ public class AndroidApplication extends Application {
         super.onCreate();
 
         RealmConfiguration config = new RealmConfiguration.Builder(this)
-                .deleteRealmIfMigrationNeeded()
+                .schemaVersion(1)
+                .migration(migration)
                 .build();
         Realm.setDefaultConfiguration(config);
 
@@ -66,4 +70,16 @@ public class AndroidApplication extends Application {
                     }
                 });
     }
+
+    RealmMigration migration = new RealmMigration() {
+        @Override
+        public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+            // DynamicRealm exposes an editable schema
+            Log.d(TAG, "migrate() called with: realm = [" + realm + "], oldVersion = [" + oldVersion + "], newVersion = [" + newVersion + "]");
+            RealmSchema schema = realm.getSchema();
+            if (oldVersion == 0) {
+
+            }
+        }
+    };
 }
