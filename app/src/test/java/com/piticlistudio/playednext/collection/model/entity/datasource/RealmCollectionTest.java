@@ -14,12 +14,12 @@ public class RealmCollectionTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(data.id, data.getId());
+        assertEquals(10, data.getId());
     }
 
     @Test
     public void getName() throws Exception {
-        assertEquals(data.name, data.getName());
+        assertEquals("collection", data.getName());
     }
 
 }

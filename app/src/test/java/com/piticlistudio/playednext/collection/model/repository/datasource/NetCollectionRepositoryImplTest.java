@@ -105,4 +105,19 @@ public class NetCollectionRepositoryImplTest {
         result.assertError(Throwable.class);
         result.assertNoValues();
     }
+
+    @Test
+    public void save() throws Exception {
+
+        NetCollection data = NetCollection.create(50, "name", "url", 1000, 2000, new ArrayList<>());
+
+        // Act
+        TestObserver<ICollectionData> result = repository.save(data).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertError(Throwable.class)
+                .assertNoValues()
+                .assertNotComplete();
+    }
 }

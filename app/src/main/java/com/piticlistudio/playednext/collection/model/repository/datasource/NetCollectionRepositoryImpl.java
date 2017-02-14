@@ -37,4 +37,15 @@ public class NetCollectionRepositoryImpl implements ICollectionRepositoryDatasou
                     return (ICollectionData)responses.get(0);
                 }).firstOrError();
     }
+
+    /**
+     * Saves the data
+     *
+     * @param data the data to save
+     * @return an Observable that emits the saved data
+     */
+    @Override
+    public Single<ICollectionData> save(ICollectionData data) {
+        return Single.error(new Exception("Forbidden"));
+    }
 }
