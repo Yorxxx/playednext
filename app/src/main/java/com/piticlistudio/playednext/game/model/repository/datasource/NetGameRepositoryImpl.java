@@ -17,7 +17,7 @@ import io.reactivex.functions.Function;
  * Created by jorge.garcia on 10/02/2017.
  */
 
-public class NetGameRepositoryImpl implements IGamedatasourceRepository {
+public class NetGameRepositoryImpl implements IGamedatasourceRepository<IGameDatasource> {
 
     private final GamedataModule.NetService service;
 
@@ -59,5 +59,16 @@ public class NetGameRepositoryImpl implements IGamedatasourceRepository {
                         throw new RuntimeException("Not found");
                     return netGames.get(0);
                 }).firstOrError();
+    }
+
+    /**
+     * Saves the data
+     *
+     * @param data the data to save
+     * @return an Observable that emits the saved data
+     */
+    @Override
+    public Single save(IGameDatasource data) {
+        return Single.error(new Exception("Forbidden"));
     }
 }

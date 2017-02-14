@@ -58,7 +58,7 @@ public abstract class BaseRealmRepository<R extends RealmObject> {
      * @param data the data to save.
      * @return an Observable that emits the saved item
      */
-    public Single<R> save(R data) {
+    public Single<R> store(R data) {
         return getManagedRealm()
                 .map(realm -> {
                     realm.executeTransaction(realm1 -> {

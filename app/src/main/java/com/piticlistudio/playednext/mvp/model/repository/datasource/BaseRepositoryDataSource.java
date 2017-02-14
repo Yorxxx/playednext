@@ -16,4 +16,12 @@ public interface BaseRepositoryDataSource<T> {
      * @return an Observable that emits the model loaded
      */
     Single<T> load(int id);
+
+    /**
+     * Saves the data
+     *
+     * @param data the data to save
+     * @return an Observable that emits the saved data
+     */
+    Single<T> save(T data);
 }

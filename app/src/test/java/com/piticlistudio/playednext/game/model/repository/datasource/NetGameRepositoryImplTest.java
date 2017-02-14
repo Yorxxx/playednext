@@ -21,7 +21,7 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.TestObserver;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -159,11 +159,22 @@ public class NetGameRepositoryImplTest extends BaseTest {
         result.assertNoErrors()
                 .assertComplete()
                 .assertValueCount(1)
-                .assertValue(check(new Consumer<List<IGameDatasource>>() {
-                    @Override
-                    public void accept(List<IGameDatasource> iGameDatasources) throws Exception {
-                        assertEquals(responseList, iGameDatasources);
-                    }
-                }));
+                .assertValue(check(iGameDatasources -> assertEquals(responseList, iGameDatasources)));
+    }
+
+    @Test
+    public void save() throws Exception {
+
+        NetGame data = GameFactory.provideNetGame(1, "name");
+
+        // Act
+        TestObserver<IGameDatasource> result = repository.save(data).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertError(Throwable.class)
+                .assertNotComplete()
+                .assertNoValues();
+
     }
 }
