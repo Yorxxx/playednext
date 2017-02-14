@@ -13,7 +13,7 @@ import com.piticlistudio.playednext.image.ImageModule;
 
 import dagger.Component;
 
-@Component(modules = {GamedataModule.class, ImageModule.class, NetModule.class})
+@Component(modules = {GamedataModule.class, NetModule.class})
 public interface GamedataComponent {
 
     GamedataRepository repository();
