@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.collection.model.entity.datasource.ICollecti
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
+import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
@@ -181,5 +182,15 @@ public class RealmGame extends RealmObject implements IGameDatasource {
             }
         }
         return data;
+    }
+
+    /**
+     * Returns the genres
+     *
+     * @return the genres
+     */
+    @Override
+    public List<NetworkEntityIdRelation<IGenreData>> getGenres() {
+        return null;
     }
 }

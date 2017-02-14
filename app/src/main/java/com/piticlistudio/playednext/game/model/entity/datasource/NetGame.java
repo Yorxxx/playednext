@@ -4,14 +4,13 @@ import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
-import com.piticlistudio.playednext.image.model.entity.ImageData;
+import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 import com.piticlistudio.playednext.utils.AutoGson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,12 +21,6 @@ import java.util.List;
 @AutoGson
 public abstract class NetGame implements IGameDatasource {
 
-    public abstract int id();
-    public abstract String name();
-    public abstract String slug();
-    public abstract String url();
-    public abstract long created_at();
-    public abstract long updated_at();
     public String summary;
     public String storyline;
     public int collection;
@@ -55,6 +48,18 @@ public abstract class NetGame implements IGameDatasource {
     public static NetGame create(int id, String name, String slug, String url, long createdAt, long updatedAt) {
         return new AutoValue_NetGame(id, name, slug, url, createdAt, updatedAt);
     }
+
+    public abstract int id();
+
+    public abstract String name();
+
+    public abstract String slug();
+
+    public abstract String url();
+
+    public abstract long created_at();
+
+    public abstract long updated_at();
 
     /**
      * Returns the id
@@ -157,6 +162,22 @@ public abstract class NetGame implements IGameDatasource {
         if (publishers != null) {
             for (Integer publisher : publishers) {
                 data.add(new NetworkEntityIdRelation<>(publisher, Optional.absent()));
+            }
+        }
+        return data;
+    }
+
+    /**
+     * Returns the genres
+     *
+     * @return the genres
+     */
+    @Override
+    public List<NetworkEntityIdRelation<IGenreData>> getGenres() {
+        List<NetworkEntityIdRelation<IGenreData>> data = new ArrayList<>();
+        if (genres != null) {
+            for (Integer genre : genres) {
+                data.add(new NetworkEntityIdRelation<>(genre, Optional.absent()));
             }
         }
         return data;

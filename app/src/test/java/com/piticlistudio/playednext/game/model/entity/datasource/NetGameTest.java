@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.game.model.entity.datasource;
 
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
+import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
@@ -122,7 +123,7 @@ public class NetGameTest {
         assertNotNull(result);
         assertEquals(developers.size(), result.size());
         for (int i = 0; i < result.size(); i++) {
-            assertEquals((int) developers.get(i), (int) result.get(i).id);
+            assertEquals((int) developers.get(i), result.get(i).id);
             assertNotNull(result.get(i).data);
             assertFalse(result.get(i).data.isPresent());
         }
@@ -143,7 +144,28 @@ public class NetGameTest {
         assertNotNull(result);
         assertEquals(publishers.size(), result.size());
         for (int i = 0; i < result.size(); i++) {
-            assertEquals((int) publishers.get(i), (int) result.get(i).id);
+            assertEquals((int) publishers.get(i), result.get(i).id);
+            assertNotNull(result.get(i).data);
+            assertFalse(result.get(i).data.isPresent());
+        }
+    }
+
+    @Test
+    public void getGenres() throws Exception {
+        List<Integer> genres = new ArrayList<>();
+        for (int i = 15; i < 20; i++) {
+            genres.add(i);
+        }
+        data.genres = genres;
+
+        // Act
+        List<NetworkEntityIdRelation<IGenreData>> result = data.getGenres();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(genres.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals((int) genres.get(i), result.get(i).id);
             assertNotNull(result.get(i).data);
             assertFalse(result.get(i).data.isPresent());
         }
