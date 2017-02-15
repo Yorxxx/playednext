@@ -20,7 +20,6 @@ import com.piticlistudio.playednext.mvp.model.entity.Mapper;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.model.entity.RealmPlatformMapper;
 import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
-import com.piticlistudio.playednext.releasedate.model.entity.RealmReleaseDateMapper;
 
 import javax.inject.Inject;
 

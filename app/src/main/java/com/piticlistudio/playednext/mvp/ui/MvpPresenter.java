@@ -1,24 +1,55 @@
 package com.piticlistudio.playednext.mvp.ui;
 
-import com.piticlistudio.playednext.mvp.ui.MvpView;
+
+import android.support.annotation.Nullable;
+
+import java.lang.ref.WeakReference;
 
 /**
- * Root interface for mvp presenters
- * Created by jorge.garcia on 15/02/2017.
+ * Base presenter
+ * Created by jorge.garcia on 13/12/2016.
  */
-public interface MvpPresenter<V extends MvpView> {
+
+public class MvpPresenter<V extends MvpView> implements IMvpPresenter<V> {
+
+    private WeakReference<V> view;
 
     /**
      * Attachs the view
      *
      * @param view the view to attach
      */
-    void attachView(V view);
+    @Override
+    public void attachView(V view) {
+        this.view = new WeakReference<V>(view);
+    }
 
     /**
      * Detachs the view
      *
      * @param retainInstance determines if is retaining state
      */
-    void detachView(boolean retainInstance);
+    @Override
+    public void detachView(boolean retainInstance) {
+        if (view != null) {
+            view.clear();
+            view = null;
+        }
+    }
+
+    @Nullable
+    public V getView() {
+        if (view != null) {
+            return view.get();
+        }
+        return null;
+    }
+
+    /**
+     * Returns if view is available.
+     * @return true if is not null and attached. False otherwise
+     */
+    public boolean isViewAvailable() {
+        return getView() != null;
+    }
 }
