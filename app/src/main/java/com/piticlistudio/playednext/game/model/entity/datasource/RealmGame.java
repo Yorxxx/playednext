@@ -13,6 +13,7 @@ import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
+import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class RealmGame extends RealmObject implements IGameDatasource {
     private RealmList<RealmCompany> publishers = new RealmList<>();
     private RealmList<RealmGenre> genres = new RealmList<>();
     private RealmList<RealmGameRelease> releases = new RealmList<>();
+    private RealmList<RealmPlatform> platforms = new RealmList<>();
 
     public RealmGame() {
     }
@@ -210,11 +212,6 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         this.genres = genres;
     }
 
-
-    public void setReleases(RealmList<RealmGameRelease> releases) {
-        this.releases = releases;
-    }
-
     /**
      * Returns the releases
      *
@@ -228,6 +225,10 @@ public class RealmGame extends RealmObject implements IGameDatasource {
         return new ArrayList<>(releases);
     }
 
+    public void setReleases(RealmList<RealmGameRelease> releases) {
+        this.releases = releases;
+    }
+
     /**
      * Returns the platforms
      *
@@ -235,6 +236,17 @@ public class RealmGame extends RealmObject implements IGameDatasource {
      */
     @Override
     public List<NetworkEntityIdRelation<IPlatformData>> getPlatforms() {
-        return null;
+        if (platforms == null) {
+            return new ArrayList<>();
+        }
+        List<NetworkEntityIdRelation<IPlatformData>> data = new ArrayList<>();
+        for (RealmPlatform platform : platforms) {
+            data.add(new NetworkEntityIdRelation<>(platform.getId(), Optional.of(platform)));
+        }
+        return data;
+    }
+
+    public void setPlatforms(RealmList<RealmPlatform> platforms) {
+        this.platforms = platforms;
     }
 }

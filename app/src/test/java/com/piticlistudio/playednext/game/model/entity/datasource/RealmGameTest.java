@@ -11,6 +11,7 @@ import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
+import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
 import com.piticlistudio.playednext.releasedate.model.entity.datasource.RealmReleaseDate;
 
@@ -193,8 +194,8 @@ public class RealmGameTest {
     public void getReleases() throws Exception {
         RealmList<RealmGameRelease> releases = new RealmList<>();
         for (int i = 0; i < 3; i++) {
-            RealmPlatform platform = new RealmPlatform(i, "platform_"+i);
-            RealmReleaseDate date = new RealmReleaseDate("date_"+i, (i+1)*1000);
+            RealmPlatform platform = new RealmPlatform(i, "platform_" + i);
+            RealmReleaseDate date = new RealmReleaseDate("date_" + i, (i + 1) * 1000);
             releases.add(new RealmGameRelease(platform, date));
         }
         data.setReleases(releases);
@@ -207,6 +208,29 @@ public class RealmGameTest {
         assertEquals(releases.size(), result.size());
         for (int i = 0; i < result.size(); i++) {
             assertEquals(releases.get(i), result.get(i));
+        }
+    }
+
+    @Test
+    public void getPlatforms() throws Exception {
+
+        RealmList<RealmPlatform> platforms = new RealmList<>();
+        for (int i = 0; i < 5; i++) {
+            RealmPlatform platform = new RealmPlatform(i, "platform_" + i);
+            platforms.add(platform);
+        }
+        data.setPlatforms(platforms);
+
+        // Act
+        List<NetworkEntityIdRelation<IPlatformData>> result = data.getPlatforms();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(result.size(), platforms.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals(platforms.get(i).getId(), result.get(i).id);
+            assertTrue(result.get(i).data.isPresent());
+            assertEquals(platforms.get(i), result.get(i).getData());
         }
 
     }
