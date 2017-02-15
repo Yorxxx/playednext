@@ -58,7 +58,7 @@ public class AndroidApplication extends Application {
         // TODO: 10/02/2017 remove
         final GameRepository repository = gameComponent.repository();
         repository.load(1500)
-//                .flatMap(repository::save)
+                .flatMap(repository::save)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Game>() {

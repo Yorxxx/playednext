@@ -11,6 +11,8 @@ import com.piticlistudio.playednext.game.model.entity.RealmGameMapper;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
+import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGameReleaseDateData;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.genre.model.repository.IGenreRepository;
@@ -18,6 +20,8 @@ import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 import com.piticlistudio.playednext.platform.model.repository.IPlatformRepository;
+import com.piticlistudio.playednext.releasedate.model.entity.ReleaseDate;
+import com.piticlistudio.playednext.releasedate.model.entity.ReleaseDateMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +48,13 @@ public class GameRepository implements IGameRepository {
     private final ICompanyRepository companyRepository;
     private final IGenreRepository genreRepository;
     private final IPlatformRepository platformRepository;
+    private final ReleaseDateMapper dateMapper;
 
     @Inject
     public GameRepository(IGamedataRepository repository, GameMapper mapper, RealmGameMapper realmMapper,
                           ICollectionRepository collectionRepository, ICompanyRepository companyRepository,
-                          IGenreRepository genreRepository, IPlatformRepository platformRepository) {
+                          IGenreRepository genreRepository, IPlatformRepository platformRepository,
+                          ReleaseDateMapper dateMapper) {
         this.repository = repository;
         this.mapper = mapper;
         this.realmMapper = realmMapper;
@@ -56,6 +62,7 @@ public class GameRepository implements IGameRepository {
         this.companyRepository = companyRepository;
         this.genreRepository = genreRepository;
         this.platformRepository = platformRepository;
+        this.dateMapper = dateMapper;
     }
 
     /**
@@ -81,6 +88,7 @@ public class GameRepository implements IGameRepository {
                                         operators.add(loadPublishers(iGameDatasource, game));
                                         operators.add(loadGenres(iGameDatasource, game));
                                         operators.add(loadPlatforms(iGameDatasource, game));
+                                        operators.add(loadReleases(iGameDatasource, game));
                                         return Observable.merge(operators);
                                     }
                                 });
@@ -289,5 +297,43 @@ public class GameRepository implements IGameRepository {
                     return dest;
                 })
                 .toObservable();
+    }
+
+    /**
+     * Loads the releases from the supplied source
+     * If source has no releases, does not emit anything.
+     *
+     * @param from the source containing the platforms info
+     * @param dest the entity in which to set the data
+     * @return an Observable that emits the request with the releases on the source, loaded.
+     */
+    Observable<Game> loadReleases(IGameDatasource from, Game dest) {
+        if (from.getReleases().isEmpty())
+            return Observable.empty();
+
+        // TODO: 15/02/2017 should improve by checking date and platforms
+        if (from.getReleases().size() == dest.releases.size())
+            return Observable.empty();
+
+        return Observable.fromIterable(from.getReleases())
+                .flatMap(new Function<IGameReleaseDateData, ObservableSource<Optional<GameRelease>>>() {
+                    @Override
+                    public ObservableSource<Optional<GameRelease>> apply(IGameReleaseDateData iGameReleaseDateData) throws Exception {
+                        return platformRepository.load(iGameReleaseDateData.getPlatform().id)
+                                .map(platform -> {
+                                    Optional<ReleaseDate> releaseDate = dateMapper.transform(iGameReleaseDateData.getDate());
+                                    if (!releaseDate.isPresent())
+                                        return Optional.absent();
+                                    return Optional.of(GameRelease.create(platform, releaseDate.get()));
+                                });
+                    }
+                })
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList()
+                .map(data -> {
+                    dest.releases = data;
+                    return dest;
+                }).toObservable();
     }
 }
