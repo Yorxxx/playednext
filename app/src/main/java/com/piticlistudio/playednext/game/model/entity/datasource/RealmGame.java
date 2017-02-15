@@ -12,6 +12,7 @@ import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
+import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -225,5 +226,15 @@ public class RealmGame extends RealmObject implements IGameDatasource {
             return new ArrayList<>();
         }
         return new ArrayList<>(releases);
+    }
+
+    /**
+     * Returns the platforms
+     *
+     * @return the platforms
+     */
+    @Override
+    public List<NetworkEntityIdRelation<IPlatformData>> getPlatforms() {
+        return null;
     }
 }

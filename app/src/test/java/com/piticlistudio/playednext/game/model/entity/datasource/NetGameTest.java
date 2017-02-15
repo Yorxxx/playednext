@@ -7,6 +7,7 @@ import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
+import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 import com.piticlistudio.playednext.releasedate.model.entity.datasource.NetReleaseDate;
 
 import org.junit.Test;
@@ -194,6 +195,28 @@ public class NetGameTest {
         for (int i = 0; i < result.size(); i++) {
             assertEquals(dates.get(i), result.get(i));
         }
+    }
 
+    @Test
+    public void getPlatforms() throws Exception {
+
+        List<IGDBGameRelease> dates = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            dates.add(IGDBGameRelease.create(i, (i+1)*1000, "human_"+i));
+        }
+        data.release_dates = dates;
+
+        assertEquals(3, data.release_dates.size());
+
+        // Act
+        List<NetworkEntityIdRelation<IPlatformData>> result = data.getPlatforms();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(dates.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertFalse(result.get(i).data.isPresent());
+            assertEquals(dates.get(i).getPlatform().id, result.get(i).id);
+        }
     }
 }

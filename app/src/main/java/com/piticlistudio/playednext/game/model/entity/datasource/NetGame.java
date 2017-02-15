@@ -10,9 +10,11 @@ import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
+import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 import com.piticlistudio.playednext.utils.AutoGson;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -197,5 +199,25 @@ public abstract class NetGame implements IGameDatasource {
             return new ArrayList<>();
         }
         return new ArrayList<>(release_dates);
+    }
+
+    /**
+     * Returns the platforms
+     *
+     * @return the platforms
+     */
+    @Override
+    public List<NetworkEntityIdRelation<IPlatformData>> getPlatforms() {
+        if (release_dates == null || release_dates.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<NetworkEntityIdRelation<IPlatformData>> data = new ArrayList<>();
+        HashSet<Integer> platformsSet = new HashSet<>();
+        for (IGDBGameRelease release_date : release_dates) {
+            if (!platformsSet.contains(release_date.platform()))
+                data.add(release_date.getPlatform());
+            platformsSet.add(release_date.platform());
+        }
+        return data;
     }
 }
