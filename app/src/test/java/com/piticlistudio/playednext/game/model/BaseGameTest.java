@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
+import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.utils.StringUtils;
@@ -40,8 +41,7 @@ public class BaseGameTest extends BaseTest {
         assertNotNull(data.collection);
         if (remoteData.getCollection().isPresent() && remoteData.getCollection().get().data.isPresent()) {
             assertTrue(data.collection.isPresent());
-        }
-        else {
+        } else {
             assertFalse(data.collection.isPresent());
         }
         if (data.collection.isPresent()) {
@@ -64,7 +64,7 @@ public class BaseGameTest extends BaseTest {
             }
         }
 
-       if (data.publishers == null)
+        if (data.publishers == null)
             assertTrue(remoteData.getPublishers().isEmpty());
         else {
             assertEquals(data.publishers.size(), remoteData.getPublishers().size());
@@ -114,20 +114,19 @@ public class BaseGameTest extends BaseTest {
                 assertEquals(platform.id(), remoteData.getPlatforms().get(i).data.get().getId());
                 assertEquals(platform.name(), remoteData.getPlatforms().get(i).data.get().getName());
             }
-        }
+        }*/
 
-        // TODO
-//        if (data.releases == null)
-//            assertTrue(remoteData.getReleases().isEmpty());
-//        else {
-//            assertEquals(data.releases.size(), remoteData.getReleases().size());
-//            for (int i = 0; i < data.releases.size(); i++) {
-//                GameRelease release = data.releases.get(i);
-//                assertEquals(release.platform().id(), remoteData.getReleases().get(i).getPlatform().data.get().getId());
-//                assertEquals(release.releaseDate().date(), remoteData.getReleases().get(i).getReleaseDate().getDate());
-//                assertEquals(release.releaseDate().region(), remoteData.getReleases().get(i).getReleaseDate().getRegion());
-//            }
-//        }*/
+        if (data.releases == null)
+            assertTrue(remoteData.getReleases().isEmpty());
+        else {
+            assertEquals(data.releases.size(), remoteData.getReleases().size());
+            for (int i = 0; i < data.releases.size(); i++) {
+                GameRelease release = data.releases.get(i);
+                assertEquals(release.platform().id(), remoteData.getReleases().get(i).getPlatform().data.get().getId());
+                assertEquals(release.releaseDate().date(), (long) remoteData.getReleases().get(i).getDate().getDate().get());
+                assertEquals(release.releaseDate().humanDate(), remoteData.getReleases().get(i).getDate().getHumanDate());
+            }
+        }
 
         return true;
     }

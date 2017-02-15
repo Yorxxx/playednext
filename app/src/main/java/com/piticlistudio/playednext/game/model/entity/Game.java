@@ -4,8 +4,10 @@ import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.collection.model.entity.Collection;
 import com.piticlistudio.playednext.company.model.entity.Company;
+import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
+import com.piticlistudio.playednext.releasedate.model.entity.ReleaseDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,7 @@ public abstract class Game {
     public List<Company> developers = new ArrayList<>();
     public List<Company> publishers = new ArrayList<>();
     public List<Genre> genres = new ArrayList<>();
+    public List<GameRelease> releases = new ArrayList<>();
 
     public static Game create(int id, String title) {
         return new AutoValue_Game(id, title);

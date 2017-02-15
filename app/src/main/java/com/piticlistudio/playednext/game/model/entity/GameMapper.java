@@ -6,6 +6,9 @@ import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.company.model.entity.CompanyMapper;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
+import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
+import com.piticlistudio.playednext.gamerelease.model.entity.GameReleaseMapper;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGameReleaseDateData;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.genre.model.entity.GenreMapper;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
@@ -26,13 +29,15 @@ public class GameMapper implements Mapper<Game, IGameDatasource> {
     private final ImageDataMapper imageMapper;
     private final CompanyMapper companyMapper;
     private final GenreMapper genreMapper;
+    private final GameReleaseMapper releaseMapper;
 
     @Inject
-    public GameMapper(CollectionMapper collectionMapper, ImageDataMapper imageMapper, CompanyMapper companyMapper, GenreMapper genreMapper) {
+    public GameMapper(CollectionMapper collectionMapper, ImageDataMapper imageMapper, CompanyMapper companyMapper, GenreMapper genreMapper, GameReleaseMapper releaseMapper) {
         this.collectionMapper = collectionMapper;
         this.imageMapper = imageMapper;
         this.companyMapper = companyMapper;
         this.genreMapper = genreMapper;
+        this.releaseMapper = releaseMapper;
     }
 
     /**
@@ -91,6 +96,14 @@ public class GameMapper implements Mapper<Game, IGameDatasource> {
             }
         }
         result.genres = genres;
+
+        List<GameRelease> releases = new ArrayList<>();
+        for (IGameReleaseDateData iGameReleaseDateData : data.getReleases()) {
+            Optional<GameRelease> release = releaseMapper.transform(iGameReleaseDateData);
+            if (release.isPresent())
+                releases.add(release.get());
+        }
+        result.releases = releases;
 
         return Optional.of(result);
     }

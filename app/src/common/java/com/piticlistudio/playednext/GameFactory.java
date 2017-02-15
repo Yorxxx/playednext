@@ -8,12 +8,18 @@ import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
 import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGDBGameRelease;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.RealmGameRelease;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
+import com.piticlistudio.playednext.platform.model.entity.Platform;
+import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
+import com.piticlistudio.playednext.releasedate.model.entity.ReleaseDate;
+import com.piticlistudio.playednext.releasedate.model.entity.datasource.RealmReleaseDate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,16 +94,16 @@ public class GameFactory {
         List<Platform> platforms = new ArrayList<>();
         platforms.add(platform1);
         platforms.add(platform2);
-        data.platforms = platforms;
+        data.platforms = platforms;*/
 
-        GameRelease release1 = GameRelease.create(PlatformFactory.provide(10, "platform10"), ReleaseDateFactory.provide(8));
-        GameRelease release2 = GameRelease.create(PlatformFactory.provide(3, "platform3"), ReleaseDateFactory.provide(8));
-        GameRelease release3 = GameRelease.create(PlatformFactory.provide(3, "platform3"), ReleaseDateFactory.provide(5));
+        GameRelease release1 = GameRelease.create(Platform.create(10, "platform10"), ReleaseDate.create(8, "eight"));
+        GameRelease release2 = GameRelease.create(Platform.create(3, "platform3"), ReleaseDate.create(8, "eight"));
+        GameRelease release3 = GameRelease.create(Platform.create(3, "platform3"), ReleaseDate.create(5, "five"));
         List<GameRelease> releases = new ArrayList<>();
         releases.add(release1);
         releases.add(release2);
         releases.add(release3);
-        data.releases = releases;*/
+        data.releases = releases;
 
         return data;
     }
@@ -136,6 +142,14 @@ public class GameFactory {
         RealmList<RealmGenre> genres = new RealmList<>();
         genres.add(new RealmGenre(1, "platform"));
         data.setGenres(genres);
+
+        RealmList<RealmGameRelease> releases = new RealmList<>();
+        for (int i = 0; i < 3; i++) {
+            RealmPlatform platform = new RealmPlatform(i, "platform_"+i);
+            RealmReleaseDate date = new RealmReleaseDate("date_"+i, (i+1)*1000);
+            releases.add(new RealmGameRelease(platform, date));
+        }
+        data.setReleases(releases);
 
         return data;
     }

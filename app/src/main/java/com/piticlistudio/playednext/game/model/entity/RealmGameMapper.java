@@ -7,6 +7,9 @@ import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.company.model.entity.RealmCompanyMapper;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
+import com.piticlistudio.playednext.gamerelease.model.entity.RealmGameReleaseMapper;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.RealmGameRelease;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.genre.model.entity.RealmGenreMapper;
 import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
@@ -14,6 +17,7 @@ import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.model.entity.RealmImageDataMapper;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.Mapper;
+import com.piticlistudio.playednext.releasedate.model.entity.RealmReleaseDateMapper;
 
 import javax.inject.Inject;
 
@@ -30,13 +34,15 @@ public class RealmGameMapper implements Mapper<RealmGame, Game> {
     private final RealmCollectionMapper collectionMapper;
     private final RealmCompanyMapper companyMapper;
     private final RealmGenreMapper genreMapper;
+    private final RealmGameReleaseMapper dateMapper;
 
     @Inject
-    public RealmGameMapper(RealmImageDataMapper imageMapper, RealmCollectionMapper collectionMapper, RealmCompanyMapper companyMapper, RealmGenreMapper genreMapper) {
+    public RealmGameMapper(RealmImageDataMapper imageMapper, RealmCollectionMapper collectionMapper, RealmCompanyMapper companyMapper, RealmGenreMapper genreMapper, RealmGameReleaseMapper dateMapper) {
         this.imageMapper = imageMapper;
         this.collectionMapper = collectionMapper;
         this.companyMapper = companyMapper;
         this.genreMapper = genreMapper;
+        this.dateMapper = dateMapper;
     }
 
     /**
@@ -98,6 +104,14 @@ public class RealmGameMapper implements Mapper<RealmGame, Game> {
                 genres.add(genredata.get());
         }
         result.setGenres(genres);
+
+        RealmList<RealmGameRelease> releases = new RealmList<>();
+        for (GameRelease release : data.releases) {
+            Optional<RealmGameRelease> releaseOptional = dateMapper.transform(release);
+            if (releaseOptional.isPresent())
+                releases.add(releaseOptional.get());
+        }
+        result.setReleases(releases);
 
         return Optional.of(result);
     }
