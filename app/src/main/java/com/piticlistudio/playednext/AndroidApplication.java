@@ -14,6 +14,8 @@ import com.piticlistudio.playednext.game.model.GamedataModule;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.genre.GenreModule;
+import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
+import com.piticlistudio.playednext.releasedate.model.entity.datasource.RealmReleaseDate;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -37,7 +39,7 @@ public class AndroidApplication extends Application {
         super.onCreate();
 
         RealmConfiguration config = new RealmConfiguration.Builder(this)
-                .schemaVersion(2)
+                .schemaVersion(3)
                 .migration(migration)
                 .build();
         Realm.setDefaultConfiguration(config);
@@ -86,6 +88,24 @@ public class AndroidApplication extends Application {
 
                 schema.get("RealmGame")
                         .addRealmListField("genres", schema.get("RealmGenre"));
+                oldVersion++;
+            }
+            if (oldVersion == 2) {
+                schema.create("RealmPlatform")
+                        .addField("id", int.class, FieldAttribute.PRIMARY_KEY)
+                        .addField("name", String.class, FieldAttribute.REQUIRED);
+
+                schema.create("RealmReleaseDate")
+                        .addField("human", String.class, FieldAttribute.REQUIRED)
+                        .addField("date", long.class);
+
+                schema.create("RealmGameRelease")
+                        .addRealmObjectField("platform", schema.get("RealmPlatform"))
+                        .addRealmObjectField("release", schema.get("RealmReleaseDate"));
+
+                schema.get("RealmGame")
+                        .addRealmListField("releases", schema.get("RealmGameRelease"));
+
                 oldVersion++;
             }
         }
