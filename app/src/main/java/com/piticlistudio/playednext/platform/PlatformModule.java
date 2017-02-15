@@ -3,8 +3,12 @@ package com.piticlistudio.playednext.platform;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.genre.model.repository.datasource.IGenreRepositoryDatasource;
 import com.piticlistudio.playednext.genre.model.repository.datasource.RealmGenreRepositoryImpl;
+import com.piticlistudio.playednext.platform.model.entity.PlatformMapper;
 import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 import com.piticlistudio.playednext.platform.model.entity.datasource.NetPlatform;
+import com.piticlistudio.playednext.platform.model.repository.IPlatformRepository;
+import com.piticlistudio.playednext.platform.model.repository.PlatformRepository;
+import com.piticlistudio.playednext.platform.model.repository.datasource.IGDBPlatformRepositoryImpl;
 import com.piticlistudio.playednext.platform.model.repository.datasource.IPlatformRepositoryDatasource;
 import com.piticlistudio.playednext.platform.model.repository.datasource.RealmPlatformRepositoryImpl;
 
@@ -33,11 +37,11 @@ public class PlatformModule {
         return retrofit.create(NetService.class);
     }
 
-//    @Provides
-//    @Named("net")
-//    public IGenreRepositoryDatasource<IGenreData> provideNetRepository(NetService service) {
-//        return new NetGenreRepositoryImpl(service);
-//    }
+    @Provides
+    @Named("net")
+    public IPlatformRepositoryDatasource<IPlatformData> provideNetRepository(NetService service) {
+        return new IGDBPlatformRepositoryImpl(service);
+    }
 
     @Provides
     @Named("db")
@@ -45,12 +49,12 @@ public class PlatformModule {
         return new RealmPlatformRepositoryImpl();
     }
 
-//    @Provides
-//    public IGenreRepository provideRepository(@Named("db") IGenreRepositoryDatasource<IGenreData> local,
-//                                              @Named("net") IGenreRepositoryDatasource<IGenreData> remote,
-//                                              GenreMapper mapper) {
-//        return new GenreRepository(local, remote, mapper);
-//    }
+    @Provides
+    public IPlatformRepository provideRepository(@Named("db") IPlatformRepositoryDatasource<IPlatformData> local,
+                                                 @Named("net") IPlatformRepositoryDatasource<IPlatformData> remote,
+                                                 PlatformMapper mapper) {
+        return new PlatformRepository(local, remote, mapper);
+    }
 
     public interface NetService {
 

@@ -17,6 +17,9 @@ import com.piticlistudio.playednext.image.model.entity.ImageDataMapper;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.mvp.model.entity.Mapper;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
+import com.piticlistudio.playednext.platform.model.entity.Platform;
+import com.piticlistudio.playednext.platform.model.entity.PlatformMapper;
+import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +33,17 @@ public class GameMapper implements Mapper<Game, IGameDatasource> {
     private final CompanyMapper companyMapper;
     private final GenreMapper genreMapper;
     private final GameReleaseMapper releaseMapper;
+    private final PlatformMapper platformMapper;
 
     @Inject
-    public GameMapper(CollectionMapper collectionMapper, ImageDataMapper imageMapper, CompanyMapper companyMapper, GenreMapper genreMapper, GameReleaseMapper releaseMapper) {
+    public GameMapper(CollectionMapper collectionMapper, ImageDataMapper imageMapper, CompanyMapper companyMapper, GenreMapper genreMapper,
+                      GameReleaseMapper releaseMapper, PlatformMapper platformMapper) {
         this.collectionMapper = collectionMapper;
         this.imageMapper = imageMapper;
         this.companyMapper = companyMapper;
         this.genreMapper = genreMapper;
         this.releaseMapper = releaseMapper;
+        this.platformMapper = platformMapper;
     }
 
     /**
@@ -104,6 +110,17 @@ public class GameMapper implements Mapper<Game, IGameDatasource> {
                 releases.add(release.get());
         }
         result.releases = releases;
+
+        List<Platform> platforms = new ArrayList<>();
+        for (NetworkEntityIdRelation<IPlatformData> iPlatformDataNetworkEntityIdRelation : data.getPlatforms()) {
+            if (iPlatformDataNetworkEntityIdRelation.data.isPresent()) {
+                Optional<Platform> platform = platformMapper.transform(iPlatformDataNetworkEntityIdRelation.getData());
+                if (platform.isPresent()) {
+                    platforms.add(platform.get());
+                }
+            }
+        }
+        result.platforms = platforms;
 
         return Optional.of(result);
     }

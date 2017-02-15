@@ -8,6 +8,7 @@ import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource
 import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
+import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.utils.StringUtils;
 
 import static org.junit.Assert.assertEquals;
@@ -103,7 +104,7 @@ public class BaseGameTest extends BaseTest {
             }
         }
 
-        /*if (data.platforms == null)
+        if (data.platforms == null)
             assertTrue(remoteData.getPlatforms().isEmpty());
         else {
             assertEquals(data.platforms.size(), remoteData.getPlatforms().size());
@@ -114,7 +115,7 @@ public class BaseGameTest extends BaseTest {
                 assertEquals(platform.id(), remoteData.getPlatforms().get(i).data.get().getId());
                 assertEquals(platform.name(), remoteData.getPlatforms().get(i).data.get().getName());
             }
-        }*/
+        }
 
         if (data.releases == null)
             assertTrue(remoteData.getReleases().isEmpty());

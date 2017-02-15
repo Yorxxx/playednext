@@ -15,6 +15,9 @@ import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.genre.model.repository.IGenreRepository;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
+import com.piticlistudio.playednext.platform.model.entity.Platform;
+import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
+import com.piticlistudio.playednext.platform.model.repository.IPlatformRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,16 +43,19 @@ public class GameRepository implements IGameRepository {
     private final ICollectionRepository collectionRepository;
     private final ICompanyRepository companyRepository;
     private final IGenreRepository genreRepository;
+    private final IPlatformRepository platformRepository;
 
     @Inject
     public GameRepository(IGamedataRepository repository, GameMapper mapper, RealmGameMapper realmMapper,
-                          ICollectionRepository collectionRepository, ICompanyRepository companyRepository, IGenreRepository genreRepository) {
+                          ICollectionRepository collectionRepository, ICompanyRepository companyRepository,
+                          IGenreRepository genreRepository, IPlatformRepository platformRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.realmMapper = realmMapper;
         this.collectionRepository = collectionRepository;
         this.companyRepository = companyRepository;
         this.genreRepository = genreRepository;
+        this.platformRepository = platformRepository;
     }
 
     /**
@@ -74,6 +80,7 @@ public class GameRepository implements IGameRepository {
                                         operators.add(loadDevelopers(iGameDatasource, game));
                                         operators.add(loadPublishers(iGameDatasource, game));
                                         operators.add(loadGenres(iGameDatasource, game));
+                                        operators.add(loadPlatforms(iGameDatasource, game));
                                         return Observable.merge(operators);
                                     }
                                 });
@@ -243,6 +250,42 @@ public class GameRepository implements IGameRepository {
                 .toList()
                 .map(list -> {
                     dest.genres.addAll(list);
+                    return dest;
+                })
+                .toObservable();
+    }
+
+    /**
+     * Loads the platforms from the supplied source
+     * Will only request the platforms that are present in source but not on destination
+     * If source has no platforms, does not emit anything.
+     *
+     * @param from the source containing the platforms info
+     * @param dest the entity in which to set the data
+     * @return an Observable that emits the request with the platforms on the source, loaded.
+     */
+    Observable<Game> loadPlatforms(IGameDatasource from, Game dest) {
+        if (from.getPlatforms().isEmpty())
+            return Observable.empty();
+
+        List<Integer> missingIds = new ArrayList<>();
+        for (NetworkEntityIdRelation<IPlatformData> iPlatformDataNetworkEntityIdRelation : from.getPlatforms()) {
+            int requestedId = iPlatformDataNetworkEntityIdRelation.id;
+            boolean found = false;
+            for (Platform platform : dest.platforms) {
+                if (platform.id() == requestedId)
+                    found = true;
+            }
+            if (!found)
+                missingIds.add(requestedId);
+        }
+        if (missingIds.size() == 0)
+            return Observable.empty();
+        return Observable.fromIterable(missingIds)
+                .flatMap(platformRepository::load)
+                .toList()
+                .map(data -> {
+                    dest.platforms.addAll(data);
                     return dest;
                 })
                 .toObservable();

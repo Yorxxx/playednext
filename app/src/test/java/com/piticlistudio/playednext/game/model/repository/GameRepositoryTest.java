@@ -25,11 +25,17 @@ import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.genre.model.repository.IGenreRepository;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
+import com.piticlistudio.playednext.platform.PlatformModule;
+import com.piticlistudio.playednext.platform.model.entity.Platform;
+import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
+import com.piticlistudio.playednext.platform.model.repository.IPlatformRepository;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,11 +75,14 @@ public class GameRepositoryTest extends BaseGameTest {
     ICompanyRepository companyRepository;
     @Mock
     IGenreRepository genreRepository;
+    @Mock
+    IPlatformRepository platformRepository;
 
     private GameRepository repository;
     @Rule
     public DaggerMockRule<GamedataComponent> rule = new DaggerMockRule<>(GamedataComponent.class, new GamedataModule())
-            .set(component -> repository = component.plus(new GameModule(), new CollectionModule(), new CompanyModule(), new GenreModule())
+            .set(component -> repository = component.plus(new GameModule(), new CollectionModule(), new CompanyModule(), new GenreModule
+                    (), new PlatformModule())
                     .repository());
     private RealmGame localData = GameFactory.provideRealmGame(50, "title");
 
@@ -190,6 +199,11 @@ public class GameRepositoryTest extends BaseGameTest {
             return Observable.just(Genre.create(id, "genre_" + id)).delay(15, TimeUnit.SECONDS);
         }).when(genreRepository).load(anyInt());
 
+        doAnswer(invocation -> {
+            int id = (int)invocation.getArguments()[0];
+            return Observable.just(Platform.create(id, "platform_"+id)).delay(20, TimeUnit.SECONDS);
+        }).when(platformRepository).load(anyInt());
+
         // Act
         TestObserver<Game> result = repository.load(gameId).test();
         testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
@@ -236,7 +250,7 @@ public class GameRepositoryTest extends BaseGameTest {
 
         // Check if genres have been loaded
         result.assertNoErrors()
-                .assertComplete()
+                .assertNotComplete()
                 .assertValueCount(5)
                 .assertValueAt(4, check(game -> {
                     assertTrue(game.collection.isPresent());
@@ -246,6 +260,23 @@ public class GameRepositoryTest extends BaseGameTest {
                     assertEquals(source.getGenres().size(), game.genres.size());
                 }));
         verify(genreRepository, times(3)).load(anyInt());
+
+        // Advance time
+        testSchedulerRule.getTestScheduler().advanceTimeBy(6, TimeUnit.SECONDS);
+
+        // Check if genres have been loaded
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(6)
+                .assertValueAt(5, check(game -> {
+                    assertTrue(game.collection.isPresent());
+                    assertEquals(collection, game.collection.get());
+                    assertEquals(source.getDevelopers().size(), game.developers.size());
+                    assertEquals(source.getPublishers().size(), game.publishers.size());
+                    assertEquals(source.getGenres().size(), game.genres.size());
+                    assertEquals(source.getPlatforms().size(), game.platforms.size());
+                }));
+        verify(platformRepository, times(source.getPlatforms().size())).load(anyInt());
     }
 
     @Test
@@ -599,5 +630,78 @@ public class GameRepositoryTest extends BaseGameTest {
 
         assertEquals(to.genres.size(), source.getGenres().size());
         verify(genreRepository, times(source.getGenres().size())).load(anyInt());
+    }
+
+    @Test
+    public void loadPlatforms_noPlatforms() throws Exception {
+
+        NetGame from = GameFactory.provideNetGame(10, "title");
+        from.release_dates.clear();
+        Game dest = Game.create(10, "title");
+
+        // Act
+        TestObserver<Game> result = repository.loadPlatforms(from, dest).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertNoValues();
+        verifyZeroInteractions(platformRepository);
+    }
+
+    @Test
+    public void loadPlatforms_platformsAlreadyLoaded() throws Exception {
+        Game to = Game.create(10, "title");
+        List<Platform> platforms = new ArrayList<>();
+        Platform platform1 = Platform.create(1, "name1");
+        Platform platform2 = Platform.create(2, "name2");
+        platforms.add(platform1);
+        platforms.add(platform2);
+        to.platforms = platforms;
+
+        RealmGame source = GameFactory.provideRealmGame(10, "title");
+        RealmList<RealmPlatform> realmPlatforms = new RealmList<>();
+        realmPlatforms.add(new RealmPlatform(1, "name1"));
+        realmPlatforms.add(new RealmPlatform(2, "name2"));
+        source.setPlatforms(realmPlatforms);
+
+        // Act
+        TestObserver<Game> result = repository.loadPlatforms(source, to).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertNoValues();
+        verifyZeroInteractions(platformRepository);
+    }
+
+    @Test
+    public void loadPlatforms_requestsPlatform() throws Exception {
+
+        Game to = Game.create(10, "title");
+        to.platforms = new ArrayList<>();
+
+        NetGame source = GameFactory.provideNetGame(10, "title");
+        assertTrue(source.getPlatforms().size() > 0);
+
+        doAnswer(invocation -> {
+            int id = (int)invocation.getArguments()[0];
+            return Observable.just(Platform.create(id, "platform_"+id));
+        }).when(platformRepository).load(anyInt());
+
+        // Act
+        TestObserver<Game> result = repository.loadPlatforms(source, to).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(1)
+                .assertValue(to);
+
+        assertEquals(to.platforms.size(), source.getPlatforms().size());
+        verify(platformRepository, times(source.getPlatforms().size())).load(anyInt());
     }
 }

@@ -14,8 +14,7 @@ import com.piticlistudio.playednext.game.model.GamedataModule;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.genre.GenreModule;
-import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
-import com.piticlistudio.playednext.releasedate.model.entity.datasource.RealmReleaseDate;
+import com.piticlistudio.playednext.platform.PlatformModule;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -39,7 +38,7 @@ public class AndroidApplication extends Application {
         super.onCreate();
 
         RealmConfiguration config = new RealmConfiguration.Builder(this)
-                .schemaVersion(3)
+                .schemaVersion(4)
                 .migration(migration)
                 .build();
         Realm.setDefaultConfiguration(config);
@@ -54,12 +53,12 @@ public class AndroidApplication extends Application {
                 .netModule(new NetModule())
                 .build();
 
-        gameComponent = gamedataComponent.plus(new GameModule(), new CollectionModule(), new CompanyModule(), new GenreModule());
+        gameComponent = gamedataComponent.plus(new GameModule(), new CollectionModule(), new CompanyModule(), new GenreModule(), new PlatformModule());
 
         // TODO: 10/02/2017 remove
         final GameRepository repository = gameComponent.repository();
-        repository.load(1000)
-                .flatMap(repository::save)
+        repository.load(1500)
+//                .flatMap(repository::save)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Game>() {
@@ -107,6 +106,10 @@ public class AndroidApplication extends Application {
                         .addRealmListField("releases", schema.get("RealmGameRelease"));
 
                 oldVersion++;
+            }
+            if (oldVersion == 3) {
+                schema.get("RealmGame")
+                        .addRealmListField("platforms", schema.get("RealmPlatforms"));
             }
         }
     };

@@ -89,12 +89,12 @@ public class GameFactory {
         screenshots.add(screen5);
         data.screenshots = screenshots;
 
-      /*  Platform platform1 = Platform.create(1, "platform1");
+        Platform platform1 = Platform.create(1, "platform1");
         Platform platform2 = Platform.create(2, "platform2");
         List<Platform> platforms = new ArrayList<>();
         platforms.add(platform1);
         platforms.add(platform2);
-        data.platforms = platforms;*/
+        data.platforms = platforms;
 
         GameRelease release1 = GameRelease.create(Platform.create(10, "platform10"), ReleaseDate.create(8, "eight"));
         GameRelease release2 = GameRelease.create(Platform.create(3, "platform3"), ReleaseDate.create(8, "eight"));
@@ -150,6 +150,13 @@ public class GameFactory {
             releases.add(new RealmGameRelease(platform, date));
         }
         data.setReleases(releases);
+
+        RealmList<RealmPlatform> platforms = new RealmList<>();
+        for (int i = 0; i < 2; i++) {
+            RealmPlatform platform = new RealmPlatform(i, "platform_"+i);
+            platforms.add(platform);
+        }
+        data.setPlatforms(platforms);
 
         return data;
     }
