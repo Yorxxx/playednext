@@ -5,6 +5,8 @@ import com.piticlistudio.playednext.collection.model.entity.datasource.ICollecti
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGameReleaseDateData;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.RealmGameRelease;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
@@ -40,6 +42,7 @@ public class RealmGame extends RealmObject implements IGameDatasource {
     private RealmList<RealmCompany> developers = new RealmList<>();
     private RealmList<RealmCompany> publishers = new RealmList<>();
     private RealmList<RealmGenre> genres = new RealmList<>();
+    private RealmList<RealmGameRelease> releases = new RealmList<>();
 
     public RealmGame() {
     }
@@ -204,5 +207,23 @@ public class RealmGame extends RealmObject implements IGameDatasource {
 
     public void setGenres(RealmList<RealmGenre> genres) {
         this.genres = genres;
+    }
+
+
+    public void setReleases(RealmList<RealmGameRelease> releases) {
+        this.releases = releases;
+    }
+
+    /**
+     * Returns the releases
+     *
+     * @return the releases
+     */
+    @Override
+    public List<IGameReleaseDateData> getReleases() {
+        if (releases == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(releases);
     }
 }

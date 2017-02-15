@@ -1,10 +1,13 @@
 package com.piticlistudio.playednext.game.model.entity.datasource;
 
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGDBGameRelease;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGameReleaseDateData;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
+import com.piticlistudio.playednext.releasedate.model.entity.datasource.NetReleaseDate;
 
 import org.junit.Test;
 
@@ -168,6 +171,28 @@ public class NetGameTest {
             assertEquals((int) genres.get(i), result.get(i).id);
             assertNotNull(result.get(i).data);
             assertFalse(result.get(i).data.isPresent());
+        }
+
+    }
+
+    @Test
+    public void getReleaseDates() throws Exception {
+        List<IGDBGameRelease> dates = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            dates.add(IGDBGameRelease.create(i, (i+1)*1000, "human_"+i));
+        }
+        data.release_dates = dates;
+
+        assertEquals(3, data.release_dates.size());
+
+        // Act
+        List<IGameReleaseDateData> result = data.getReleases();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(dates.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals(dates.get(i), result.get(i));
         }
 
     }

@@ -4,6 +4,8 @@ import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGDBGameRelease;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGameReleaseDateData;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
@@ -44,6 +46,7 @@ public abstract class NetGame implements IGameDatasource {
     public long first_release_date;
     public NetImageData cover;
     public List<NetImageData> screenshots;
+    public List<IGDBGameRelease> release_dates = new ArrayList<>();
 
     public static NetGame create(int id, String name, String slug, String url, long createdAt, long updatedAt) {
         return new AutoValue_NetGame(id, name, slug, url, createdAt, updatedAt);
@@ -181,5 +184,18 @@ public abstract class NetGame implements IGameDatasource {
             }
         }
         return data;
+    }
+
+    /**
+     * Returns the releases
+     *
+     * @return the releases
+     */
+    @Override
+    public List<IGameReleaseDateData> getReleases() {
+        if (release_dates == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(release_dates);
     }
 }

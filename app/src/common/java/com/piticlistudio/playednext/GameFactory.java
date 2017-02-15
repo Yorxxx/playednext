@@ -8,6 +8,7 @@ import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGDBGameRelease;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
@@ -141,7 +142,8 @@ public class GameFactory {
 
     /**
      * Provides a NEt game
-     * @param id the id of the game
+     *
+     * @param id    the id of the game
      * @param title the title
      * @return the NetGame
      */
@@ -165,12 +167,11 @@ public class GameFactory {
         }
         response.rating = 88;
         response.rating_count = 99;
-//        response.release_dates = new ArrayList<>();
-//        for (int i = 0; i < 3; i++) {
-//            IGDBReleaseDate date = IGDBReleaseDate.create(i*10000, i+1, "humandate_"+i);
-//            IGDBGameRelease release = IGDBGameRelease.create(i, i, date);
-//            response.release_dates.add(release);
-//        }
+        response.release_dates = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            IGDBGameRelease release = IGDBGameRelease.create(i, (i + 1) * 1000, "humandate_" + i);
+            response.release_dates.add(release);
+        }
 
         response.summary = "ABC";
         response.storyline = "storyline";

@@ -4,11 +4,15 @@ import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGameReleaseDateData;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.RealmGameRelease;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
+import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
+import com.piticlistudio.playednext.releasedate.model.entity.datasource.RealmReleaseDate;
 
 import org.junit.Test;
 
@@ -182,6 +186,27 @@ public class RealmGameTest {
             assertTrue(result.get(i).data.isPresent());
             assertEquals(genres.get(i), result.get(i).getData());
             assertEquals(genres.get(i).getId(), result.get(i).id);
+        }
+    }
+
+    @Test
+    public void getReleases() throws Exception {
+        RealmList<RealmGameRelease> releases = new RealmList<>();
+        for (int i = 0; i < 3; i++) {
+            RealmPlatform platform = new RealmPlatform(i, "platform_"+i);
+            RealmReleaseDate date = new RealmReleaseDate("date_"+i, (i+1)*1000);
+            releases.add(new RealmGameRelease(platform, date));
+        }
+        data.setReleases(releases);
+
+        // ACt
+        List<IGameReleaseDateData> result = data.getReleases();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(releases.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals(releases.get(i), result.get(i));
         }
 
     }
