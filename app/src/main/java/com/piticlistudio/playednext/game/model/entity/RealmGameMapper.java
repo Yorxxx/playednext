@@ -17,6 +17,9 @@ import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.model.entity.RealmImageDataMapper;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.mvp.model.entity.Mapper;
+import com.piticlistudio.playednext.platform.model.entity.Platform;
+import com.piticlistudio.playednext.platform.model.entity.RealmPlatformMapper;
+import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
 import com.piticlistudio.playednext.releasedate.model.entity.RealmReleaseDateMapper;
 
 import javax.inject.Inject;
@@ -35,14 +38,17 @@ public class RealmGameMapper implements Mapper<RealmGame, Game> {
     private final RealmCompanyMapper companyMapper;
     private final RealmGenreMapper genreMapper;
     private final RealmGameReleaseMapper dateMapper;
+    private final RealmPlatformMapper platformMapper;
 
     @Inject
-    public RealmGameMapper(RealmImageDataMapper imageMapper, RealmCollectionMapper collectionMapper, RealmCompanyMapper companyMapper, RealmGenreMapper genreMapper, RealmGameReleaseMapper dateMapper) {
+    public RealmGameMapper(RealmImageDataMapper imageMapper, RealmCollectionMapper collectionMapper, RealmCompanyMapper companyMapper,
+                           RealmGenreMapper genreMapper, RealmGameReleaseMapper dateMapper, RealmPlatformMapper platformMapper) {
         this.imageMapper = imageMapper;
         this.collectionMapper = collectionMapper;
         this.companyMapper = companyMapper;
         this.genreMapper = genreMapper;
         this.dateMapper = dateMapper;
+        this.platformMapper = platformMapper;
     }
 
     /**
@@ -112,6 +118,14 @@ public class RealmGameMapper implements Mapper<RealmGame, Game> {
                 releases.add(releaseOptional.get());
         }
         result.setReleases(releases);
+
+        RealmList<RealmPlatform> platforms = new RealmList<>();
+        for (Platform platform : data.platforms) {
+            Optional<RealmPlatform> platformOptional = platformMapper.transform(platform);
+            if (platformOptional.isPresent())
+                platforms.add(platformOptional.get());
+        }
+        result.setPlatforms(platforms);
 
         return Optional.of(result);
     }
