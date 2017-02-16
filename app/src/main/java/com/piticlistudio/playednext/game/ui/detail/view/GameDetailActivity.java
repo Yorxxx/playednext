@@ -4,12 +4,20 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.piticlistudio.playednext.AndroidApplication;
+import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
+import com.piticlistudio.playednext.utils.UIUtils;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Activity that displays a detailed game
@@ -20,6 +28,9 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
 
     private static final String TAG = "GameDetailActivity";
 
+    @BindView(R.id.backdrop)
+    ImageView backdrop;
+
     private GameDetailPresenter presenter;
 
     private GameComponent getGameComponent() {
@@ -29,6 +40,11 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.game_detail);
+        ButterKnife.bind(this);
+
+        int height = UIUtils.getScreenHeight(getApplicationContext());
+        backdrop.getLayoutParams().height = height;
 
         presenter = getGameComponent().detailPresenter();
         presenter.attachView(this);

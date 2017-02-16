@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app2="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:fitsSystemWindows="false"
+             android:orientation="vertical">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                app2:contentScrim="?attr/colorPrimary"
+                app2:expandedTitleMarginEnd="64dp"
+                app2:expandedTitleMarginStart="48dp"
+                app2:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                <FrameLayout
+                    android:id="@+id/detail_backdrop_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    app2:layout_collapseMode="parallax"
+                    app2:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                    <ImageView
+                        android:id="@+id/backdrop"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/boston"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/game_detail_backdrop_overlay"/>
+
+
+                    <!--<ImageView-->
+                    <!--android:id="@+id/game_cover"-->
+                    <!--android:layout_width="@dimen/game_detail_cover_image_size"-->
+                    <!--android:layout_height="@dimen/game_detail_cover_image_size"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:cropToPadding="false"-->
+                    <!--android:scaleType="fitCenter"-->
+                    <!--android:src="@drawable/sample_cover"/>-->
+
+                    <!--<ImageButton-->
+                    <!--android:id="@+id/youtube_Btn"-->
+                    <!--android:layout_width="@dimen/game_detail_youtube_btn_size"-->
+                    <!--android:layout_height="@dimen/game_detail_youtube_btn_size"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:background="@drawable/youtube"-->
+                    <!--android:cropToPadding="false"-->
+                    <!--android:scaleType="centerInside"-->
+                    <!--android:visibility="invisible"/>-->
+
+                </FrameLayout>
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app2:layout_collapseMode="pin"
+                    app2:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+
+                </android.support.v7.widget.Toolbar>
+
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:descendantFocusability="beforeDescendants"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app2:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:text="@string/app_name"
+            app2:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="@dimen/game_detail_fab_margin"-->
+        <!--android:clickable="true"-->
+        <!--android:visibility="visible"-->
+        <!--app2:layout_anchor="@id/appbar"-->
+        <!--app2:layout_anchorGravity="bottom|right|end"-->
+        <!--app2:srcCompat="@drawable/ic_play_arrow_white_24dp"/>-->
+
+        <!--<include-->
+        <!--layout="@layout/gamerelation_detail_layout"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:layout_margin="@dimen/game_detail_fab_margin"/>-->
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/loading"-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:alpha="0"-->
+    <!--android:background="@android:color/white"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<ProgressBar-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:visibility="visible"/>-->
+
+    <!--<com.piticlistudio.vgtodo.ui.widget.CustomTextView-->
+    <!--style="@style/AppTheme.Caption.Loading"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:gravity="center"-->
+    <!--android:text="@string/game_detail_loading"-->
+    <!--android:textStyle="bold"/>-->
+    <!--</LinearLayout>-->
+
+
+</FrameLayout>
