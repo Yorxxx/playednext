@@ -140,7 +140,6 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
      */
     @Override
     public void setData(Game data) {
-        this.currentData = data;
         toolbar.setTitle(data.title());
         title.setText(data.title());
         if (screenshotViewerDisposable != null && !screenshotViewerDisposable.isDisposed()) {

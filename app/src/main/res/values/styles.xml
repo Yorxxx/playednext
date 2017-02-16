@@ -8,8 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Text styles -->
     <style name="AppTheme.Lato" parent="Base.TextAppearance.AppCompat">
         <item name="com.piticlistudio.playednext:font">fonts/Lato-Regular.ttf</item>
+    </style>
+
+    <style name="AppTheme.LatoBold" parent="Base.TextAppearance.AppCompat">
+        <item name="com.piticlistudio.playednext:font">fonts/Lato-Bold.ttf</item>
     </style>
 
     <style name="AppTheme.Title" parent="Base.TextAppearance.Widget.AppCompat.Toolbar.Title">
@@ -17,7 +22,21 @@
         <item name="android:textSize">30sp</item>
     </style>
 
-    <style name="GameDetailTheme.Title" parent="AppTheme.Title">
+    <!-- Card styles -->
+    <style name="Widget.CardContent" parent="android:Widget">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="Widget.CardContent.Vertical" parent="Widget.CardContent">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Widget.CardContent.Title" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">24sp</item>
+        <item name="com.piticlistudio.playednext:font">fonts/Lato-Regular.ttf</item>
     </style>
 
 
