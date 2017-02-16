@@ -22,6 +22,10 @@
         <item name="android:textSize">30sp</item>
     </style>
 
+    <style name="GameDetail.Description" parent="AppTheme.Lato">
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <!-- Card styles -->
     <style name="Widget.CardContent" parent="android:Widget">
         <item name="android:paddingLeft">16dp</item>

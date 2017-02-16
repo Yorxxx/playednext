@@ -90,16 +90,14 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
         listview.setLayoutManager(layoutManager);
         listview.setAdapter(adapter);
 
-        barLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                backdrop.invalidate();
-                boolean isCollapsed = verticalOffset == -1.0 * appBarLayout.getTotalScrollRange();
-                if (isCollapsed)
-                    collapsingToolbar.setTitle(toolbar.getTitle());
-                else
-                    collapsingToolbar.setTitle(" ");
-            }
+        // Determine if we should display our fake title or not
+        barLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            backdrop.invalidate();
+            boolean isCollapsed = verticalOffset == -1.0 * appBarLayout.getTotalScrollRange();
+            if (isCollapsed)
+                collapsingToolbar.setTitle(toolbar.getTitle());
+            else
+                collapsingToolbar.setTitle(" ");
         });
 
         doubleClickSubject

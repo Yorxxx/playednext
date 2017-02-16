@@ -3,6 +3,8 @@ package com.piticlistudio.playednext.game.ui.detail.view.adapter;
 import com.airbnb.epoxy.EpoxyAdapter;
 import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.game.ui.detail.view.adapter.viewmodel.GameDetailDescriptionModel;
+import com.piticlistudio.playednext.game.ui.detail.view.adapter.viewmodel.GameDetailDescriptionModel_;
 import com.piticlistudio.playednext.game.ui.detail.view.adapter.viewmodel.GameDetailInfoModel;
 import com.piticlistudio.playednext.game.ui.detail.view.adapter.viewmodel.GameDetailInfoModel_;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
@@ -22,20 +24,32 @@ public class GameDetailAdapter extends EpoxyAdapter {
 
     private Game data = null;
     private GameDetailInfoModel infoModel;
+    private GameDetailDescriptionModel descriptionModel;
 
     @Inject
     public GameDetailAdapter() {
         enableDiffing();
         infoModel = new GameDetailInfoModel_();
+        descriptionModel = new GameDetailDescriptionModel_();
     }
 
     public void setData(Game data) {
+
+        bindDescriptionModel(data);
         bindInfoModel(data);
 
         if (this.data != null)
             notifyModelsChanged();
 
         this.data = data;
+    }
+
+    private void bindDescriptionModel(Game game) {
+        String description = game.summary != null ? game.summary : game.storyline;
+        ((GameDetailDescriptionModel_)descriptionModel).description(description);
+        if (this.data == null)
+            addModel(descriptionModel);
+        descriptionModel.show(description != null && description.length() > 0);
     }
 
     /**
