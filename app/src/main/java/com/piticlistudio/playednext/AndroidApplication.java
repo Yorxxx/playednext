@@ -5,6 +5,9 @@ import android.util.Log;
 
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.company.model.CompanyModule;
+import com.piticlistudio.playednext.di.component.AppComponent;
+import com.piticlistudio.playednext.di.component.DaggerAppComponent;
+import com.piticlistudio.playednext.di.module.AppModule;
 import com.piticlistudio.playednext.di.module.NetModule;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
@@ -25,6 +28,7 @@ import io.realm.RealmSchema;
 public class AndroidApplication extends Application {
 
     private static final String TAG = "AndroidApplication";
+    public AppComponent appComponent;
     public GamedataComponent gamedataComponent;
     public GameComponent gameComponent;
 
@@ -42,6 +46,10 @@ public class AndroidApplication extends Application {
     }
 
     private void initializeComponents() {
+
+        appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build();
 
         gamedataComponent = DaggerGamedataComponent.builder()
                 .gamedataModule(new GamedataModule())
