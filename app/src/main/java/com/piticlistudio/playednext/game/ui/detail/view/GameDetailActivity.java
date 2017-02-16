@@ -4,10 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
@@ -19,6 +18,7 @@ import com.piticlistudio.playednext.utils.UIUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Activity that displays a detailed game
@@ -33,6 +33,8 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
     ImageView backdrop;
     @BindView(R.id.appbar)
     AppBarLayout barLayout;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private GameDetailPresenter presenter;
 
@@ -45,6 +47,12 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_detail);
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(null);
+        }
 
         int height = UIUtils.getScreenHeight(getApplicationContext());
         backdrop.getLayoutParams().height = height;
@@ -112,5 +120,17 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
     @Override
     public void loadData(int gameId) {
         presenter.loadData(gameId);
+    }
+
+    @OnClick({R.id.appbar})
+    public void scrollDown() {
+        Log.d(TAG, "scrollDown() called");
+        barLayout.setExpanded(false);
+    }
+
+    @OnClick({R.id.toolbar})
+    public void scrollUp() {
+        Log.d(TAG, "scrollUp() called");
+        barLayout.setExpanded(true);
     }
 }
