@@ -7,6 +7,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Activity that displays a detailed game
@@ -50,7 +52,7 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
 
     private Disposable screenshotViewerDisposable;
     private GameDetailPresenter presenter;
-    private Game currentData = null;
+    private PublishSubject<View> doubleClickSubject = PublishSubject.create();
 
     private GameComponent getGameComponent() {
         return ((AndroidApplication) getApplication()).gameComponent;
@@ -83,13 +85,21 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 backdrop.invalidate();
                 boolean isCollapsed = verticalOffset == -1.0 * appBarLayout.getTotalScrollRange();
-                Log.d(TAG, "isCollapsed: " + isCollapsed);
                 if (isCollapsed)
                     collapsingToolbar.setTitle(toolbar.getTitle());
                 else
                     collapsingToolbar.setTitle(" ");
             }
         });
+
+        doubleClickSubject
+                .buffer(300, TimeUnit.MILLISECONDS)
+                .map(views -> views.size() == 2)
+                .filter(aBoolean -> aBoolean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
+                    barLayout.setExpanded(false);
+                });
     }
 
     @Override
@@ -171,14 +181,13 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
     }
 
     @OnClick({R.id.appbar})
-    public void scrollDown() {
-        Log.d(TAG, "scrollDown() called");
-        barLayout.setExpanded(false);
+    public void scrollDown(View v) {
+        // Only scroll down when user simulates a "double tap"
+        doubleClickSubject.onNext(v);
     }
 
     @OnClick({R.id.toolbar})
-    public void scrollUp() {
-        Log.d(TAG, "scrollUp() called");
+    public void scrollUp(View v) {
         barLayout.setExpanded(true);
     }
 }
