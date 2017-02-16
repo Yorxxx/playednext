@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
+import com.piticlistudio.playednext.game.ui.detail.view.adapter.GameDetailAdapter;
 import com.piticlistudio.playednext.utils.UIUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -39,6 +42,8 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
 
     private static final String TAG = "GameDetailActivity";
 
+    @BindView(R.id.listview)
+    RecyclerView listview;
     @BindView(R.id.backdrop)
     ImageView backdrop;
     @BindView(R.id.appbar)
@@ -50,6 +55,7 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
 
+    private GameDetailAdapter adapter;
     private Disposable screenshotViewerDisposable;
     private GameDetailPresenter presenter;
     private PublishSubject<View> doubleClickSubject = PublishSubject.create();
@@ -78,7 +84,11 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
 
         presenter = getGameComponent().detailPresenter();
         presenter.attachView(this);
-        loadData(1942);
+
+        adapter = getGameComponent().detailAdapter();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        listview.setLayoutManager(layoutManager);
+        listview.setAdapter(adapter);
 
         barLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -100,6 +110,8 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
                 .subscribe(aBoolean -> {
                     barLayout.setExpanded(false);
                 });
+
+        loadData(1942);
     }
 
     @Override
@@ -157,6 +169,7 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
                                 .into(backdrop);
                     });
         }
+        adapter.setData(data);
     }
 
     /**

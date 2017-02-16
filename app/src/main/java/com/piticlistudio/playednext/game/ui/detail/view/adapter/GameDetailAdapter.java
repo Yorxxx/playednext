@@ -11,6 +11,8 @@ import com.piticlistudio.playednext.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Adapter for displaying a game detail
  * Created by jorge.garcia on 16/02/2017.
@@ -21,8 +23,10 @@ public class GameDetailAdapter extends EpoxyAdapter {
     private Game data = null;
     private GameDetailInfoModel infoModel;
 
+    @Inject
     public GameDetailAdapter() {
         enableDiffing();
+        infoModel = new GameDetailInfoModel_();
     }
 
     public void setData(Game data) {
