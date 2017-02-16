@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.game.ui.detail.interactor;
 
 import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.game.model.repository.IGameRepository;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 
@@ -15,10 +16,10 @@ import io.reactivex.Observable;
 
 public class GameDetailInteractor implements GameDetailContract.Interactor {
 
-    private final IGameRepository repository;
+    private final GameRepository repository;
 
     @Inject
-    public GameDetailInteractor(IGameRepository repository) {
+    public GameDetailInteractor(GameRepository repository) {
         this.repository = repository;
     }
 

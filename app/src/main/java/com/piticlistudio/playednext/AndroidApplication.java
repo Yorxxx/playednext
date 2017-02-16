@@ -11,14 +11,9 @@ import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.DaggerGamedataComponent;
 import com.piticlistudio.playednext.game.model.GamedataComponent;
 import com.piticlistudio.playednext.game.model.GamedataModule;
-import com.piticlistudio.playednext.game.model.entity.Game;
-import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.DynamicRealm;
 import io.realm.FieldAttribute;
 import io.realm.Realm;
@@ -55,30 +50,29 @@ public class AndroidApplication extends Application {
 
         gameComponent = gamedataComponent.plus(new GameModule(), new CollectionModule(), new CompanyModule(), new GenreModule(), new PlatformModule());
 
-        // TODO: 10/02/2017 remove
-        final GameRepository repository = gameComponent.repository();
-        repository.load(1500)
-                .flatMap(repository::save)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<Game>() {
-                    @Override
-                    public void accept(Game game) throws Exception {
-                        Log.d(TAG, "accept() returned: " + game);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.e(TAG, "accept: " + throwable.getLocalizedMessage());
-                    }
-                });
+//        // TODO: 10/02/2017 remove
+//        final GameRepository repository = gameComponent.repository();
+//        repository.load(1500)
+//                .flatMap(repository::save)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribe(new Consumer<Game>() {
+//                    @Override
+//                    public void accept(Game game) throws Exception {
+//                        Log.d(TAG, "accept() returned: " + game);
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//                        Log.e(TAG, "accept: " + throwable.getLocalizedMessage());
+//                    }
+//                });
     }
 
     RealmMigration migration = new RealmMigration() {
         @Override
         public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
             // DynamicRealm exposes an editable schema
-            Log.d(TAG, "migrate() called with: realm = [" + realm + "], oldVersion = [" + oldVersion + "], newVersion = [" + newVersion + "]");
             RealmSchema schema = realm.getSchema();
             if (oldVersion == 1) {
                 schema.create("RealmGenre")
