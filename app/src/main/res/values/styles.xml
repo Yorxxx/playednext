@@ -12,8 +12,12 @@
         <item name="com.piticlistudio.playednext:font">fonts/Lato-Regular.ttf</item>
     </style>
 
-    <style name="GameDetailTheme.Title" parent="AppTheme.Lato">
-        <item name="android:textSize">20sp</item>
+    <style name="AppTheme.Title" parent="Base.TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="com.piticlistudio.playednext:font">fonts/Lato-Regular.ttf</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="GameDetailTheme.Title" parent="AppTheme.Title">
     </style>
 
 

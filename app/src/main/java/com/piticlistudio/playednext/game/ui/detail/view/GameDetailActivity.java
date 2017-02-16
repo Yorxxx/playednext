@@ -3,10 +3,12 @@ package com.piticlistudio.playednext.game.ui.detail.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
@@ -41,9 +43,14 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
     AppBarLayout barLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.backdropTitle)
+    TextView title;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
 
     private Disposable screenshotViewerDisposable;
     private GameDetailPresenter presenter;
+    private Game currentData = null;
 
     private GameComponent getGameComponent() {
         return ((AndroidApplication) getApplication()).gameComponent;
@@ -71,7 +78,18 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
         presenter.attachView(this);
         loadData(1942);
 
-        barLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> backdrop.invalidate());
+        barLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                backdrop.invalidate();
+                boolean isCollapsed = verticalOffset == -1.0 * appBarLayout.getTotalScrollRange();
+                Log.d(TAG, "isCollapsed: " + isCollapsed);
+                if (isCollapsed)
+                    collapsingToolbar.setTitle(toolbar.getTitle());
+                else
+                    collapsingToolbar.setTitle(" ");
+            }
+        });
     }
 
     @Override
@@ -112,8 +130,9 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
      */
     @Override
     public void setData(Game data) {
+        this.currentData = data;
         toolbar.setTitle(data.title());
-
+        title.setText(data.title());
         if (screenshotViewerDisposable != null && !screenshotViewerDisposable.isDisposed()) {
             screenshotViewerDisposable.dispose();
         }

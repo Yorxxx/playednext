@@ -69,12 +69,13 @@
                     <!--android:visibility="invisible"/>-->
 
                     <com.piticlistudio.playednext.ui.widget.CustomTextView
-                        style="@style/GameDetailTheme.Title"
+                        android:id="@+id/backdropTitle"
+                        style="@style/AppTheme.Title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:layout_margin="10dp"
-                        android:text="Hola Cancio"/>
+                        android:text="@string/app_name"/>
 
                 </FrameLayout>
 
