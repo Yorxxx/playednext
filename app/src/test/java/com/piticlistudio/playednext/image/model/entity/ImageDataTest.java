@@ -23,4 +23,36 @@ public class ImageDataTest {
         assertEquals("url", data.thumbUrl());
     }
 
+    @Test
+    public void getThumbUrl() throws Exception {
+
+        ImageData data = ImageData.create("id", 100, 200, "url");
+
+        // Assert
+        assertEquals("http://url", data.getThumbUrl());
+
+        data = ImageData.create("id", 100, 200, "http://url");
+
+        // Assert
+        assertEquals("http://url", data.getThumbUrl());
+
+        data = ImageData.create("id", 100, 200, "//url");
+
+        // Assert
+        assertEquals("http://url", data.getThumbUrl());
+    }
+
+    @Test
+    public void getFullUrl() throws Exception {
+
+        ImageData data = ImageData.create("id", 100, 200, "url");
+
+        // Assert
+        assertEquals("http://url", data.getFullUrl());
+
+        data = ImageData.create("1", 100, 200, "//images.igdb.com/igdb/image/upload/t_thumb/tdwfj2vupiyho2ph60kv.png");
+
+        // Assert
+        assertEquals("http://images.igdb.com/igdb/image/upload/tdwfj2vupiyho2ph60kv.png", data.getFullUrl());
+    }
 }

@@ -1,5 +1,7 @@
 package com.piticlistudio.playednext.image.model.entity;
 
+import android.support.annotation.Nullable;
+
 import com.google.auto.value.AutoValue;
 
 /**
@@ -20,4 +22,35 @@ public abstract class ImageData {
     public abstract int fullHeight();
 
     public abstract String thumbUrl();
+
+    /**
+     * Returns the full url.
+     *
+     * @return the full or null.
+     */
+    @Nullable
+    public String getFullUrl() {
+        if (thumbUrl() == null) {
+            return null;
+        }
+        return getThumbUrl().replace("/t_thumb", "");
+    }
+
+    /**
+     * Returns the full url.
+     *
+     * @return the full or null.
+     */
+    public String getThumbUrl() {
+        if (thumbUrl() == null) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        if (!thumbUrl().startsWith("http:"))
+            sb.append("http:");
+        if (!thumbUrl().startsWith("//") && !thumbUrl().startsWith("http://"))
+            sb.append("//");
+        sb.append(thumbUrl());
+        return sb.toString();
+    }
 }
