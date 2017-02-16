@@ -36,7 +36,7 @@
                     app2:layout_collapseMode="parallax"
                     app2:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                    <ImageView
+                    <com.piticlistudio.playednext.ui.widget.ScrollParallaxImageView
                         android:id="@+id/backdrop"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -67,6 +67,14 @@
                     <!--android:cropToPadding="false"-->
                     <!--android:scaleType="centerInside"-->
                     <!--android:visibility="invisible"/>-->
+
+                    <com.piticlistudio.playednext.ui.widget.CustomTextView
+                        style="@style/GameDetailTheme.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="10dp"
+                        android:text="Hola Cancio"/>
 
                 </FrameLayout>
 

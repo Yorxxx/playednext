@@ -8,4 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.Lato" parent="Base.TextAppearance.AppCompat">
+        <item name="com.piticlistudio.playednext:font">fonts/Lato-Regular.ttf</item>
+    </style>
+
+    <style name="GameDetailTheme.Title" parent="AppTheme.Lato">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+
 </resources>

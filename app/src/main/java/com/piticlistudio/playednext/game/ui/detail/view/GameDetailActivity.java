@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.game.ui.detail.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -30,6 +31,8 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
 
     @BindView(R.id.backdrop)
     ImageView backdrop;
+    @BindView(R.id.appbar)
+    AppBarLayout barLayout;
 
     private GameDetailPresenter presenter;
 
@@ -48,7 +51,14 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
 
         presenter = getGameComponent().detailPresenter();
         presenter.attachView(this);
-        loadData(50);
+        loadData(250);
+
+        barLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                backdrop.invalidate();
+            }
+        });
     }
 
     @Override
