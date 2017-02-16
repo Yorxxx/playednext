@@ -10,15 +10,21 @@ import android.widget.ImageView;
 
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
+import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
 import com.piticlistudio.playednext.utils.UIUtils;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Activity that displays a detailed game
@@ -36,10 +42,15 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    private Disposable screenshotViewerDisposable;
     private GameDetailPresenter presenter;
 
     private GameComponent getGameComponent() {
         return ((AndroidApplication) getApplication()).gameComponent;
+    }
+
+    private AppComponent getAppComponent() {
+        return ((AndroidApplication) getApplication()).appComponent;
     }
 
     @Override
@@ -54,19 +65,21 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
             getSupportActionBar().setTitle(null);
         }
 
-        int height = UIUtils.getScreenHeight(getApplicationContext());
-        backdrop.getLayoutParams().height = height;
+        backdrop.getLayoutParams().height = UIUtils.getScreenHeight(getApplicationContext());
 
         presenter = getGameComponent().detailPresenter();
         presenter.attachView(this);
-        loadData(250);
+        loadData(1942);
 
-        barLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                backdrop.invalidate();
-            }
-        });
+        barLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> backdrop.invalidate());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (screenshotViewerDisposable != null && !screenshotViewerDisposable.isDisposed()) {
+            screenshotViewerDisposable.dispose();
+        }
     }
 
     @Override
@@ -99,7 +112,23 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailC
      */
     @Override
     public void setData(Game data) {
-        Log.d(TAG, "setData() called with: data = [" + data + "]");
+        toolbar.setTitle(data.title());
+
+        if (screenshotViewerDisposable != null && !screenshotViewerDisposable.isDisposed()) {
+            screenshotViewerDisposable.dispose();
+        }
+
+        if (data.screenshots.size() > 0) {
+            screenshotViewerDisposable = Observable.interval(5, TimeUnit.SECONDS)
+                    .take(data.screenshots.size())
+                    .map(aLong -> data.screenshots.get(aLong.intValue()))
+                    .repeat()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(imageData -> {
+                        getAppComponent().picasso().load(imageData.getFullUrl())
+                                .into(backdrop);
+                    });
+        }
     }
 
     /**
