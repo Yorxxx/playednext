@@ -17,7 +17,9 @@
         </activity>
 
         <activity
-            android:name=".game.ui.detail.view.GameDetailActivity">
+            android:name=".game.ui.detail.view.GameDetailActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/GameDetailTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

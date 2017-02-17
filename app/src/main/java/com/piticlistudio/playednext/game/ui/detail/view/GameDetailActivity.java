@@ -1,14 +1,14 @@
 package com.piticlistudio.playednext.game.ui.detail.view;
 
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
-import com.piticlistudio.playednext.image.ui.viewer.ImageViewerFragment;
+import com.piticlistudio.playednext.image.ui.viewer.ImageViewerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +20,13 @@ import java.util.List;
 
 public class GameDetailActivity extends AppCompatActivity implements GameDetailFragment.Callbacks {
 
-    private final static String GAMEDETAIL_TAG = "gamedetail";
-    private final static String IMAGEVIEW_TAG = "imageviewer";
     private Game currentData = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new GameDetailFragment()).commit();
         }
@@ -44,25 +42,8 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailF
                 for (ImageData screenshot : currentData.screenshots) {
                     images.add(screenshot.getFullUrl());
                 }
-                getSupportFragmentManager().beginTransaction()
-                        .replace(android.R.id.content, ImageViewerFragment.newInstance(images), IMAGEVIEW_TAG)
-                        .commit();
+                startActivity(ImageViewerActivity.init(this, images));
             }
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new GameDetailFragment(), GAMEDETAIL_TAG)
-                    .commit();
-        }
-    }
-
-    /**
-     * Take care of popping the fragment back stack or finishing the activity
-     * as appropriate.
-     */
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().findFragmentByTag(IMAGEVIEW_TAG) == null) {
-            super.onBackPressed();
         }
     }
 

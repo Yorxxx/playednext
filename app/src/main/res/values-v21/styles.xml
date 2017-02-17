@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Base application theme. -->
@@ -9,7 +10,7 @@
     </style>
 
     <style name="GameDetailTheme" parent="AppTheme">
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <!-- Text styles -->
@@ -46,6 +47,4 @@
         <item name="android:textSize">24sp</item>
         <item name="com.piticlistudio.playednext:font">fonts/Lato-Regular.ttf</item>
     </style>
-
-
 </resources>
