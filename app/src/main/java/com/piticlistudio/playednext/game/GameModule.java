@@ -1,14 +1,10 @@
 package com.piticlistudio.playednext.game;
 
-import com.piticlistudio.playednext.collection.model.repository.CollectionRepository;
-import com.piticlistudio.playednext.collection.model.repository.ICollectionRepository;
-import com.piticlistudio.playednext.company.model.repository.ICompanyRepository;
-import com.piticlistudio.playednext.game.model.entity.GameMapper;
 import com.piticlistudio.playednext.game.model.repository.GameRepository;
-import com.piticlistudio.playednext.game.model.repository.IGameRepository;
-import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.game.ui.detail.interactor.GameDetailInteractor;
+import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
+import com.piticlistudio.playednext.game.ui.search.interactor.GameSearchInteractor;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,11 +21,8 @@ public class GameModule {
         return new GameDetailInteractor(repository);
     }
 
-//    @Provides
-//    public GameRepository provideRepository(IGamedataRepository repository,
-//                                            GameMapper mapper,
-//                                            ICollectionRepository collectionRepository,
-//                                            ICompanyRepository companyRepository) {
-//        return new GameRepository(repository, mapper, collectionRepository, companyRepository);
-//    }
+    @Provides
+    public GameSearchContract.Interactor provideSearchInteractor(GameRepository repository) {
+        return new GameSearchInteractor(repository);
+    }
 }

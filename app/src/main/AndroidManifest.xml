@@ -12,7 +12,10 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".EmptyActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
 
         </activity>
 
@@ -20,10 +23,6 @@
             android:name=".game.ui.detail.view.GameDetailActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/GameDetailTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <activity

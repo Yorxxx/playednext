@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.game.model;
 
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.company.model.CompanyModule;
+import com.piticlistudio.playednext.di.module.AppModule;
 import com.piticlistudio.playednext.di.module.NetModule;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
@@ -22,5 +23,5 @@ public interface GamedataComponent {
     GameMapper mapper();
     RealmGameMapper realmMapper();
 
-    GameComponent plus(GameModule module, CollectionModule cm, CompanyModule com, GenreModule gm, PlatformModule pm);
+    GameComponent plus(AppModule appModule, GameModule module, CollectionModule cm, CompanyModule com, GenreModule gm, PlatformModule pm);
 }

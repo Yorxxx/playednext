@@ -1,7 +1,6 @@
 package com.piticlistudio.playednext;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.company.model.CompanyModule;
@@ -31,52 +30,6 @@ public class AndroidApplication extends Application {
     public AppComponent appComponent;
     public GamedataComponent gamedataComponent;
     public GameComponent gameComponent;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        RealmConfiguration config = new RealmConfiguration.Builder(this)
-                .schemaVersion(4)
-                .migration(migration)
-                .build();
-        Realm.setDefaultConfiguration(config);
-
-        initializeComponents();
-    }
-
-    private void initializeComponents() {
-
-        appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .build();
-
-        gamedataComponent = DaggerGamedataComponent.builder()
-                .gamedataModule(new GamedataModule())
-                .netModule(new NetModule())
-                .build();
-
-        gameComponent = gamedataComponent.plus(new GameModule(), new CollectionModule(), new CompanyModule(), new GenreModule(), new PlatformModule());
-
-//        // TODO: 10/02/2017 remove
-//        final GameRepository repository = gameComponent.repository();
-//        repository.load(1500)
-//                .flatMap(repository::save)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(new Consumer<Game>() {
-//                    @Override
-//                    public void accept(Game game) throws Exception {
-//                        Log.d(TAG, "accept() returned: " + game);
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//                        Log.e(TAG, "accept: " + throwable.getLocalizedMessage());
-//                    }
-//                });
-    }
-
     RealmMigration migration = new RealmMigration() {
         @Override
         public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
@@ -115,4 +68,32 @@ public class AndroidApplication extends Application {
             }
         }
     };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        RealmConfiguration config = new RealmConfiguration.Builder(this)
+                .schemaVersion(4)
+                .migration(migration)
+                .build();
+        Realm.setDefaultConfiguration(config);
+
+        initializeComponents();
+    }
+
+    private void initializeComponents() {
+
+        appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build();
+
+        gamedataComponent = DaggerGamedataComponent.builder()
+                .gamedataModule(new GamedataModule())
+                .netModule(new NetModule())
+                .build();
+
+        gameComponent = gamedataComponent.plus(new AppModule(this), new GameModule(), new CollectionModule(), new CompanyModule(), new
+                GenreModule(), new PlatformModule());
+    }
 }

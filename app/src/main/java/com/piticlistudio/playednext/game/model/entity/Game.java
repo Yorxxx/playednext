@@ -1,5 +1,7 @@
 package com.piticlistudio.playednext.game.model.entity;
 
+import android.support.annotation.Nullable;
+
 import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.collection.model.entity.Collection;
@@ -37,4 +39,16 @@ public abstract class Game {
     public abstract int id();
 
     public abstract String title();
+
+    /**
+     * Returns the thumb cover url.
+     *
+     * @return the url or null
+     */
+    @Nullable
+    public String getThumbCoverUrl() {
+        if (cover != null && cover.isPresent())
+            return cover.get().getThumbUrl();
+        return null;
+    }
 }
