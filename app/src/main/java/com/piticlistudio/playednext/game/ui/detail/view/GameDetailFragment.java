@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,6 +28,7 @@ import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
 import com.piticlistudio.playednext.game.ui.detail.view.adapter.GameDetailAdapter;
+import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.ui.grid.adapter.PlatformLabelGridAdapter;
 import com.piticlistudio.playednext.utils.UIUtils;
 
@@ -46,10 +48,11 @@ import io.reactivex.subjects.PublishSubject;
  * Created by jorge.garcia on 16/02/2017.
  */
 
-public class GameDetailFragment extends Fragment implements GameDetailContract.View {
+public class GameDetailFragment extends Fragment implements GameDetailContract.View, PlatformLabelGridAdapter.Callbacks {
 
     public static final String TAG = "GameDetail";
-
+    private static Callbacks sDummyCallbacks = data -> {
+    };
     @BindView(R.id.listview)
     RecyclerView listview;
     @BindView(R.id.backdrop)
@@ -64,15 +67,14 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.platformslist)
     RecyclerView platformsList;
-
+    @BindView(R.id.content)
+    ViewGroup content;
     private Unbinder unbinder;
     private GameDetailAdapter adapter;
     private PlatformLabelGridAdapter platformAdapter;
     private Disposable screenshotViewerDisposable;
     private GameDetailPresenter presenter;
     private PublishSubject<View> doubleClickSubject = PublishSubject.create();
-
-    private static Callbacks sDummyCallbacks = data -> {};
     private Callbacks mCallbacks = sDummyCallbacks;
 
     private GameComponent getGameComponent() {
@@ -141,6 +143,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
         gridLayoutManager.setSpanSizeLookup(platformAdapter.getSpanSizeLookup());
         platformsList.setLayoutManager(gridLayoutManager);
         platformsList.setAdapter(platformAdapter);
+        platformAdapter.setListener(this);
 
         // Determine if we should display our fake title or not
         barLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
@@ -161,7 +164,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
                     barLayout.setExpanded(false);
                 });
 
-        loadData(1942);
+        loadData(1944);
     }
 
     /**
@@ -253,6 +256,17 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     @OnClick({R.id.toolbar})
     public void scrollUp(View v) {
         barLayout.setExpanded(true);
+    }
+
+    /**
+     * Callback when a platform has been clicked
+     *
+     * @param data the data clicked
+     * @param v    the view clicked
+     */
+    @Override
+    public void onPlatformClicked(Platform data, View v) {
+        Snackbar.make(content, data.name(), Snackbar.LENGTH_SHORT).show();
     }
 
     public interface Callbacks {

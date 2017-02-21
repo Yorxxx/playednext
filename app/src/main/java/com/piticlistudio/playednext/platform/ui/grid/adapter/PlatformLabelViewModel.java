@@ -26,6 +26,9 @@ public class PlatformLabelViewModel extends EpoxyModelWithHolder<PlatformLabelVi
     @EpoxyAttribute
     int textColor;
 
+    @EpoxyAttribute(hash = false)
+    View.OnClickListener clickListener;
+
     /**
      * This should return a new instance of your {@link EpoxyHolder} class.
      */
@@ -44,6 +47,7 @@ public class PlatformLabelViewModel extends EpoxyModelWithHolder<PlatformLabelVi
         holder.platform.setText(text);
         holder.platform.setBackgroundColor(background);
         holder.platform.setTextColor(textColor);
+        holder.platform.setOnClickListener(clickListener);
     }
 
     static class Holder extends EpoxyHolder {
