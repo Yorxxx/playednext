@@ -27,7 +27,7 @@ public class GameSearchPresenter extends MvpPresenter<GameSearchContract.View> i
     private Disposable searchDisposable;
 
     @Inject
-    public GameSearchPresenter(GameSearchContract.Interactor interactor) {
+    GameSearchPresenter(GameSearchContract.Interactor interactor) {
         this.interactor = interactor;
     }
 

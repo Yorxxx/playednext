@@ -91,7 +91,8 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
 
 
         listview.setLayoutManager(gridLayoutManager);
-        listview.addItemDecoration(new SpacesItemDecoration(16));
+        listview.addItemDecoration(new SpacesItemDecoration((int)getResources().getDimension(R.dimen.game_search_adapter_spacing),
+                getSpanCount()));
         listview.setAdapter(adapter);
 
         adapter.setListener(this);
@@ -138,14 +139,23 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
         });
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+        presenter.detachView(false);
+    }
+
     private GameComponent getGameComponent() {
         return ((AndroidApplication) getActivity().getApplication()).gameComponent;
     }
 
     private int getSpanCount() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        return (int) (dpWidth / 100);
+        float dpWidth = displayMetrics.widthPixels; // * displayMetrics.density;
+        float rowWidth = getResources().getDimension(R.dimen.game_search_adapter_cell_width);
+        float spacesWidth = getResources().getDimension(R.dimen.game_search_adapter_spacing);
+        return (int) (dpWidth / (rowWidth+(2*spacesWidth)));
     }
 
     @OnClick(R.id.closeBtn)
