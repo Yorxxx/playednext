@@ -26,6 +26,10 @@ public abstract class Platform {
             return "PC Win";
         if (name().equals("PlayStation 4"))
             return "Ps4";
+        if (name().equals("PlayStation Network"))
+            return "PSN";
+        if (name().equals("Xbox Live Arcade"))
+            return "XBLA";
 
         if (name().length() <= 8)
             return name();
@@ -41,12 +45,14 @@ public abstract class Platform {
     }
 
     public int getColor() {
-        if (name().equals("Xbox One"))
+        if (name().equals("Xbox One") || name().equals("Xbox Live Arcade"))
             return Color.parseColor("#3b7e14");
         if (name().equals("PC (Microsoft Windows)"))
             return Color.parseColor("#78909C");
-        if (name().equals("PlayStation 4"))
+        if (name().equals("PlayStation 4") || name().equals("PlayStation Network"))
             return Color.parseColor("#025bd9");
+        if (name().equals("Mac"))
+            return Color.parseColor("#CCE0E0");
         return Color.WHITE;
     }
 }
