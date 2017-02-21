@@ -45,7 +45,7 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailF
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         if (savedInstanceState == null) {
             if (getIntent().hasExtra(EXTRA_GAMEID)) {
-                String gameId = getIntent().getStringExtra(EXTRA_GAMEID);
+                int gameId = getIntent().getIntExtra(EXTRA_GAMEID, 0);
                 getSupportFragmentManager().beginTransaction().replace(android.R.id.content, GameDetailFragment.newInstance(gameId)).commit();
             }
         }

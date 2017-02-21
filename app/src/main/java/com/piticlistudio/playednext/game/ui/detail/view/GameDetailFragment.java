@@ -78,10 +78,10 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     private PublishSubject<View> doubleClickSubject = PublishSubject.create();
     private Callbacks mCallbacks = sDummyCallbacks;
 
-    public static GameDetailFragment newInstance(String gameId) {
+    public static GameDetailFragment newInstance(int gameId) {
         GameDetailFragment fragment = new GameDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_GAMEID, gameId);
+        args.putInt(ARG_GAMEID, gameId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -173,7 +173,9 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
                     barLayout.setExpanded(false);
                 });
 
-        loadData(1944);
+        if (getArguments().containsKey(ARG_GAMEID)) {
+            loadData(getArguments().getInt(ARG_GAMEID));
+        }
     }
 
     /**

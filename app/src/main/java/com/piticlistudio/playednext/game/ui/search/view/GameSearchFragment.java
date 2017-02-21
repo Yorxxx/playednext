@@ -21,6 +21,7 @@ import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.game.ui.detail.view.GameDetailActivity;
 import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
 import com.piticlistudio.playednext.game.ui.search.presenter.GameSearchPresenter;
 import com.piticlistudio.playednext.game.ui.search.view.adapter.GameSearchAdapter;
@@ -252,6 +253,6 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
 
     @Override
     public void onGameClicked(Game clickedGame, View v) {
-
+        startActivity(GameDetailActivity.init(getActivity(), clickedGame));
     }
 }
