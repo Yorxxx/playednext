@@ -26,6 +26,17 @@ public abstract class Platform {
             return "PC Win";
         if (name().equals("PlayStation 4"))
             return "Ps4";
+
+        if (name().length() <= 8)
+            return name();
+        String[] values = name().split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        if (values.length == 2) {
+            sb.append(values[0].charAt(0));
+            sb.append(" ");
+            sb.append(values[1]);
+            return sb.toString();
+        }
         return name();
     }
 

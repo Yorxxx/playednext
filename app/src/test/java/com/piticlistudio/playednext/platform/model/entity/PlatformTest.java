@@ -28,6 +28,10 @@ public class PlatformTest {
         assertNotNull(data.getAcronym());
         assertEquals("name", data.getAcronym());
 
+        data = Platform.create(50, "Amiga");
+        assertNotNull(data.getAcronym());
+        assertEquals("Amiga", data.getAcronym());
+
         data = Platform.create(10, "Xbox One");
         assertNotNull(data.getAcronym());
         assertEquals("One", data.getAcronym());
@@ -39,6 +43,30 @@ public class PlatformTest {
         data = Platform.create(10, "PlayStation 4");
         assertNotNull(data.getAcronym());
         assertEquals("Ps4", data.getAcronym());
+
+        data = Platform.create(10, "Amstrad CPC");
+        assertNotNull(data.getAcronym());
+        assertEquals("A CPC", data.getAcronym());
+
+        data = Platform.create(10, "Atari 8-bit");
+        assertNotNull(data.getAcronym());
+        assertEquals("A 8-bit", data.getAcronym());
+
+        data = Platform.create(10, "Atari ST/STE");
+        assertNotNull(data.getAcronym());
+        assertEquals("A ST/STE", data.getAcronym());
+
+        data = Platform.create(10, "Commodore C64/128");
+        assertNotNull(data.getAcronym());
+        assertEquals("C C64/128", data.getAcronym());
+
+        data = Platform.create(10, "PC DOS");
+        assertNotNull(data.getAcronym());
+        assertEquals("PC DOS", data.getAcronym());
+
+        data = Platform.create(10, "Apple II");
+        assertNotNull(data.getAcronym());
+        assertEquals("Apple II", data.getAcronym());
     }
 
     @Test

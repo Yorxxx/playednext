@@ -43,6 +43,7 @@ public class PlatformLabelViewModel extends EpoxyModelWithHolder<PlatformLabelVi
     public void bind(Holder holder) {
         holder.platform.setText(text);
         holder.platform.setBackgroundColor(background);
+        holder.platform.setTextColor(textColor);
     }
 
     static class Holder extends EpoxyHolder {
