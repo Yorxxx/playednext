@@ -16,7 +16,7 @@ public class PlatformLabelGridAdapter extends EpoxyAdapter {
 
         if (models.isEmpty()) {
             for (Platform platform : data) {
-                addModel(new PlatformLabelViewModel_().text(platform.name()));
+                addModel(new PlatformLabelViewModel_().text(platform.getAcronym()));
             }
         }
         else {
