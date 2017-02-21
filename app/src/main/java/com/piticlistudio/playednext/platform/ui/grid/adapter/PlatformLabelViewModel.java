@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.platform.ui.grid.adapter;
 
+import android.support.annotation.ColorInt;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,6 +18,14 @@ public class PlatformLabelViewModel extends EpoxyModelWithHolder<PlatformLabelVi
     @EpoxyAttribute
     String text;
 
+    @ColorInt
+    @EpoxyAttribute
+    int background;
+
+    @ColorInt
+    @EpoxyAttribute
+    int textColor;
+
     /**
      * This should return a new instance of your {@link EpoxyHolder} class.
      */
@@ -33,6 +42,7 @@ public class PlatformLabelViewModel extends EpoxyModelWithHolder<PlatformLabelVi
     @Override
     public void bind(Holder holder) {
         holder.platform.setText(text);
+        holder.platform.setBackgroundColor(background);
     }
 
     static class Holder extends EpoxyHolder {

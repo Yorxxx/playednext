@@ -1,5 +1,7 @@
 package com.piticlistudio.playednext.platform.model.entity;
 
+import android.graphics.Color;
+
 import com.google.auto.value.AutoValue;
 
 @AutoValue
@@ -25,5 +27,15 @@ public abstract class Platform {
         if (name().equals("PlayStation 4"))
             return "Ps4";
         return name();
+    }
+
+    public int getColor() {
+        if (name().equals("Xbox One"))
+            return Color.parseColor("#3b7e14");
+        if (name().equals("PC (Microsoft Windows)"))
+            return Color.parseColor("#78909C");
+        if (name().equals("PlayStation 4"))
+            return Color.parseColor("#025bd9");
+        return Color.WHITE;
     }
 }

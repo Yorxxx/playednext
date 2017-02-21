@@ -1,5 +1,7 @@
 package com.piticlistudio.playednext.platform.model.entity;
 
+import android.graphics.Color;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -37,5 +39,21 @@ public class PlatformTest {
         data = Platform.create(10, "PlayStation 4");
         assertNotNull(data.getAcronym());
         assertEquals("Ps4", data.getAcronym());
+    }
+
+    @Test
+    public void getColor() throws Exception {
+
+        Platform data = Platform.create(50, "name");
+        assertEquals(Color.WHITE, data.getColor());
+
+        data = Platform.create(10, "Xbox One");
+        assertNotEquals(Color.WHITE, data);
+
+        data = Platform.create(10, "PC (Microsoft Windows)");
+        assertNotEquals(Color.WHITE, data);
+
+        data = Platform.create(10, "PlayStation 4");
+        assertNotEquals(Color.WHITE, data);
     }
 }

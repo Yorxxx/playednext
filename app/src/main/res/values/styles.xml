@@ -26,6 +26,19 @@
         <item name="android:textSize">30sp</item>
     </style>
 
+    <style name="AppTheme.PlatformLabel" parent="Base.TextAppearance.AppCompat">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="AppTheme.PlatformLabel.Horizontal" parent="AppTheme.PlatformLabel">
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingLeft">20dp</item>
+    </style>
+
     <style name="GameDetail.Description" parent="AppTheme.Lato">
         <item name="android:textSize">18sp</item>
     </style>
