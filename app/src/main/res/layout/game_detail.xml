@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:app2="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:fitsSystemWindows="false"
@@ -68,14 +69,32 @@
                     <!--android:scaleType="centerInside"-->
                     <!--android:visibility="invisible"/>-->
 
-                    <com.piticlistudio.playednext.ui.widget.CustomTextView
-                        android:id="@+id/backdropTitle"
-                        style="@style/AppTheme.Title"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
-                        android:layout_margin="10dp"
-                        android:text="@string/app_name"/>
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <com.piticlistudio.playednext.ui.widget.CustomTextView
+                            android:id="@+id/backdropTitle"
+                            style="@style/AppTheme.Title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:text="@string/app_name"/>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/platformslist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            tools:listitem="@layout/platform_label_row"/>
+
+                    </LinearLayout>
 
                 </FrameLayout>
 

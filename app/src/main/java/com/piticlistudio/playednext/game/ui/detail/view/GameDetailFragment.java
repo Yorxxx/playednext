@@ -7,9 +7,11 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
 import com.piticlistudio.playednext.game.ui.detail.view.adapter.GameDetailAdapter;
+import com.piticlistudio.playednext.platform.ui.grid.adapter.PlatformLabelGridAdapter;
 import com.piticlistudio.playednext.utils.UIUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -59,9 +62,12 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     TextView title;
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.platformslist)
+    RecyclerView platformsList;
 
     private Unbinder unbinder;
     private GameDetailAdapter adapter;
+    private PlatformLabelGridAdapter platformAdapter;
     private Disposable screenshotViewerDisposable;
     private GameDetailPresenter presenter;
     private PublishSubject<View> doubleClickSubject = PublishSubject.create();
@@ -101,6 +107,12 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
         mCallbacks = (Callbacks) getActivity();
     }
 
+    private int getSpanCount() {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        return (int) (dpWidth / 100);
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -121,6 +133,14 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         listview.setLayoutManager(layoutManager);
         listview.setAdapter(adapter);
+
+        int spanScount = getSpanCount();
+        platformAdapter = new PlatformLabelGridAdapter();
+        platformAdapter.setSpanCount(spanScount);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), spanScount);
+        gridLayoutManager.setSpanSizeLookup(platformAdapter.getSpanSizeLookup());
+        platformsList.setLayoutManager(gridLayoutManager);
+        platformsList.setAdapter(platformAdapter);
 
         // Determine if we should display our fake title or not
         barLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
@@ -200,6 +220,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
                     });
         }
         adapter.setData(data);
+        platformAdapter.setData(data.platforms);
         mCallbacks.onDataLoaded(data);
     }
 
