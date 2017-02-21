@@ -51,6 +51,7 @@ import io.reactivex.subjects.PublishSubject;
 public class GameDetailFragment extends Fragment implements GameDetailContract.View, PlatformLabelGridAdapter.Callbacks {
 
     public static final String TAG = "GameDetail";
+    private final static String ARG_GAMEID = "gameId";
     private static Callbacks sDummyCallbacks = data -> {
     };
     @BindView(R.id.listview)
@@ -76,6 +77,14 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     private GameDetailPresenter presenter;
     private PublishSubject<View> doubleClickSubject = PublishSubject.create();
     private Callbacks mCallbacks = sDummyCallbacks;
+
+    public static GameDetailFragment newInstance(String gameId) {
+        GameDetailFragment fragment = new GameDetailFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_GAMEID, gameId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     private GameComponent getGameComponent() {
         return ((AndroidApplication) getActivity().getApplication()).gameComponent;
