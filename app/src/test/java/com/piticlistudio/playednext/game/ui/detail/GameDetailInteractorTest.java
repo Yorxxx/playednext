@@ -4,6 +4,7 @@ import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.game.model.repository.IGameRepository;
 import com.piticlistudio.playednext.game.ui.detail.interactor.GameDetailInteractor;
 
@@ -28,7 +29,7 @@ public class GameDetailInteractorTest extends BaseTest {
     public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
 
     @Mock
-    IGameRepository repository;
+    GameRepository repository;
 
     @InjectMocks
     GameDetailInteractor interactor;

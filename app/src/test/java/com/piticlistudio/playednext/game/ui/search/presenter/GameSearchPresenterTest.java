@@ -1,10 +1,8 @@
 package com.piticlistudio.playednext.game.ui.search.presenter;
 
 import com.piticlistudio.playednext.BaseTest;
-import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.TestSubjectSchedulerRule;
 import com.piticlistudio.playednext.game.model.entity.Game;
-import com.piticlistudio.playednext.game.model.repository.IGameRepository;
 import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
 
 import org.junit.After;
@@ -17,15 +15,12 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import io.reactivex.Observable;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -112,21 +107,5 @@ public class GameSearchPresenterTest extends BaseTest {
 
         // Assert
         verify(interactor).search("full que", 0, 15);
-    }
-
-    @Test
-    public void showError() throws Exception {
-
-        Exception error = new TimeoutException();
-        when(interactor.search(anyString(), anyInt(), anyInt())).thenReturn(Observable.error(error));
-
-        // Act
-        presenter.search("query", 0, 15);
-
-        // Assert
-        testSchedulerRule.getTestScheduler().advanceTimeBy(1, TimeUnit.SECONDS);
-        verify(view).showLoading();
-        verify(view, never()).setData(anyListOf(Game.class));
-        verify(view).showError(error);
     }
 }

@@ -86,13 +86,13 @@ public class GameSearchPresenter extends MvpPresenter<GameSearchContract.View> i
         }
     }
 
-    class SearchQuery {
+    private class SearchQuery {
 
         private String query;
         private int offset;
         private int limit;
 
-        public SearchQuery(String query, int offset, int limit) {
+        SearchQuery(String query, int offset, int limit) {
             this.query = query;
             this.offset = offset;
             this.limit = limit;

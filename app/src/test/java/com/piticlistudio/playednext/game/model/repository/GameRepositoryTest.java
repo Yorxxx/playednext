@@ -11,6 +11,7 @@ import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.company.model.repository.ICompanyRepository;
+import com.piticlistudio.playednext.di.module.AppModule;
 import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.BaseGameTest;
 import com.piticlistudio.playednext.game.model.GamedataComponent;
@@ -81,8 +82,8 @@ public class GameRepositoryTest extends BaseGameTest {
     private GameRepository repository;
     @Rule
     public DaggerMockRule<GamedataComponent> rule = new DaggerMockRule<>(GamedataComponent.class, new GamedataModule())
-            .set(component -> repository = component.plus(new GameModule(), new CollectionModule(), new CompanyModule(), new GenreModule
-                    (), new PlatformModule())
+            .set(component -> repository = component.plus(new AppModule(null), new GameModule(), new CollectionModule(), new CompanyModule
+                    (), new GenreModule(), new PlatformModule())
                     .repository());
     private RealmGame localData = GameFactory.provideRealmGame(50, "title");
 
