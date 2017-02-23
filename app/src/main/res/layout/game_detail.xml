@@ -8,6 +8,7 @@
              android:fitsSystemWindows="false"
              android:orientation="vertical">
 
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -146,29 +147,15 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-    <!--<LinearLayout-->
-    <!--android:id="@+id/loading"-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:alpha="0"-->
-    <!--android:background="@android:color/white"-->
-    <!--android:gravity="center"-->
-    <!--android:orientation="vertical">-->
+    <include
+        android:id="@+id/loading"
+        layout="@layout/game_detail_loading"/>
 
-    <!--<ProgressBar-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:visibility="visible"/>-->
-
-    <!--<com.piticlistudio.vgtodo.ui.widget.CustomTextView-->
-    <!--style="@style/AppTheme.Caption.Loading"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:gravity="center"-->
-    <!--android:text="@string/game_detail_loading"-->
-    <!--android:textStyle="bold"/>-->
-    <!--</LinearLayout>-->
+    <include
+        android:id="@+id/error"
+        layout="@layout/game_detail_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 
 </FrameLayout>

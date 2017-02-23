@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.game.ui.detail.view;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -70,6 +74,18 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     RecyclerView platformsList;
     @BindView(R.id.content)
     ViewGroup content;
+    @BindView(R.id.loading)
+    View loading;
+    @BindView(R.id.error)
+    View error;
+    @BindView(R.id.errorMsg)
+    TextView errorMsg;
+    @BindView(R.id.retry)
+    Button retryBtn;
+    @BindView(R.id.retryLoading)
+    View loadingRetry;
+
+    private boolean isRetrying;
     private Unbinder unbinder;
     private GameDetailAdapter adapter;
     private PlatformLabelGridAdapter platformAdapter;
@@ -77,6 +93,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     private GameDetailPresenter presenter;
     private PublishSubject<View> doubleClickSubject = PublishSubject.create();
     private Callbacks mCallbacks = sDummyCallbacks;
+    private int requestedGameId = 0;
 
     public static GameDetailFragment newInstance(int gameId) {
         GameDetailFragment fragment = new GameDetailFragment();
@@ -174,7 +191,8 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
                 });
 
         if (getArguments().containsKey(ARG_GAMEID)) {
-            loadData(getArguments().getInt(ARG_GAMEID));
+            requestedGameId = getArguments().getInt(ARG_GAMEID);
+            loadData(requestedGameId);
         }
     }
 
@@ -201,7 +219,14 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
      */
     @Override
     public void showLoading() {
-        Log.d(TAG, "showLoading() called");
+        if (error.getTranslationY() == 0 && !isRetrying) {
+            this.error.animate().translationY(-5000).setInterpolator(new AnticipateInterpolator()).setDuration(300).start();
+        }
+        else {
+            if (loading.getAlpha() != 1)
+                loading.animate().alpha(1).setDuration(300).start();
+        }
+
     }
 
     /**
@@ -209,7 +234,12 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
      */
     @Override
     public void showContent() {
-        Log.d(TAG, "showContent() called");
+        isRetrying = false;
+        if (loading.getAlpha() != 0)
+            loading.animate().alpha(0).setDuration(300).start();
+        if (error.getTranslationY() == 0) {
+            this.error.animate().translationY(-5000).setInterpolator(new AnticipateInterpolator()).setDuration(800).start();
+        }
     }
 
     /**
@@ -245,7 +275,22 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
      */
     @Override
     public void showError(Throwable error) {
-        Log.d(TAG, "showError() called with: error = [" + error + "]");
+        if (!isRetrying) {
+            this.error.animate().translationY(0).setInterpolator(new OvershootInterpolator()).setDuration(300).start();
+        }
+        else {
+            ObjectAnimator
+                    .ofFloat(this.error, "translationX", 0, 25, -25, 25, -25,15, -15, 6, -6, 0)
+                    .setDuration(300)
+                    .start();
+        }
+
+        if (loading.getAlpha() != 0)
+            loading.animate().alpha(0).setDuration(300).start();
+
+        errorMsg.setText(error.getLocalizedMessage());
+        retryBtn.setAlpha(1);
+        loadingRetry.setAlpha(0);
     }
 
     /**
@@ -256,6 +301,14 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     @Override
     public void loadData(int gameId) {
         presenter.loadData(gameId);
+    }
+
+    @OnClick({R.id.retry})
+    public void retryRequest() {
+        isRetrying = true;
+        retryBtn.animate().alpha(0).setDuration(300).start();
+        loadingRetry.animate().alpha(1).setDuration(300).start();
+        loadData(requestedGameId);
     }
 
     @OnClick({R.id.appbar})

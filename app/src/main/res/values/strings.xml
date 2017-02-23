@@ -7,6 +7,9 @@
     <string name="game_detail_publishers_title">Publishers</string>
     <string name="game_detail_genres_title">Genres</string>
     <string name="game_detail_saga_title">Saga</string>
+    <string name="game_detail_loading">Loading…</string>
+    <string name="game_detail_error_title">Something went wrong</string>
+    <string name="game_detail_retry_button">Retry</string>
 
     <string name="game_search_emptyview_title">Tap on the search bar to start</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext;
 
 import android.app.Application;
+import android.support.annotation.VisibleForTesting;
 
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.company.model.CompanyModule;
@@ -95,5 +96,10 @@ public class AndroidApplication extends Application {
 
         gameComponent = gamedataComponent.plus(new AppModule(this), new GameModule(), new CollectionModule(), new CompanyModule(), new
                 GenreModule(), new PlatformModule());
+    }
+
+    @VisibleForTesting
+    public void setGameComponent(GameComponent component) {
+        this.gameComponent = component;
     }
 }

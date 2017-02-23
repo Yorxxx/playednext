@@ -2,6 +2,8 @@
 <resources>
 
     <dimen name="game_detail_list_items_margin">16dp</dimen>
+    <dimen name="game_detail_loading_size">128dp</dimen>
+    <dimen name="game_detail_error_image_size">200dp</dimen>
 
     <dimen name="game_search_adapter_cell_width">120dp</dimen>
     <dimen name="game_search_adapter_cell_height">140dp</dimen>

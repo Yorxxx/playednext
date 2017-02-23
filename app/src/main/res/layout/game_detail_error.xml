@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/loading"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/game_detail_error_background"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="@dimen/game_detail_error_image_size"
+            android:layout_height="@dimen/game_detail_error_image_size"
+            android:layout_gravity="center_horizontal|bottom"
+            app:srcCompat="@drawable/ic_mood_bad_black_24dp"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <com.piticlistudio.playednext.ui.widget.CustomTextView
+            style="@style/AppTheme.Error.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLines="2"
+            android:text="@string/game_detail_error_title"/>
+
+        <com.piticlistudio.playednext.ui.widget.CustomTextView
+            android:id="@+id/errorMsg"
+            style="@style/AppTheme.Error.Subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="start"
+            android:maxLines="5"
+            android:text="@string/lorem"/>
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+
+            <Button
+                android:id="@+id/retry"
+                style="@style/AppTheme.Button"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:alpha="1"
+                android:gravity="center"
+                android:text="@string/game_detail_retry_button"
+                android:textStyle="bold"/>
+
+            <ProgressBar
+                android:id="@+id/retryLoading"
+                android:layout_width="72dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:progress="100"/>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
