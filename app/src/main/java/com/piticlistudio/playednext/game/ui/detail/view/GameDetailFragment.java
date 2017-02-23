@@ -119,12 +119,6 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
         return v;
     }
 
-    /**
-     * Called when a fragment is first attached to its context.
-     * {@link #onCreate(Bundle)} will be called after this.
-     *
-     * @param context
-     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.game.ui.detail.view;
 import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 
 import com.piticlistudio.playednext.AndroidApplication;
@@ -12,6 +13,7 @@ import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.RecyclerViewItemCountAssertion;
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.company.model.CompanyModule;
+import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.di.module.AppModule;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
@@ -19,6 +21,7 @@ import com.piticlistudio.playednext.game.model.GamedataComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.genre.GenreModule;
+import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.platform.PlatformModule;
 
 import org.junit.Rule;
@@ -29,6 +32,8 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -36,6 +41,7 @@ import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -94,7 +100,6 @@ public class GameDetailFragmentTest {
         onView(withId(R.id.backdropTitle)).check(matches(withText(game.title())));
         onView(withId(R.id.platformslist)).check(new RecyclerViewItemCountAssertion(game.platforms.size()));
         onView(withId(R.id.loading)).check(matches(CustomMatchers.withAlpha(0)));
-
     }
 
     @Test
@@ -129,11 +134,10 @@ public class GameDetailFragmentTest {
         onView(withId(R.id.retry)).check(matches(isDisplayed()));
 
         onView(withId(R.id.retry)).perform(click());
+        onView(withId(R.id.loading)).check(matches(CustomMatchers.withAlpha(1)));
 
         Thread.sleep(7000);
 
-        onView(withId(R.id.loading)).check(matches(CustomMatchers.withAlpha(1)));
         onView(withId(R.id.error)).check(matches(not(isDisplayed())));
-        verify(interactor).load(GAMEID);
     }
 }
