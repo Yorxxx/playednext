@@ -30,6 +30,16 @@ public abstract class Platform {
             return "PSN";
         if (name().equals("Xbox Live Arcade"))
             return "XBLA";
+        if (name().equals("Super Nintendo Entertainment System (SNES)"))
+            return "SNES";
+        if (name().equals("Nintendo GameCube"))
+            return "NGC";
+        if (name().equals("Game Boy Advance"))
+            return "GBA";
+        if (name().equals("Virtual Console (Nintendo)"))
+            return "VC";
+        if (name().equals("Nintendo Switch"))
+            return "Switch";
 
         if (name().length() <= 8)
             return name();
@@ -37,7 +47,8 @@ public abstract class Platform {
         StringBuilder sb = new StringBuilder();
         if (values.length == 2) {
             sb.append(values[0].charAt(0));
-            sb.append(" ");
+            if (!values[0].equals("Nintendo"))
+                sb.append(" ");
             sb.append(values[1]);
             return sb.toString();
         }
@@ -53,6 +64,18 @@ public abstract class Platform {
             return Color.parseColor("#025bd9");
         if (name().equals("Mac"))
             return Color.parseColor("#CCE0E0");
+        if (name().equals("Super Nintendo Entertainment System (SNES)") || name().equals("Super Famicom"))
+            return Color.parseColor("#DAE0F0");
+        if (name().equals("Nintendo GameCube"))
+            return Color.parseColor("#6509cb");
+        if (name().equals("Game Boy Advance"))
+            return Color.parseColor("#682c9e");
+        if (name().equals("Nintendo 64"))
+            return Color.parseColor("#C1BED1");
+        if (name().equals("Nintendo 3DS"))
+            return Color.parseColor("#d5000c");
+        if (name().equals("Nintendo DS"))
+            return Color.parseColor("#3085B0");
         return Color.WHITE;
     }
 }
