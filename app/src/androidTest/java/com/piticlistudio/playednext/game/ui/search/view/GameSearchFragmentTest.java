@@ -1,7 +1,9 @@
 package com.piticlistudio.playednext.game.ui.search.view;
 
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.EditText;
 
@@ -39,16 +41,18 @@ import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -263,8 +267,7 @@ public class GameSearchFragmentTest {
         verify(interactor).search("mario", 16, 15);
         onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(15)); // When fails while loading more, remove that cell
         // from the adapter
-        onView(withId(android.support.design.R.id.snackbar_text)).check(matches(isDisplayed()));
-        onView(withId(android.support.design.R.id.snackbar_text)).check(matches(withText(error.getLocalizedMessage())));
+        onView(allOf(withId(android.support.design.R.id.snackbar_text), withParent(withId(android.R.id.content)))).check(matches(isDisplayed()));
         onView(withId(android.support.design.R.id.snackbar_action)).check(matches(isDisplayed()));
         onView(withId(android.support.design.R.id.snackbar_action)).check(matches(withText(R.string.game_search_error_retry_button)));
         onView(withId(android.support.design.R.id.snackbar_action)).perform(click());
@@ -275,16 +278,6 @@ public class GameSearchFragmentTest {
 
         verify(interactor).search("mario", 16, 15);
         onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(31));
-
-//        onView(withText(error.getLocalizedMessage())).inRoot(withDecorView(not(is(activityTestRule.getActivity().getWindow()
-//                .getDecorView())))).check(matches(isDisplayed()));
-//        onView(withId(R.id.loadmore_progress)).check(doesNotExist());
-//        onView(withText(R.string.game_search_error_retry_button)).inRoot(withDecorView(not(is(activityTestRule.getActivity().getWindow()
-//                .getDecorView())))).check(matches(isDisplayed()));
-//
-//        onView(withText(R.string.game_search_error_retry_button)).perform(click());
-//        verify(interactor).search("mario", 16, 15);
-//        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isNotVisible()));
     }
 
     @Test
@@ -311,5 +304,33 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.progress)).check(matches(CustomMatchers.isNotVisible()));
         onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isNotVisible()));
         onView(withId(R.id.emptystateview)).check(matches(not(CustomMatchers.isNotVisible())));
+    }
+
+    @Test
+    public void given_searchResults_When_TappingOnItem_Then_LaunchesDetail() throws Exception {
+
+        activityTestRule.launchActivity(null);
+
+        doAnswer(invocation -> {
+            String query = (String) invocation.getArguments()[0];
+            int offset = (int) invocation.getArguments()[1];
+            int limit = (int) invocation.getArguments()[2];
+
+            List<Game> data = new ArrayList<>();
+            for (int i = offset; i < offset + limit; i++) {
+                data.add(GameFactory.provide(i, query + i));
+            }
+            return Observable.just(data).delay(2, TimeUnit.SECONDS);
+        }).when(interactor).search(anyString(), anyInt(), anyInt());
+
+
+        ViewInteraction searchAutoComplete3 = onView(allOf(withId(R.id.search_src_text), withParent(allOf(withId(R.id.search_plate), withParent(withId(R.id.search_edit_frame)))), isDisplayed()));
+        searchAutoComplete3.perform(replaceText("mario"), closeSoftKeyboard());
+
+        Thread.sleep(3000); // TODO Idling resources
+
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        onView(withId(R.id.backdrop)).check(matches(not(doesNotExist())));
     }
 }
