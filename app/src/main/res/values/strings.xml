@@ -12,4 +12,7 @@
     <string name="game_detail_retry_button">Retry</string>
 
     <string name="game_search_emptyview_title">Tap on the search bar to start</string>
+    <string name="game_search_error_title">Something went wrong</string>
+    <string name="game_search_error_retry_button">Retry</string>
+    <string name="game_search_emptylist">No results were found.</string>
 </resources>

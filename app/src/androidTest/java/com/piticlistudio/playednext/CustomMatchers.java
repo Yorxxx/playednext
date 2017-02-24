@@ -46,6 +46,28 @@ public class CustomMatchers {
         };
     }
 
+    /**
+     * A Custom matcher that check the visibility of the view
+     * Checks the Visibility state and the alpha state
+     *
+     * @return a matcher
+     */
+    public static Matcher<View> isNotVisible() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            protected boolean matchesSafely(View item) {
+                float alpha = item.getAlpha();
+                int visibility = item.getVisibility();
+                return alpha == 0 || visibility == View.INVISIBLE || visibility == View.GONE;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+
+            }
+        };
+    }
+
     public static Matcher<View> withError(CharSequence error) {
         return new TypeSafeMatcher<View>() {
 

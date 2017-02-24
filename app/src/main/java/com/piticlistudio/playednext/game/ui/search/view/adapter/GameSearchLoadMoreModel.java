@@ -57,7 +57,7 @@ public class GameSearchLoadMoreModel extends EpoxyModelWithHolder<GameSearchLoad
 
     static class LoadMoreHolder extends EpoxyHolder {
 
-        @BindView(R.id.progress)
+        @BindView(R.id.loadmore_progress)
         ProgressBar progress;
 
         @Override

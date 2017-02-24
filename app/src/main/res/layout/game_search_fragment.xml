@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout android:id="@+id/content"
+              xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
@@ -9,7 +9,10 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp">
 
         <include
             layout="@layout/game_search_searchview"/>
@@ -25,26 +28,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"/>
 
-        <LinearLayout
-            android:id="@+id/initialstateview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/cardview_light_background"
-            android:gravity="center"
-            android:orientation="vertical">
+        <include layout="@layout/game_search_initialstate"/>
 
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                app:srcCompat="@drawable/game_search_emptystate_view_icon_24dp"/>
+        <include layout="@layout/game_search_error"/>
 
-            <com.piticlistudio.playednext.ui.widget.CustomTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:text="@string/game_search_emptyview_title"/>
-
-        </LinearLayout>
+        <include layout="@layout/game_search_emptydata"/>
 
     </FrameLayout>
 

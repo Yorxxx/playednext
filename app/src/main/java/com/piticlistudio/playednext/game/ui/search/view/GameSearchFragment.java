@@ -4,18 +4,19 @@ import android.animation.Animator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
@@ -57,6 +58,14 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
     FloatingActionButton closeBtn;
     @BindView(R.id.searchlist)
     RecyclerView listview;
+    @BindView(R.id.content)
+    ViewGroup content;
+    @BindView(R.id.gamesearch_error)
+    ViewGroup errorLayout;
+    @BindView(R.id.errorMsg)
+    TextView errorMessage;
+    @BindView(R.id.emptystateview)
+    ViewGroup emptyStateView;
     private int loadLimit = MAX_LOAD_ITEMS;
     private Unbinder unbinder;
 
@@ -92,7 +101,7 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
 
 
         listview.setLayoutManager(gridLayoutManager);
-        listview.addItemDecoration(new SpacesItemDecoration((int)getResources().getDimension(R.dimen.game_search_adapter_spacing),
+        listview.addItemDecoration(new SpacesItemDecoration((int) getResources().getDimension(R.dimen.game_search_adapter_spacing),
                 getSpanCount()));
         listview.setAdapter(adapter);
 
@@ -128,12 +137,14 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                isLoadingMore = false;
                 search(query, 0, loadLimit);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                isLoadingMore = false;
                 search(newText, 0, loadLimit);
                 return true;
             }
@@ -156,7 +167,7 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
         float dpWidth = displayMetrics.widthPixels; // * displayMetrics.density;
         float rowWidth = getResources().getDimension(R.dimen.game_search_adapter_cell_width);
         float spacesWidth = getResources().getDimension(R.dimen.game_search_adapter_spacing);
-        return (int) (dpWidth / (rowWidth+(2*spacesWidth)));
+        return (int) (dpWidth / (rowWidth + (2 * spacesWidth)));
     }
 
     @OnClick(R.id.closeBtn)
@@ -209,6 +220,9 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
         if (initialstateview.getAlpha() > 0) {
             initialstateview.animate().alpha(0).setDuration(300).start();
         }
+        if (errorLayout.getAlpha() > 0) {
+            errorLayout.animate().alpha(0).setDuration(300).start();
+        }
     }
 
     /**
@@ -224,6 +238,12 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
             isLoadingMore = false;
         } else {
             adapter.setData(data);
+            if (data.isEmpty()) {
+                emptyStateView.animate().alpha(1).setDuration(300).start();
+            } else {
+                if (emptyStateView.getAlpha() != 0)
+                    emptyStateView.animate().alpha(0).setDuration(300).start();
+            }
         }
         canLoadMore = data.size() == loadLimit;
         adapter.setHasAdditionalData(canLoadMore);
@@ -236,7 +256,27 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
      */
     @Override
     public void showError(Throwable error) {
-        Log.e(TAG, "Error: " + error.getLocalizedMessage());
+        progress.setVisibility(View.GONE);
+        if (isLoadingMore) {
+            Snackbar errorBar = Snackbar.make(content, error.getLocalizedMessage(), Snackbar.LENGTH_LONG);
+            errorBar.setAction(R.string.game_search_error_retry_button, view -> {
+                adapter.setHasAdditionalData(true);
+                search(searchview.getQuery().toString(), adapter.getItemCount() - 1, loadLimit);
+            });
+            errorBar.show();
+            errorLayout.animate().alpha(0).setDuration(300).start();
+            adapter.setHasAdditionalData(false);
+        } else {
+            errorMessage.setText(error.getLocalizedMessage());
+            errorLayout.animate().alpha(1).setDuration(300).start();
+        }
+        if (initialstateview.getAlpha() > 0) {
+            initialstateview.animate().alpha(0).setDuration(300).start();
+        }
+        if (emptyStateView.getAlpha() != 0)
+            emptyStateView.animate().alpha(0).setDuration(300).start();
+        isLoadingMore = false;
+        canLoadMore = false;
     }
 
     /**

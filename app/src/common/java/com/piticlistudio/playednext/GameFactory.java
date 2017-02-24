@@ -49,7 +49,7 @@ public class GameFactory {
 //        data.hypes = 179;
 //        data.rating = 98.3154255976391;
 
-        ImageData cover = ImageData.create("cover", 100, 75, "coverUrl");
+        ImageData cover = ImageData.create("cover", 100, 75, "//images.igdb.com/igdb/image/upload/t_thumb/irhaovusoqq5xk6a8wff.png");
         data.cover = Optional.of(cover);
 
         Collection collection = Collection.create(100, "collection1");
@@ -171,7 +171,7 @@ public class GameFactory {
     public static NetGame provideNetGame(int id, String title) {
 
         NetGame response = NetGame.create(id, title, "slug", "url", 1000, 2500);
-        response.cover = NetImageData.create("url", 800, 500, "imageid");
+        response.cover = NetImageData.create("//images.igdb.com/igdb/image/upload/t_thumb/irhaovusoqq5xk6a8wff.png", 800, 500, "imageid");
         response.category = 100;
         response.collection = 200;
         response.hypes = 179;
