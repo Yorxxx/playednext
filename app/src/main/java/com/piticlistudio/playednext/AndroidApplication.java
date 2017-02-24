@@ -67,6 +67,13 @@ public class AndroidApplication extends Application {
                 schema.get("RealmGame")
                         .addRealmListField("platforms", schema.get("RealmPlatforms"));
             }
+            if (oldVersion == 4) {
+                schema.create("RealmGameRelation")
+                        .addField("id", int.class, FieldAttribute.PRIMARY_KEY)
+                        .addField("createdAt", long.class)
+                        .addField("updatedAt", long.class)
+                        .addRealmObjectField("game", schema.get("RealmGame"));
+            }
         }
     };
 
@@ -75,7 +82,7 @@ public class AndroidApplication extends Application {
         super.onCreate();
 
         RealmConfiguration config = new RealmConfiguration.Builder(this)
-                .schemaVersion(4)
+                .schemaVersion(5)
                 .migration(migration)
                 .build();
         Realm.setDefaultConfiguration(config);
