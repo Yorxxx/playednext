@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:id="@+id/loading"
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@android:color/white"
-             android:gravity="center"
-             android:orientation="vertical">
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:alpha="0"
+              android:background="@android:color/white"
+              android:gravity="center"
+              android:orientation="vertical">
 
     <ProgressBar
         android:layout_width="@dimen/game_detail_loading_size"
