@@ -1,0 +1,46 @@
+package com.piticlistudio.playednext.gamerelation.model.repository.datasource;
+
+import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
+import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
+import com.piticlistudio.playednext.gamerelation.model.entity.datasource.IGameRelationDatasource;
+import com.piticlistudio.playednext.gamerelation.model.entity.datasource.RealmGameRelation;
+import com.piticlistudio.playednext.mvp.model.repository.datasource.BaseRealmRepository;
+
+import io.reactivex.Single;
+
+/**
+ * Repository for RealmGameRelation
+ * Created by jorge.garcia on 27/02/2017.
+ */
+
+public class RealmGameRelationRepositoryImpl extends BaseRealmRepository<RealmGameRelation> implements
+        IGameRelationRepositoryDatasource<IGameRelationDatasource> {
+
+    public RealmGameRelationRepositoryImpl() {
+        super(RealmGameRelation.class);
+    }
+
+    /**
+     * Loads the model with the specified id.
+     *
+     * @param id the id to load.
+     * @return an Observable that emits the model loaded
+     */
+    @Override
+    public Single<IGameRelationDatasource> load(int id) {
+        return super.find(id)
+                .map(data -> data);
+    }
+
+    /**
+     * Saves the data
+     *
+     * @param data the data to save
+     * @return an Observable that emits the saved data
+     */
+    @Override
+    public Single<IGameRelationDatasource> save(IGameRelationDatasource data) {
+        return super.store((RealmGameRelation) data)
+                .map(result -> result);
+    }
+}

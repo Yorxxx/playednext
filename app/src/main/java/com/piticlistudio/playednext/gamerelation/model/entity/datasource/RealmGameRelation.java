@@ -70,4 +70,20 @@ public class RealmGameRelation extends RealmObject implements IGameRelationDatas
     public long getUpdatedAt() {
         return updatedAt;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setGame(RealmGame game) {
+        this.game = game;
+    }
+
+    public void setUpdatedAt(long updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
 }
