@@ -6,4 +6,10 @@
 
     <color name="error_color">#FF0000</color>
     <color name="game_detail_backdrop_overlay">#77000000</color>
+
+    <color name="gamerelation_completed_color">#BDBDBD</color>
+    <color name="gamerelation_current_color">#BDFFBD</color>
+    <color name="gamerelation_pending_color">#FF5722</color>
+
+    <color name="radiobutton_checked">#FF5722</color>
 </resources>

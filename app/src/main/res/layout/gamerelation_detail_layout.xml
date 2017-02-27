@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.piticlistudio.playednext.gamerelation.ui.detail.view.GameRelationDetailView android:id="@+id/gamerelation_switch_box"
+                                                                                 xmlns:android="http://schemas.android.com/apk/res/android"
+                                                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                                                 android:layout_width="wrap_content"
+                                                                                 android:layout_height="wrap_content"
+                                                                                 android:orientation="horizontal">
+
+
+    <LinearLayout
+        android:id="@+id/switchesContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gamerelation_switch_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <com.github.zagum.switchicon.SwitchIconView
+            android:id="@+id/doneSwitchBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            app:si_animation_duration="250"
+            app:si_disabled_alpha=".3"
+            app:si_disabled_color="#b7b7b7"
+            app:si_enabled="true"
+            app:si_no_dash="false"
+            app:si_tint_color="@color/gamerelation_completed_color"
+            app:srcCompat="@drawable/gamerelation_completed_status"/>
+
+        <com.github.zagum.switchicon.SwitchIconView
+            android:id="@+id/playingSwitchBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            app:si_animation_duration="250"
+            app:si_disabled_alpha=".3"
+            app:si_disabled_color="#b7b7b7"
+            app:si_enabled="false"
+            app:si_no_dash="false"
+            app:si_tint_color="@color/gamerelation_current_color"
+            app:srcCompat="@drawable/gamerelation_playing_status"/>
+
+        <com.github.zagum.switchicon.SwitchIconView
+            android:id="@+id/waitingSwitchBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            app:si_animation_duration="250"
+            app:si_disabled_alpha=".3"
+            app:si_disabled_color="#b7b7b7"
+            app:si_enabled="false"
+            app:si_no_dash="false"
+            app:si_tint_color="@color/gamerelation_pending_color"
+            app:srcCompat="@drawable/gamerelation_waiting_status"/>
+
+
+    </LinearLayout>
+
+</com.piticlistudio.playednext.gamerelation.ui.detail.view.GameRelationDetailView>

@@ -109,4 +109,10 @@ public class AndroidApplication extends Application {
     public void setGameComponent(GameComponent component) {
         this.gameComponent = component;
     }
+
+    public AppComponent getApplicationComponent() {
+        return this.appComponent;
+    }
+
+    public GameComponent getGameComponent() { return this.gameComponent; }
 }

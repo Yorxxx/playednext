@@ -1,8 +1,10 @@
 package com.piticlistudio.playednext.gamerelation.ui.detail.interactor;
 
+import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.game.model.repository.IGameRepository;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.model.repository.GameRelationRepository;
+import com.piticlistudio.playednext.gamerelation.model.repository.IGameRelationRepository;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
 
 import javax.inject.Inject;
@@ -16,11 +18,11 @@ import io.reactivex.Observable;
 
 public class GameRelationDetailInteractor implements GameRelationDetailContract.Interactor {
 
-    private final GameRelationRepository repository;
-    private final IGameRepository gameRepository;
+    private final IGameRelationRepository repository;
+    private final GameRepository gameRepository;
 
     @Inject
-    public GameRelationDetailInteractor(GameRelationRepository repository, IGameRepository gameRepository) {
+    public GameRelationDetailInteractor(IGameRelationRepository repository, GameRepository gameRepository) {
         this.repository = repository;
         this.gameRepository = gameRepository;
     }
