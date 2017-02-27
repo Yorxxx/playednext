@@ -20,6 +20,13 @@ public class RealmRelationInterval extends RealmObject implements IRelationStatu
         // Empty
     }
 
+    public RealmRelationInterval(int id, int type, long startedAt, long endedAt) {
+        this.id = id;
+        this.type = type;
+        this.startedAt = startedAt;
+        this.endedAt = endedAt;
+    }
+
     public int getId() {
         return id;
     }

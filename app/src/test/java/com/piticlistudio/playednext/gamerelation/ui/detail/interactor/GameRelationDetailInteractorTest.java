@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.gamerelation.ui.detail.interactor;
 
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.game.model.repository.IGameRepository;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.model.repository.GameRelationRepository;
@@ -31,7 +32,7 @@ public class GameRelationDetailInteractorTest extends BaseTest {
     GameRelationRepository repository;
 
     @Mock
-    IGameRepository gameRepository;
+    GameRepository gameRepository;
 
     @InjectMocks
     GameRelationDetailInteractor interactor;

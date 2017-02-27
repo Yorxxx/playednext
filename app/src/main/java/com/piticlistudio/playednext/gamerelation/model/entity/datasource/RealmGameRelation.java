@@ -2,7 +2,13 @@ package com.piticlistudio.playednext.gamerelation.model.entity.datasource;
 
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.relationinterval.model.entity.datasource.IRelationStatus;
+import com.piticlistudio.playednext.relationinterval.model.entity.datasource.RealmRelationInterval;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -16,7 +22,7 @@ public class RealmGameRelation extends RealmObject implements IGameRelationDatas
     private int id;
 
     private RealmGame game;
-
+    private RealmList<RealmRelationInterval> statuses = new RealmList<>();
     private long updatedAt;
     private long createdAt;
 
@@ -85,5 +91,23 @@ public class RealmGameRelation extends RealmObject implements IGameRelationDatas
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    /**
+     * Returns the list of different status for this relation.
+     *
+     * @return the list of statuses this relation has had.
+     */
+    @Override
+    public List<IRelationStatus> getStatus() {
+        return new ArrayList<>(statuses);
+    }
+
+    public RealmList<RealmRelationInterval> getStatuses() {
+        return statuses;
+    }
+
+    public void setStatuses(RealmList<RealmRelationInterval> statuses) {
+        this.statuses = statuses;
     }
 }

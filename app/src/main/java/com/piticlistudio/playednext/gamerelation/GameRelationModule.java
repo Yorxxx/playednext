@@ -13,6 +13,8 @@ import com.piticlistudio.playednext.gamerelation.model.repository.datasource.IGa
 import com.piticlistudio.playednext.gamerelation.model.repository.datasource.RealmGameRelationRepositoryImpl;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
 import com.piticlistudio.playednext.gamerelation.ui.detail.interactor.GameRelationDetailInteractor;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
+import com.piticlistudio.playednext.relationinterval.model.entity.datasource.RelationIntervalMapper;
 
 import javax.inject.Inject;
 
@@ -24,8 +26,8 @@ public class GameRelationModule {
 
     @Provides
     @Inject
-    protected GameRelationMapper relationDataMapper(GameMapper gameDataMapper) {
-        return new GameRelationMapper(gameDataMapper);
+    protected GameRelationMapper relationDataMapper(GameMapper gameDataMapper, RelationIntervalMapper intervalMapper) {
+        return new GameRelationMapper(gameDataMapper, intervalMapper);
     }
 
     @Provides

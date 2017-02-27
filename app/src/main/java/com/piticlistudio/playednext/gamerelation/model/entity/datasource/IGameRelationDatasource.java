@@ -1,6 +1,9 @@
 package com.piticlistudio.playednext.gamerelation.model.entity.datasource;
 
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
+import com.piticlistudio.playednext.relationinterval.model.entity.datasource.IRelationStatus;
+
+import java.util.List;
 
 /**
  * Definition methods for GameRelation datasource entities
@@ -22,12 +25,12 @@ public interface IGameRelationDatasource {
      */
     IGameDatasource getGame();
 
-//    /**
-//     * Returns the list of different status for this relation.
-//     *
-//     * @return the list of statuses this relation has had.
-//     */
-//    List<IRelationStatus> getStatus();
+    /**
+     * Returns the list of different status for this relation.
+     *
+     * @return the list of statuses this relation has had.
+     */
+    List<IRelationStatus> getStatus();
 
     /**
      * Returns the creation in Unix timestamp

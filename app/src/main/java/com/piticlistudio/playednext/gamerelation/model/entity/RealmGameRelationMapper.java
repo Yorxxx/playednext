@@ -5,8 +5,13 @@ import com.piticlistudio.playednext.game.model.entity.RealmGameMapper;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.gamerelation.model.entity.datasource.RealmGameRelation;
 import com.piticlistudio.playednext.mvp.model.entity.Mapper;
+import com.piticlistudio.playednext.relationinterval.model.entity.RealmRelationIntervalMapper;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
+import com.piticlistudio.playednext.relationinterval.model.entity.datasource.RealmRelationInterval;
 
 import javax.inject.Inject;
+
+import io.realm.RealmList;
 
 /**
  * Maps a GameRelation into a RealmGameRelation
@@ -15,10 +20,12 @@ import javax.inject.Inject;
 public class RealmGameRelationMapper implements Mapper<RealmGameRelation, GameRelation> {
 
     private final RealmGameMapper gameMapper;
+    private final RealmRelationIntervalMapper intervalMapper;
 
     @Inject
-    public RealmGameRelationMapper(RealmGameMapper gameMapper) {
+    public RealmGameRelationMapper(RealmGameMapper gameMapper, RealmRelationIntervalMapper intervalMapper) {
         this.gameMapper = gameMapper;
+        this.intervalMapper = intervalMapper;
     }
 
     /**
@@ -36,6 +43,13 @@ public class RealmGameRelationMapper implements Mapper<RealmGameRelation, GameRe
         if (!realmGameOptional.isPresent())
             return Optional.absent();
         RealmGameRelation result = new RealmGameRelation(data.id(), realmGameOptional.get(), data.createdAt(), data.getUpdatedAt());
+        RealmList<RealmRelationInterval> status = new RealmList<>();
+        for (RelationInterval interval : data.getStatuses()) {
+            Optional<RealmRelationInterval> realmInterval = intervalMapper.transform(interval);
+            if (realmInterval.isPresent())
+                status.add(realmInterval.get());
+        }
+        result.setStatuses(status);
         return Optional.of(result);
     }
 }
