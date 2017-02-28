@@ -52,6 +52,7 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
                         data.getCurrent().get().setEndAt(System.currentTimeMillis());
                     }
                     data.getStatuses().add(interactor.create(type));
+                    data.setUpdatedAt(System.currentTimeMillis());
                     return data;
                 })
                 .flatMap(interactor::save)

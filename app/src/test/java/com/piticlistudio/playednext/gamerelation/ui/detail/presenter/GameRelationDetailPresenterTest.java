@@ -130,6 +130,7 @@ public class GameRelationDetailPresenterTest extends BaseTest {
 
         Game game = Game.create(10, "name");
         GameRelation data = GameRelation.create(game, 1);
+        long updatedAt = data.getUpdatedAt();
         when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
         doAnswer(invocation -> {
             RelationInterval.RelationType type = (RelationInterval.RelationType)invocation.getArguments()[0];
@@ -152,6 +153,7 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         assertEquals(RelationInterval.RelationType.PLAYING, data.getCurrent().get().type());
         assertTrue(data.getCurrent().get().startAt() > 0);
         assertEquals(1, data.getStatuses().size());
+        assertTrue(data.getUpdatedAt() > updatedAt);
     }
 
     @Test
@@ -159,6 +161,7 @@ public class GameRelationDetailPresenterTest extends BaseTest {
 
         Game game = Game.create(10, "name");
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
+        long updatedAt = data.getUpdatedAt();
         data.getStatuses().add(RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000));
         when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
         doAnswer(invocation -> {
@@ -181,5 +184,6 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         assertTrue(data.getStatuses().get(0).getEndAt() > 0);
         assertTrue(data.getStatuses().get(1).startAt() >= data.getStatuses().get(0).getEndAt());
         assertEquals(0, data.getStatuses().get(1).getEndAt());
+        assertTrue(data.getUpdatedAt() > updatedAt);
     }
 }

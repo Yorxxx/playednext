@@ -17,9 +17,11 @@ import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
 import com.piticlistudio.playednext.gamerelation.ui.detail.presenter.GameRelationDetailPresenter;
 import com.piticlistudio.playednext.mvp.ui.BaseLinearLayout;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class GameRelationDetailView extends BaseLinearLayout implements GameRelationDetailContract.View {
@@ -85,25 +87,23 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
     @Override
     public void setData(GameRelation data) {
         this.data = data;
-//        if (data.getCurrent().isPresent()) {
-//            switch (data.getCurrent().get().type()) {
-//                case DONE:
-//                    doneBtn.setIconEnabled(true, false);
-//                    break;
-//                case PENDING:
-//                    waitingBtn.setIconEnabled(true, false);
-//                    break;
-//                case PLAYING:
-//                    playingBtn.setIconEnabled(true, false);
-//                    break;
-////                default:
-////                    radiogroup.clearCheck();
-//            }
-//        } else {
-//            doneBtn.setIconEnabled(false);
-//            waitingBtn.setIconEnabled(false);
-//            waitingBtn.setIconEnabled(false);
-//        }
+        if (data.getCurrent().isPresent()) {
+            switch (data.getCurrent().get().type()) {
+                case DONE:
+                    doneBtn.setIconEnabled(true, false);
+                    break;
+                case PENDING:
+                    waitingBtn.setIconEnabled(true, false);
+                    break;
+                case PLAYING:
+                    playingBtn.setIconEnabled(true, false);
+                    break;
+            }
+        } else {
+            doneBtn.setIconEnabled(false);
+            waitingBtn.setIconEnabled(false);
+            waitingBtn.setIconEnabled(false);
+        }
     }
 
     /**
@@ -142,5 +142,29 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
     @Override
     public void showError(Throwable error) {
         switchesContainer.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.waitingSwitchBtn)
+    public void setRelationAsWaiting() {
+        presenter.save(this.data, RelationInterval.RelationType.PENDING);
+        waitingBtn.switchState(true);
+        playingBtn.setIconEnabled(false, true);
+        doneBtn.setIconEnabled(false, true);
+    }
+
+    @OnClick(R.id.playingSwitchBtn)
+    public void setRelationAsPlaying() {
+        presenter.save(this.data, RelationInterval.RelationType.PLAYING);
+        playingBtn.switchState(true);
+        doneBtn.setIconEnabled(false, true);
+        waitingBtn.setIconEnabled(false, true);
+    }
+
+    @OnClick(R.id.doneSwitchBtn)
+    public void setRelationAsCompleted() {
+        presenter.save(this.data, RelationInterval.RelationType.DONE);
+        doneBtn.switchState(true);
+        waitingBtn.setIconEnabled(false, true);
+        playingBtn.setIconEnabled(false, true);
     }
 }
