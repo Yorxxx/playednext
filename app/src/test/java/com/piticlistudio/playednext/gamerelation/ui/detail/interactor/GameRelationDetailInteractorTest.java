@@ -6,10 +6,14 @@ import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.game.model.repository.IGameRepository;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.model.repository.GameRelationRepository;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
+import com.piticlistudio.playednext.relationinterval.model.repository.RelationIntervalRepository;
 
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
@@ -33,6 +37,9 @@ public class GameRelationDetailInteractorTest extends BaseTest {
 
     @Mock
     GameRepository gameRepository;
+
+    @Mock
+    RelationIntervalRepository intervalRepository;
 
     @InjectMocks
     GameRelationDetailInteractor interactor;
@@ -149,5 +156,20 @@ public class GameRelationDetailInteractorTest extends BaseTest {
                 .assertNotComplete()
                 .assertNoValues();
         verify(gameRepository).load(10);
+    }
+
+    @Test
+    public void given_empty_When_CreateInterval_Then_RequestsRepository() throws Exception {
+
+        doAnswer(invocation -> {
+            RelationInterval.RelationType type = (RelationInterval.RelationType)invocation.getArguments()[0];
+            return RelationInterval.create(1, type, System.currentTimeMillis());
+        }).when(intervalRepository).create(any());
+
+        RelationInterval result = interactor.create(RelationInterval.RelationType.DONE);
+
+        // Assert
+        assertNotNull(result);
+        verify(intervalRepository).create(RelationInterval.RelationType.DONE);
     }
 }

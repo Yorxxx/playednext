@@ -1,11 +1,11 @@
 package com.piticlistudio.playednext.gamerelation.ui.detail.interactor;
 
 import com.piticlistudio.playednext.game.model.repository.GameRepository;
-import com.piticlistudio.playednext.game.model.repository.IGameRepository;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
-import com.piticlistudio.playednext.gamerelation.model.repository.GameRelationRepository;
 import com.piticlistudio.playednext.gamerelation.model.repository.IGameRelationRepository;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
+import com.piticlistudio.playednext.relationinterval.model.repository.RelationIntervalRepository;
 
 import javax.inject.Inject;
 
@@ -20,11 +20,13 @@ public class GameRelationDetailInteractor implements GameRelationDetailContract.
 
     private final IGameRelationRepository repository;
     private final GameRepository gameRepository;
+    private final RelationIntervalRepository intervalRepository;
 
     @Inject
-    public GameRelationDetailInteractor(IGameRelationRepository repository, GameRepository gameRepository) {
+    public GameRelationDetailInteractor(IGameRelationRepository repository, GameRepository gameRepository, RelationIntervalRepository intervalRepository) {
         this.repository = repository;
         this.gameRepository = gameRepository;
+        this.intervalRepository = intervalRepository;
     }
 
     /**
@@ -59,5 +61,16 @@ public class GameRelationDetailInteractor implements GameRelationDetailContract.
     @Override
     public Observable<GameRelation> save(GameRelation data) {
         return repository.save(data);
+    }
+
+    /**
+     * Creates a new relationInterval
+     *
+     * @param type the type to create
+     * @return an Interval
+     */
+    @Override
+    public RelationInterval create(RelationInterval.RelationType type) {
+        return intervalRepository.create(type);
     }
 }

@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,11 +19,15 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 /**
  * Test cases
@@ -125,26 +130,28 @@ public class GameRelationDetailPresenterTest extends BaseTest {
 
         Game game = Game.create(10, "name");
         GameRelation data = GameRelation.create(game, 1);
-        GameRelation data2 = GameRelation.create(game, 2);
-        GameRelation data3 = GameRelation.create(game, 3);
         when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
-        when(interactor.save(data2)).thenReturn(Observable.just(data2).delay(1, TimeUnit.SECONDS));
-        when(interactor.save(data3)).thenReturn(Observable.just(data3).delay(1, TimeUnit.SECONDS));
+        doAnswer(invocation -> {
+            RelationInterval.RelationType type = (RelationInterval.RelationType)invocation.getArguments()[0];
+            return RelationInterval.create(10, type, System.currentTimeMillis());
+        }).when(interactor).create(any(RelationInterval.RelationType.class));
 
         // Act
-        presenter.save(data);
-        presenter.save(data2);
-        presenter.save(data3);
+        presenter.save(data, RelationInterval.RelationType.DONE);
+        presenter.save(data, RelationInterval.RelationType.NONE);
+        presenter.save(data, RelationInterval.RelationType.PLAYING);
 
         testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
 
         // Assert
-        verify(interactor, never()).save(data);
-        verify(interactor, never()).save(data2);
-        verify(interactor).save(data3);
-        verify(view).setData(data3);
+        verify(interactor, times(1)).save(data);
+        verify(view).setData(data);
         verify(view).showContent();
         verify(view, never()).showError(any(Throwable.class));
+        assertTrue(data.getCurrent().isPresent());
+        assertEquals(RelationInterval.RelationType.PLAYING, data.getCurrent().get().type());
+        assertTrue(data.getCurrent().get().startAt() > 0);
+        assertEquals(1, data.getStatuses().size());
     }
 
     @Test
@@ -152,10 +159,15 @@ public class GameRelationDetailPresenterTest extends BaseTest {
 
         Game game = Game.create(10, "name");
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
+        data.getStatuses().add(RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000));
         when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+        doAnswer(invocation -> {
+            RelationInterval.RelationType type = (RelationInterval.RelationType)invocation.getArguments()[0];
+            return RelationInterval.create(10, type, System.currentTimeMillis());
+        }).when(interactor).create(any(RelationInterval.RelationType.class));
 
         // Act
-        presenter.save(data);
+        presenter.save(data, RelationInterval.RelationType.PLAYING);
 
         testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
 
@@ -163,5 +175,11 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         verify(view).setData(data);
         verify(view).showContent();
         verify(view, never()).showError(any(Throwable.class));
+        assertEquals(2, data.getStatuses().size());
+        assertTrue(data.getCurrent().isPresent());
+        assertEquals(RelationInterval.RelationType.PLAYING, data.getCurrent().get().type());
+        assertTrue(data.getStatuses().get(0).getEndAt() > 0);
+        assertTrue(data.getStatuses().get(1).startAt() >= data.getStatuses().get(0).getEndAt());
+        assertEquals(0, data.getStatuses().get(1).getEndAt());
     }
 }

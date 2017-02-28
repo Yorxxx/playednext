@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.gamerelation.ui.detail;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.mvp.ui.IMvpPresenter;
 import com.piticlistudio.playednext.mvp.ui.MvpView;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 
 import io.reactivex.Observable;
 
@@ -54,9 +55,10 @@ public interface GameRelationDetailContract {
         /**
          * Saves the relation.
          *
-         * @param data the data to save.
+         * @param data    the data to save.
+         * @param newType the new type to save into the relation
          */
-        void save(GameRelation data);
+        void save(GameRelation data, RelationInterval.RelationType newType);
     }
 
     interface Interactor {
@@ -84,5 +86,13 @@ public interface GameRelationDetailContract {
          * @return an Observable that returns the saved data
          */
         Observable<GameRelation> save(GameRelation data);
+
+        /**
+         * Creates a new relationInterval
+         *
+         * @param type the type to create
+         * @return an Interval
+         */
+        RelationInterval create(RelationInterval.RelationType type);
     }
 }
