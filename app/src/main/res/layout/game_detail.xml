@@ -124,6 +124,7 @@
             android:descendantFocusability="beforeDescendants"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:layout_marginBottom="@dimen/game_detail_bottom_margin"
             app2:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 

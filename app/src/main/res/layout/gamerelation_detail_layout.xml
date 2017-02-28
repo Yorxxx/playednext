@@ -26,7 +26,7 @@
             app:si_disabled_color="#b7b7b7"
             app:si_enabled="true"
             app:si_no_dash="false"
-            app:si_tint_color="@color/gamerelation_completed_color"
+            app:si_tint_color="@color/radiobutton_checked"
             app:srcCompat="@drawable/gamerelation_completed_status"/>
 
         <com.github.zagum.switchicon.SwitchIconView
@@ -39,7 +39,7 @@
             app:si_disabled_color="#b7b7b7"
             app:si_enabled="false"
             app:si_no_dash="false"
-            app:si_tint_color="@color/gamerelation_current_color"
+            app:si_tint_color="@color/radiobutton_checked"
             app:srcCompat="@drawable/gamerelation_playing_status"/>
 
         <com.github.zagum.switchicon.SwitchIconView
@@ -52,7 +52,7 @@
             app:si_disabled_color="#b7b7b7"
             app:si_enabled="false"
             app:si_no_dash="false"
-            app:si_tint_color="@color/gamerelation_pending_color"
+            app:si_tint_color="@color/radiobutton_checked"
             app:srcCompat="@drawable/gamerelation_waiting_status"/>
 
 

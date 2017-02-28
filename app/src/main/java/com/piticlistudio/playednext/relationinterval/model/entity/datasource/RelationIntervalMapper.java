@@ -19,7 +19,7 @@ public class RelationIntervalMapper implements Mapper<RelationInterval, IRelatio
      */
     @Override
     public Optional<RelationInterval> transform(IRelationStatus data) {
-        if (data == null || data.getStartedAt() == 0 || data.getId() == 0)
+        if (data == null || data.getStartedAt() == 0)
             return Optional.absent();
         RelationInterval result = RelationInterval.create(data.getId(), data.getType(), data.getStartedAt());
         result.setEndAt(data.getEndedAt());

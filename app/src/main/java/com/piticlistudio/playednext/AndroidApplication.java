@@ -84,6 +84,10 @@ public class AndroidApplication extends Application {
                 schema.get("RealmGameRelation")
                         .addRealmListField("status", schema.get("RealmRelationInterval"));
             }
+            if (oldVersion == 6) {
+                schema.get("RealmGameRelation")
+                        .renameField("status", "statuses");
+            }
         }
     };
 
@@ -92,7 +96,7 @@ public class AndroidApplication extends Application {
         super.onCreate();
 
         RealmConfiguration config = new RealmConfiguration.Builder(this)
-                .schemaVersion(6)
+                .schemaVersion(7)
                 .migration(migration)
                 .build();
         Realm.setDefaultConfiguration(config);

@@ -45,20 +45,6 @@ public class RelationIntervalMapperTest extends BaseTest {
     }
 
     @Test
-    public void given_MissingIdInterval_When_Transform_Then_ReturnsAbsent() throws Exception {
-        RealmRelationInterval data = new RealmRelationInterval();
-        data.setStartedAt(5000);
-        data.setType(RelationInterval.RelationType.DONE.ordinal());
-
-        // Act
-        Optional<RelationInterval> result = mapper.transform(data);
-
-        // Assert
-        assertNotNull(result);
-        assertFalse(result.isPresent());
-    }
-
-    @Test
     public void given_MissingStartDate_When_Transform_Then_ReturnsAbsent() throws Exception {
 
         RealmRelationInterval data = new RealmRelationInterval();

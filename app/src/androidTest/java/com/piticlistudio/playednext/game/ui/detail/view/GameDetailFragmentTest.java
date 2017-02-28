@@ -93,6 +93,7 @@ public class GameDetailFragmentTest {
         onView(withId(R.id.backdropTitle)).check(matches(withText(game.title())));
         onView(withId(R.id.platformslist)).check(new RecyclerViewItemCountAssertion(game.platforms.size()));
         onView(withId(R.id.loading)).check(matches(CustomMatchers.withAlpha(0)));
+        onView(withId(R.id.gamerelation_switch_box)).check(matches(isDisplayed()));
     }
 
     @Test

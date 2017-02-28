@@ -32,6 +32,7 @@ import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
 import com.piticlistudio.playednext.game.ui.detail.view.adapter.GameDetailAdapter;
+import com.piticlistudio.playednext.gamerelation.ui.detail.view.GameRelationDetailView;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.ui.grid.adapter.PlatformLabelGridAdapter;
 import com.piticlistudio.playednext.utils.UIUtils;
@@ -84,6 +85,8 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     Button retryBtn;
     @BindView(R.id.retryLoading)
     View loadingRetry;
+    @BindView(R.id.gamerelation_switch_box)
+    GameRelationDetailView relationDetailLayout;
 
     private boolean isRetrying;
     private Unbinder unbinder;
@@ -260,6 +263,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
         adapter.setData(data);
         platformAdapter.setData(data.platforms);
         mCallbacks.onDataLoaded(data);
+        relationDetailLayout.loadData(data.id());
     }
 
     /**
