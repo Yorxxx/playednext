@@ -40,6 +40,18 @@ public abstract class Platform {
             return "VC";
         if (name().equals("Nintendo Switch"))
             return "Switch";
+        if (name().equals("PlayStation 3"))
+            return "Ps3";
+        if (name().equals("PlayStation Vita"))
+            return "Vita";
+        if (name().equals("Xbox 360"))
+            return "X360";
+        if (name().equals("Sega Mega Drive/Genesis"))
+            return "MD";
+        if (name().equals("Nintendo Entertainment System (NES)"))
+            return "NES";
+        if (name().equals("Game Boy"))
+            return "GB";
 
         if (name().length() <= 8)
             return name();
@@ -76,6 +88,22 @@ public abstract class Platform {
             return Color.parseColor("#d5000c");
         if (name().equals("Nintendo DS"))
             return Color.parseColor("#3085B0");
+        if (name().equals("PlayStation Vita"))
+            return Color.parseColor("#003287");
+        if (name().equals("PlayStation 3"))
+            return Color.parseColor("#192730");
+        if (name().equals("Xbox 360"))
+            return Color.parseColor("#90C048");
+        if (name().equals("Sega Mega Drive/Genesis"))
+            return Color.parseColor("#2B2728");
+        if (name().equals("Nintendo Entertainment System (NES)"))
+            return Color.parseColor("#D8D8D8");
+        if (name().equals("Game Boy"))
+            return Color.parseColor("#76818C");
+        if (name().equals("Nintendo Switch"))
+            return Color.RED;
+        if (name().equals("Xbox"))
+            return Color.parseColor("#353535");
         return Color.WHITE;
     }
 }

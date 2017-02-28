@@ -102,6 +102,34 @@ public class PlatformTest {
         data = Platform.create(10, "Nintendo Switch");
         assertNotNull(data.getAcronym());
         assertEquals("Switch", data.getAcronym());
+
+        data = Platform.create(10, "PlayStation 3");
+        assertNotNull(data.getAcronym());
+        assertEquals("Ps3", data.getAcronym());
+
+        data = Platform.create(10, "PlayStation Vita");
+        assertNotNull(data.getAcronym());
+        assertEquals("Vita", data.getAcronym());
+
+        data = Platform.create(10, "Xbox 360");
+        assertNotNull(data.getAcronym());
+        assertEquals("X360", data.getAcronym());
+
+        data = Platform.create(10, "Xbox");
+        assertNotNull(data.getAcronym());
+        assertEquals("Xbox", data.getAcronym());
+
+        data = Platform.create(10, "Sega Mega Drive/Genesis");
+        assertNotNull(data.getAcronym());
+        assertEquals("MD", data.getAcronym());
+
+        data = Platform.create(10, "Nintendo Entertainment System (NES)");
+        assertNotNull(data.getAcronym());
+        assertEquals("NES", data.getAcronym());
+
+        data = Platform.create(10, "Game Boy");
+        assertNotNull(data.getAcronym());
+        assertEquals("GB", data.getAcronym());
     }
 
     @Test
@@ -144,6 +172,27 @@ public class PlatformTest {
         assertNotEquals(Color.WHITE, data.getColor());
 
         data = Platform.create(10, "Nintendo Switch");
+        assertNotEquals(Color.WHITE, data.getColor());
+
+        data = Platform.create(10, "PlayStation 3");
+        assertNotEquals(Color.WHITE, data.getColor());
+
+        data = Platform.create(10, "PlayStation Vita");
+        assertNotEquals(Color.WHITE, data.getColor());
+
+        data = Platform.create(10, "Xbox 360");
+        assertNotEquals(Color.WHITE, data.getColor());
+
+        data = Platform.create(10, "Xbox");
+        assertNotEquals(Color.WHITE, data.getColor());
+
+        data = Platform.create(10, "Sega Mega Drive/Genesis");
+        assertNotEquals(Color.WHITE, data.getColor());
+
+        data = Platform.create(10, "Nintendo Entertainment System (NES)");
+        assertNotEquals(Color.WHITE, data.getColor());
+
+        data = Platform.create(10, "Game Boy");
         assertNotEquals(Color.WHITE, data.getColor());
     }
 
