@@ -71,7 +71,7 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
 
     private GameSearchAdapter adapter;
     private GameSearchPresenter presenter;
-    //    private IGameSearchFragmentListener listener;
+        private IGameSearchFragmentListener listener;
     private boolean isLoadingMore = false;
     private boolean canLoadMore = false;
 
@@ -151,6 +151,10 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
         });
     }
 
+    public void setListener(IGameSearchFragmentListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -185,9 +189,9 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
 
                     @Override
                     public void onAnimationEnd(Animator animator) {
-//                        if (listener != null) {
-//                            listener.onCloseSearchClicked(v);
-//                        }
+                        if (listener != null) {
+                            listener.onCloseSearchClicked(v);
+                        }
                     }
 
                     @Override
@@ -295,4 +299,15 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
     public void onGameClicked(Game clickedGame, View v) {
         startActivity(GameDetailActivity.init(getActivity(), clickedGame));
     }
+
+    public interface IGameSearchFragmentListener {
+
+        /**
+         * Called when the view has been requested to be dismissed
+         *
+         * @param v the clicked view.
+         */
+        void onCloseSearchClicked(View v);
+    }
+
 }

@@ -51,7 +51,7 @@ public interface GameRelationListContract {
         void showError(Throwable error);
     }
 
-    interface Presenter<V extends MvpView> extends IMvpPresenter<V> {
+    interface Presenter<V extends View> extends IMvpPresenter<V> {
 
         /**
          * Loads the data

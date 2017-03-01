@@ -12,6 +12,8 @@ import com.piticlistudio.playednext.gamerelation.model.repository.datasource.IGa
 import com.piticlistudio.playednext.gamerelation.model.repository.datasource.RealmGameRelationRepositoryImpl;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
 import com.piticlistudio.playednext.gamerelation.ui.detail.interactor.GameRelationDetailInteractor;
+import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListContract;
+import com.piticlistudio.playednext.gamerelation.ui.list.interactor.GameRelationListInteractor;
 import com.piticlistudio.playednext.relationinterval.model.entity.datasource.RelationIntervalMapper;
 import com.piticlistudio.playednext.relationinterval.model.repository.RelationIntervalRepository;
 
@@ -46,5 +48,11 @@ public class GameRelationModule {
                                                                             GameRepository gameRepository,
                                                                             RelationIntervalRepository intervalRepository) {
         return new GameRelationDetailInteractor(relationRepository, gameRepository, intervalRepository);
+    }
+
+    @Provides
+    protected GameRelationListContract.Interactor provideListInteractor(IGameRelationRepository relationRepository,
+                                                                      RelationIntervalRepository intervalRepository) {
+        return new GameRelationListInteractor(relationRepository, intervalRepository);
     }
 }

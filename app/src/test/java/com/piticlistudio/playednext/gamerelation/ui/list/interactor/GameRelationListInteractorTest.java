@@ -3,9 +3,8 @@ package com.piticlistudio.playednext.gamerelation.ui.list.interactor;
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.TestSchedulerRule;
-import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
-import com.piticlistudio.playednext.gamerelation.model.repository.GameRelationRepository;
+import com.piticlistudio.playednext.gamerelation.model.repository.IGameRelationRepository;
 import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 
 import org.junit.Rule;
@@ -15,7 +14,6 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
@@ -37,7 +35,7 @@ public class GameRelationListInteractorTest extends BaseTest {
     public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
 
     @Mock
-    GameRelationRepository relationRepository;
+    IGameRelationRepository relationRepository;
 
     @InjectMocks
     GameRelationListInteractor interactor;
@@ -56,9 +54,7 @@ public class GameRelationListInteractorTest extends BaseTest {
         result.assertNoErrors()
                 .assertComplete()
                 .assertValueCount(1)
-                .assertValue(check(data -> {
-                    assertTrue(data.isEmpty());
-                }));
+                .assertValue(check(data -> assertTrue(data.isEmpty())));
         verify(relationRepository).loadAll();
     }
 
@@ -76,9 +72,7 @@ public class GameRelationListInteractorTest extends BaseTest {
         result.assertNoErrors()
                 .assertComplete()
                 .assertValueCount(1)
-                .assertValue(check(data -> {
-                    assertTrue(data.isEmpty());
-                }));
+                .assertValue(check(data -> assertTrue(data.isEmpty())));
         verify(relationRepository).loadAll();
     }
 
@@ -96,9 +90,7 @@ public class GameRelationListInteractorTest extends BaseTest {
         result.assertNoErrors()
                 .assertComplete()
                 .assertValueCount(1)
-                .assertValue(check(data -> {
-                    assertTrue(data.isEmpty());
-                }));
+                .assertValue(check(data -> assertTrue(data.isEmpty())));
         verify(relationRepository).loadAll();
     }
 

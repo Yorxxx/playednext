@@ -12,11 +12,14 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".EmptyActivity">
+
+        </activity>
+
+        <activity android:name=".gamerelation.ui.list.view.GameRelationListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
 
         <activity

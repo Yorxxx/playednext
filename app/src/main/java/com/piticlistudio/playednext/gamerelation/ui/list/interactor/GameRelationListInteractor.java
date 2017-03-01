@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.gamerelation.ui.list.interactor;
 
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.model.repository.GameRelationRepository;
+import com.piticlistudio.playednext.gamerelation.model.repository.IGameRelationRepository;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListContract;
 import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 import com.piticlistudio.playednext.relationinterval.model.repository.RelationIntervalRepository;
@@ -20,11 +21,11 @@ import io.reactivex.Observable;
 
 public class GameRelationListInteractor implements GameRelationListContract.Interactor {
 
-    private final GameRelationRepository repository;
+    private final IGameRelationRepository repository;
     private final RelationIntervalRepository intervalRepository;
 
     @Inject
-    public GameRelationListInteractor(GameRelationRepository repository, RelationIntervalRepository intervalRepository) {
+    public GameRelationListInteractor(IGameRelationRepository repository, RelationIntervalRepository intervalRepository) {
         this.repository = repository;
         this.intervalRepository = intervalRepository;
     }

@@ -26,7 +26,7 @@ public class GameRelationListPresenter extends MvpPresenter<GameRelationListCont
     private Disposable loadDisposable;
 
     @Inject
-    public GameRelationListPresenter(GameRelationListContract.Interactor interactor) {
+    GameRelationListPresenter(GameRelationListContract.Interactor interactor) {
         this.interactor = interactor;
     }
 
