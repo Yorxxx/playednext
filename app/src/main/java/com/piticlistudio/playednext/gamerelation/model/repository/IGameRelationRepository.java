@@ -2,6 +2,8 @@ package com.piticlistudio.playednext.gamerelation.model.repository;
 
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 
 /**
@@ -26,4 +28,11 @@ public interface IGameRelationRepository {
      * @return the saved data.
      */
     Observable<GameRelation> save(GameRelation data);
+
+    /**
+     * Loads all items from the repository
+     *
+     * @return an Observable that emits all items
+     */
+    Observable<List<GameRelation>> loadAll();
 }
