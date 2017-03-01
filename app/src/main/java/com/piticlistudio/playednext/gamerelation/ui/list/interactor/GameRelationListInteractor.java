@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.model.repository.GameRelationRepository;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListContract;
 import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
+import com.piticlistudio.playednext.relationinterval.model.repository.RelationIntervalRepository;
 
 import java.util.List;
 
@@ -20,10 +21,12 @@ import io.reactivex.Observable;
 public class GameRelationListInteractor implements GameRelationListContract.Interactor {
 
     private final GameRelationRepository repository;
+    private final RelationIntervalRepository intervalRepository;
 
     @Inject
-    public GameRelationListInteractor(GameRelationRepository repository) {
+    public GameRelationListInteractor(GameRelationRepository repository, RelationIntervalRepository intervalRepository) {
         this.repository = repository;
+        this.intervalRepository = intervalRepository;
     }
 
     /**
@@ -54,6 +57,28 @@ public class GameRelationListInteractor implements GameRelationListContract.Inte
     @Override
     public Observable<List<GameRelation>> loadWaitingItems() {
         return loadFilteredByType(RelationInterval.RelationType.PENDING);
+    }
+
+    /**
+     * Saves the relation.
+     *
+     * @param data the data to save
+     * @return an Observable that returns the saved data
+     */
+    @Override
+    public Observable<GameRelation> save(GameRelation data) {
+        return repository.save(data);
+    }
+
+    /**
+     * Creates a new relationInterval
+     *
+     * @param type the type to create
+     * @return an Interval
+     */
+    @Override
+    public RelationInterval create(RelationInterval.RelationType type) {
+        return intervalRepository.create(type);
     }
 
     private Observable<List<GameRelation>> loadFilteredByType(RelationInterval.RelationType type) {

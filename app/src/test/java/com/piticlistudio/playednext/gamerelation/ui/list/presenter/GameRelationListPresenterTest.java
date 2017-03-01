@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListContract;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,6 +28,8 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 /**
@@ -200,5 +203,37 @@ public class GameRelationListPresenterTest extends BaseTest {
         // Assert
         verify(view).setData(completedItemsSecondEmission, currentItems, waitingItems);
         verify(view, times(2)).showContent();
+    }
+
+    @Test
+    public void given_relationUpdate_When_SaveIsRequested_Then_SavesData() throws Exception {
+
+        long currentTime = System.currentTimeMillis();
+        Game game = Game.create(10, "name");
+        GameRelation data = GameRelation.create(game, 1000);
+        data.setUpdatedAt(1500);
+        RelationInterval currentInterval = RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000);
+        data.getStatuses().add(currentInterval);
+        assertEquals(0, currentInterval.getEndAt());
+
+        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+        RelationInterval newInterval = RelationInterval.create(2, RelationInterval.RelationType.PLAYING, System.currentTimeMillis());
+        when(interactor.create(RelationInterval.RelationType.PLAYING)).thenReturn(newInterval);
+
+        // Act
+        presenter.save(data, RelationInterval.RelationType.PLAYING);
+
+        // Assert
+        verifyZeroInteractions(view);
+        assertEquals(2, data.getStatuses().size());
+        verify(interactor).create(RelationInterval.RelationType.PLAYING);
+        assertEquals(currentInterval, data.getStatuses().get(0));
+        assertTrue(currentInterval.getEndAt() >= currentTime);
+        assertTrue(currentInterval.getEndAt() >= currentInterval.startAt());
+        assertEquals(newInterval, data.getStatuses().get(1));
+        assertEquals(0, newInterval.getEndAt());
+        assertTrue(data.getCurrent().isPresent());
+        assertEquals(newInterval, data.getCurrent().get());
+        verify(interactor).save(data);
     }
 }

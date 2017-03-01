@@ -65,7 +65,12 @@ public class GameRelationListPresenter extends MvpPresenter<GameRelationListCont
      */
     @Override
     public void save(GameRelation data, RelationInterval.RelationType newType) {
-
+        if (data.getCurrent().isPresent()) {
+            data.getCurrent().get().setEndAt(System.currentTimeMillis());
+        }
+        data.getStatuses().add(interactor.create(newType));
+        data.setUpdatedAt(System.currentTimeMillis());
+        interactor.save(data).subscribe();
     }
 
     private void showData(ItemsResult result) {

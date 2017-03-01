@@ -89,5 +89,21 @@ public interface GameRelationListContract {
          * @return an Observable
          */
         Observable<List<GameRelation>> loadWaitingItems();
+
+        /**
+         * Saves the relation.
+         *
+         * @param data the data to save
+         * @return an Observable that returns the saved data
+         */
+        Observable<GameRelation> save(GameRelation data);
+
+        /**
+         * Creates a new relationInterval
+         *
+         * @param type the type to create
+         * @return an Interval
+         */
+        RelationInterval create(RelationInterval.RelationType type);
     }
 }
