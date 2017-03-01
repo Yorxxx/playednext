@@ -1,5 +1,8 @@
 package com.piticlistudio.playednext.gamerelation.model.repository.datasource;
 
+import android.support.test.InstrumentationRegistry;
+import android.support.test.annotation.UiThreadTest;
+
 import com.piticlistudio.playednext.BaseAndroidTest;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
@@ -12,12 +15,15 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.observers.TestObserver;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test cases for RealmGameRelationRepository implementation
@@ -109,6 +115,79 @@ public class RealmGameRelationRepositoryImplTest extends BaseAndroidTest {
         realm = Realm.getDefaultInstance();
         assertEquals(1, realm.where(RealmGameRelation.class).count());
         realm.close();
-
     }
+
+    // TODO Realm does not return values
+//    @Test
+//    public void given_emptyDatabase_When_LoadsAll_Then_EmitsEmptyList() throws Exception {
+//
+//        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+//            @Override
+//            public void run() {
+//                Realm realm = Realm.getDefaultInstance();
+//                assertEquals(0, realm.where(RealmGameRelation.class).count());
+//                realm.close();
+//
+//                // Act
+//                TestObserver<List<IGameRelationDatasource>> result = repository.loadAll().test();
+//
+//                try {
+//                    Thread.sleep(5000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                // Assert
+//                result.assertNoErrors()
+//                        .assertNotComplete()
+//                        .assertValue(check(value -> {
+//                            assertTrue(value.isEmpty());
+//                        }));
+//            }
+//        });
+//    }
+//
+//    @Test
+//    public void given_database_When_LoadsAll_Then_EmitsUpdatedList() throws Exception {
+//
+//        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+//            @Override
+//            public void run() {
+//                // Act
+//                TestObserver<List<IGameRelationDatasource>> result = repository.loadAll().test();
+//
+//                // Assert
+//                result.assertNoErrors()
+//                        .assertNotComplete()
+//                        .assertValue(check(value -> {
+//                            assertTrue(value.isEmpty());
+//                        }));
+//
+//                RealmGameRelation data = new RealmGameRelation();
+//                RealmGame game = GameFactory.provideRealmGame(10, "title");
+//                data.setId(game.getId());
+//                data.setUpdatedAt(1000);
+//                data.setCreatedAt(1000);
+//                data.setGame(game);
+//                Realm realm = Realm.getDefaultInstance();
+//                realm.beginTransaction();
+//                realm.copyToRealmOrUpdate(data);
+//                realm.commitTransaction();
+//
+//                try {
+//                    Thread.sleep(50000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                result.assertNoErrors()
+//                        .assertNotComplete()
+//                        .assertValue(check(values -> {
+//                            assertEquals(1, values.size());
+//                            assertEquals(data.getId(), values.get(0).getId());
+//                        }));
+//            }
+//        });
+//
+//    }
 }

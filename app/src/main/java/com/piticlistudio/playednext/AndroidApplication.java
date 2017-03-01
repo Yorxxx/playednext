@@ -1,7 +1,9 @@
 package com.piticlistudio.playednext;
 
 import android.app.Application;
+import android.os.Handler;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.company.model.CompanyModule;
@@ -14,14 +16,26 @@ import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.DaggerGamedataComponent;
 import com.piticlistudio.playednext.game.model.GamedataComponent;
 import com.piticlistudio.playednext.game.model.GamedataModule;
+import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
+import com.piticlistudio.playednext.gamerelation.model.entity.datasource.IGameRelationDatasource;
+import com.piticlistudio.playednext.gamerelation.model.entity.datasource.RealmGameRelation;
+import com.piticlistudio.playednext.gamerelation.model.repository.GameRelationRepository;
+import com.piticlistudio.playednext.gamerelation.model.repository.datasource.RealmGameRelationRepositoryImpl;
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
 
+import java.util.List;
+
+import io.reactivex.functions.Consumer;
 import io.realm.DynamicRealm;
 import io.realm.FieldAttribute;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
+import io.realm.RealmResults;
 import io.realm.RealmSchema;
 
 
@@ -31,6 +45,7 @@ public class AndroidApplication extends Application {
     public AppComponent appComponent;
     public GamedataComponent gamedataComponent;
     public GameComponent gameComponent;
+
     RealmMigration migration = new RealmMigration() {
         @Override
         public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
@@ -102,6 +117,15 @@ public class AndroidApplication extends Application {
         Realm.setDefaultConfiguration(config);
 
         initializeComponents();
+
+//        RealmGameRelationRepositoryImpl repository = new RealmGameRelationRepositoryImpl();
+//        repository.loadAll()
+//                .subscribe(new Consumer<List<IGameRelationDatasource>>() {
+//                    @Override
+//                    public void accept(List<IGameRelationDatasource> iGameRelationDatasources) throws Exception {
+//                        Log.d(TAG, "Load all triggered with " + iGameRelationDatasources.size() + " elements");
+//                    }
+//                });
     }
 
     private void initializeComponents() {
