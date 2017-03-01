@@ -1,6 +1,5 @@
 package com.piticlistudio.playednext.gamerelation.ui.list;
 
-import android.database.Observable;
 
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.mvp.ui.IMvpPresenter;
@@ -8,6 +7,8 @@ import com.piticlistudio.playednext.mvp.ui.MvpView;
 import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 
 import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * Contract for the list of Game relations

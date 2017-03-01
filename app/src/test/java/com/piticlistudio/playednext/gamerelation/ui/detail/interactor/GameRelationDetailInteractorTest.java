@@ -3,7 +3,6 @@ package com.piticlistudio.playednext.gamerelation.ui.detail.interactor;
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.model.repository.GameRepository;
-import com.piticlistudio.playednext.game.model.repository.IGameRepository;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.model.repository.GameRelationRepository;
 import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
@@ -12,15 +11,12 @@ import com.piticlistudio.playednext.relationinterval.model.repository.RelationIn
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;

@@ -8,11 +8,11 @@ import com.piticlistudio.playednext.gamerelation.model.entity.datasource.IGameRe
 import com.piticlistudio.playednext.gamerelation.model.entity.datasource.RealmGameRelation;
 import com.piticlistudio.playednext.gamerelation.model.repository.datasource.IGameRelationRepositoryDatasource;
 
+import java.util.List;
+
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Function;
 
 /**
  * Repository implementation
@@ -63,6 +63,22 @@ public class GameRelationRepository implements IGameRelationRepository {
                         throw new RuntimeException("Cannot map");
                     return result.get();
                 }).toObservable();
+    }
+
+    /**
+     * Loads all items from the repository
+     *
+     * @return an Observable that emits all items
+     */
+    @Override
+    public Observable<List<GameRelation>> loadAll() {
+        return dbImpl.loadAll()
+                .flatMap(data -> Observable.fromIterable(data)
+                        .map(mapper::transform)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .toList()
+                        .toObservable());
     }
 
     private Observable<GameRelation> mapSource(IGameRelationDatasource datasource) {
