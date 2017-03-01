@@ -15,4 +15,8 @@
     <string name="game_search_error_title">Something went wrong</string>
     <string name="game_search_error_retry_button">Retry</string>
     <string name="game_search_emptylist">No results were found.</string>
+
+    <string name="gamerelation_list_header_title_done">Done</string>
+    <string name="gamerelation_list_header_title_playing">Playing</string>
+    <string name="gamerelation_list_header_title_pending">Todo</string>
 </resources>

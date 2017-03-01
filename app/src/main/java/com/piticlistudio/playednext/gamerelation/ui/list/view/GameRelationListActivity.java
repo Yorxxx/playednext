@@ -6,12 +6,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
+import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.ui.search.view.GameSearchFragment;
 import com.piticlistudio.playednext.gamerelation.DaggerGameRelationComponent;
@@ -19,6 +22,7 @@ import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.GameRelationModule;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListContract;
+import com.piticlistudio.playednext.gamerelation.ui.list.adapter.GameRelationListAdapter;
 import com.piticlistudio.playednext.ui.widget.RevealBackgroundView;
 
 import java.util.List;
@@ -49,12 +53,15 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     RevealBackgroundView reveal;
 
     private GameSearchFragment searchView;
+    private GameRelationListAdapter adapter;
 
     protected GameComponent getGameComponent() {
         return ((AndroidApplication) getApplication()).getGameComponent();
-
     }
 
+    protected AppComponent getAppComponent() {
+        return ((AndroidApplication) getApplication()).getApplicationComponent();
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +69,17 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
         unbinder = ButterKnife.bind(this);
 
         component = DaggerGameRelationComponent.builder()
+                .appComponent(getAppComponent())
                 .gameComponent(getGameComponent())
                 .gameRelationModule(new GameRelationModule())
                 .build();
         presenter = component.listPresenter();
         presenter.attachView(this);
+
+        adapter = component.listAdapter();
+        listview.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
+        listview.setLayoutManager(new LinearLayoutManager(getParent()));
+        listview.setAdapter(adapter);
 
         loadData();
     }
