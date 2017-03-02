@@ -55,10 +55,11 @@ public interface GameRelationDetailContract {
         /**
          * Saves the relation.
          *
-         * @param data    the data to save.
-         * @param newType the new type to save into the relation
+         * @param data   the data to save.
+         * @param type   the type of the relation modified
+         * @param active boolean indicating if relation type associated to the relation is active
          */
-        void save(GameRelation data, RelationInterval.RelationType newType);
+        void save(GameRelation data, RelationInterval.RelationType type, boolean active);
     }
 
     interface Interactor {

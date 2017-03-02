@@ -1,9 +1,15 @@
 package com.piticlistudio.playednext.mvp.model.repository.datasource;
 
 
+import java.util.concurrent.Callable;
+
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Single;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
 
 /**
@@ -24,14 +30,25 @@ public abstract class BaseRealmRepository<R extends RealmObject> {
      * @return an Observable with a Realm instance.
      */
     protected static Observable<Realm> getManagedRealm() {
-        return Observable.using(
-                Realm::getDefaultInstance,
-                Observable::just,
-                realm -> {
-                    if (!realm.isClosed())
-                        realm.close();
-                }
-        );
+        final RealmConfiguration realmConfig = Realm.getDefaultInstance().getConfiguration();
+        return Observable.using(new Callable<Realm>() {
+            @Override
+            public Realm call() throws Exception {
+                return Realm.getInstance(realmConfig);
+            }
+        }, new Function<Realm, ObservableSource<? extends Realm>>() {
+            @Override
+            public ObservableSource<? extends Realm> apply(Realm realm) throws Exception {
+                return Observable.just(realm);
+            }
+        }, new Consumer<Realm>() {
+            @Override
+            public void accept(Realm realm) throws Exception {
+                if (!realm.isClosed())
+                    realm.close();
+            }
+        });
+
     }
 
     /**

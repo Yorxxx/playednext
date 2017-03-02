@@ -94,6 +94,7 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     @Override
     public void setData(List<GameRelation> completed, List<GameRelation> current, List<GameRelation> waiting) {
         Log.d(TAG, "setData() called with: completed = [" + completed + "], current = [" + current + "], waiting = [" + waiting + "]");
+        adapter.setData(completed, current, waiting);
     }
 
     /**

@@ -20,6 +20,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -138,9 +139,9 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         }).when(interactor).create(any(RelationInterval.RelationType.class));
 
         // Act
-        presenter.save(data, RelationInterval.RelationType.DONE);
-        presenter.save(data, RelationInterval.RelationType.NONE);
-        presenter.save(data, RelationInterval.RelationType.PLAYING);
+        presenter.save(data, RelationInterval.RelationType.DONE, true);
+        presenter.save(data, RelationInterval.RelationType.DONE, false);
+        presenter.save(data, RelationInterval.RelationType.PLAYING, true);
 
         testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
 
@@ -170,7 +171,7 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         }).when(interactor).create(any(RelationInterval.RelationType.class));
 
         // Act
-        presenter.save(data, RelationInterval.RelationType.PLAYING);
+        presenter.save(data, RelationInterval.RelationType.PLAYING, true);
 
         testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
 
@@ -184,6 +185,30 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         assertTrue(data.getStatuses().get(0).getEndAt() > 0);
         assertTrue(data.getStatuses().get(1).startAt() >= data.getStatuses().get(0).getEndAt());
         assertEquals(0, data.getStatuses().get(1).getEndAt());
+        assertTrue(data.getUpdatedAt() > updatedAt);
+    }
+
+    @Test
+    public void given_disabledStatus_When_SavingRelation_ThenSavesData() throws Exception {
+
+        Game game = Game.create(10, "name");
+        GameRelation data = GameRelation.create(game, System.currentTimeMillis());
+        long updatedAt = data.getUpdatedAt();
+        data.getStatuses().add(RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000));
+        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+
+        // Act
+        presenter.save(data, RelationInterval.RelationType.PENDING, false);
+
+        testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
+
+        // Assert
+        verify(view).setData(data);
+        verify(view).showContent();
+        verify(view, never()).showError(any(Throwable.class));
+        assertEquals(1, data.getStatuses().size());
+        assertFalse(data.getCurrent().isPresent());
+        assertTrue(data.getStatuses().get(0).getEndAt() > 0);
         assertTrue(data.getUpdatedAt() > updatedAt);
     }
 }

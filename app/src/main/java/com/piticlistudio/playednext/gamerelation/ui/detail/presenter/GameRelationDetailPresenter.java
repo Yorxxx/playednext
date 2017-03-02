@@ -51,7 +51,9 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
                     if (data.getCurrent().isPresent()) {
                         data.getCurrent().get().setEndAt(System.currentTimeMillis());
                     }
-                    data.getStatuses().add(interactor.create(type));
+                    if (value.isActive()) {
+                        data.getStatuses().add(interactor.create(type));
+                    }
                     data.setUpdatedAt(System.currentTimeMillis());
                     return data;
                 })
@@ -96,12 +98,13 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
     /**
      * Saves the relation.
      *
-     * @param data    the data to save.
-     * @param newType the new type to save into the relation
+     * @param data   the data to save.
+     * @param type   the type of the relation modified
+     * @param active boolean indicating if relation type associated to the relation is active
      */
     @Override
-    public void save(GameRelation data, RelationInterval.RelationType newType) {
-        saveSubject.onNext(new UpdateRelationEntity(data, newType));
+    public void save(GameRelation data, RelationInterval.RelationType type, boolean active) {
+        saveSubject.onNext(new UpdateRelationEntity(data, type, active));
     }
 
     private void showData(GameRelation data) {
@@ -121,10 +124,12 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
 
         private final GameRelation data;
         private final RelationInterval.RelationType type;
+        private final boolean active;
 
-        UpdateRelationEntity(GameRelation data, RelationInterval.RelationType type) {
+        UpdateRelationEntity(GameRelation data, RelationInterval.RelationType type, boolean active) {
             this.data = data;
             this.type = type;
+            this.active = active;
         }
 
         public GameRelation getData() {
@@ -133,6 +138,10 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
 
         public RelationInterval.RelationType getType() {
             return type;
+        }
+
+        public boolean isActive() {
+            return active;
         }
     }
 }

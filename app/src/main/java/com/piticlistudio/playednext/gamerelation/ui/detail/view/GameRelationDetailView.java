@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import com.github.zagum.switchicon.SwitchIconView;
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
+import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.gamerelation.DaggerGameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
@@ -63,8 +64,17 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
         return null;
     }
 
+    protected AppComponent getAppComponent() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            return ((AndroidApplication) activity.getApplication()).getApplicationComponent();
+        }
+        return null;
+    }
+
     private void init() {
         GameRelationComponent component = DaggerGameRelationComponent.builder()
+                .appComponent(getAppComponent())
                 .gameComponent(getGameComponent())
                 .gameRelationModule(new GameRelationModule())
                 .build();
@@ -146,24 +156,24 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
 
     @OnClick(R.id.waitingSwitchBtn)
     public void setRelationAsWaiting() {
-        presenter.save(this.data, RelationInterval.RelationType.PENDING);
-        waitingBtn.switchState(true);
+        presenter.save(this.data, RelationInterval.RelationType.PENDING, !waitingBtn.isIconEnabled());
+        waitingBtn.switchState(!waitingBtn.isIconEnabled());
         playingBtn.setIconEnabled(false, true);
         doneBtn.setIconEnabled(false, true);
     }
 
     @OnClick(R.id.playingSwitchBtn)
     public void setRelationAsPlaying() {
-        presenter.save(this.data, RelationInterval.RelationType.PLAYING);
-        playingBtn.switchState(true);
+        presenter.save(this.data, RelationInterval.RelationType.PLAYING, !playingBtn.isIconEnabled());
+        playingBtn.switchState(!playingBtn.isIconEnabled());
         doneBtn.setIconEnabled(false, true);
         waitingBtn.setIconEnabled(false, true);
     }
 
     @OnClick(R.id.doneSwitchBtn)
     public void setRelationAsCompleted() {
-        presenter.save(this.data, RelationInterval.RelationType.DONE);
-        doneBtn.switchState(true);
+        presenter.save(this.data, RelationInterval.RelationType.DONE, !doneBtn.isIconEnabled());
+        doneBtn.switchState(!doneBtn.isIconEnabled());
         waitingBtn.setIconEnabled(false, true);
         playingBtn.setIconEnabled(false, true);
     }

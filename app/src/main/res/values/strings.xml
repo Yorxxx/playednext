@@ -2,6 +2,7 @@
     <string name="app_name">PlayedNext</string>
     <string name="lorem">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</string>
 
+    <!-- Game detail screen start -->
     <string name="game_detail_info_label_title">Information</string>
     <string name="game_detail_developers_title">Developers</string>
     <string name="game_detail_publishers_title">Publishers</string>
@@ -10,13 +11,60 @@
     <string name="game_detail_loading">Loading…</string>
     <string name="game_detail_error_title">Something went wrong</string>
     <string name="game_detail_retry_button">Retry</string>
+    <!-- game detail screen end -->
 
+    <!-- game search screen start -->
     <string name="game_search_emptyview_title">Tap on the search bar to start</string>
     <string name="game_search_error_title">Something went wrong</string>
     <string name="game_search_error_retry_button">Retry</string>
     <string name="game_search_emptylist">No results were found.</string>
+    <!-- game search screen end -->
 
     <string name="gamerelation_list_header_title_done">Done</string>
     <string name="gamerelation_list_header_title_playing">Playing</string>
     <string name="gamerelation_list_header_title_pending">Todo</string>
+    <string name="gamerelation_list_completed_item_subtitle">Completed on %1$s</string>
+
+    <string name="interval_displaydate_completed_zero">Completed today at %1$s</string>
+    <plurals name="interval_displaydate_completed">
+        <!-- NOTE: This "zero" value is never accessed, but kept for better understanding while translating it -->
+        <item quantity="zero">@string/interval_displaydate_completed_zero</item>
+        <item quantity="one">Completed yesterday at %1$s</item>
+        <item quantity="other">Completed %1$s days ago</item>
+    </plurals>
+    <string name="interval_displaydate_completed_ended">Completed on %1$s</string>
+
+    <string name="interval_displaydate_playing_start_zero">Started playing today at %1$s</string>
+    <plurals name="interval_displaydate_playing_start">
+        <!-- NOTE: This "zero" value is never accessed, but kept for better understanding while translating it -->
+        <item quantity="zero">@string/interval_displaydate_playing_start_zero</item>
+        <item quantity="one">Started playing yesterday at %1$s</item>
+        <item quantity="other">Started playing %1$s days ago</item>
+    </plurals>
+    <string name="interval_displaydate_playing_ended_hours">Played from %1$s to %2$s (%3$d hours)</string>
+    <string name="interval_displaydate_playing_ended_days">Played from %1$s to %2$s (%3$d days)</string>
+
+    <string name="interval_displaydate_waiting_start_zero">Backlogged today at %1$s</string>
+    <plurals name="interval_displaydate_waiting_start">
+        <item quantity="zero">@string/interval_displaydate_waiting_start_zero</item>
+        <item quantity="one">Backlogged yesterday at %1$s</item>
+        <item quantity="other">Backlogged %1$s days ago</item>
+    </plurals>
+    <string name="interval_displaydate_waiting_ended_hours">Backlogged from %1$s to %2$s (%3$d hours)</string>
+    <string name="interval_displaydate_waiting_ended_days">Backlogged from %1$s to %2$s (%3$d days)</string>
+
+    <string name="interval_displaydate_completed_yesterday">Completed yesterday at %1$s</string>
+    <string name="interval_displaydate_completed_daysago">Completed %1$d days ago</string>
+    <string name="interval_displaydate_completed_longago">Completed on %1$s</string>
+    <string name="interval_displaydate_playing_start_today">Started playing today at %1$s</string>
+    <string name="interval_displaydate_playing_start_yesterday">Started playing yesterday at %1$s</string>
+    <string name="interval_displaydate_playing_start_daysago">Started playing %1$d days ago</string>
+    <string name="interval_displaydate_playing_start_longago">Started playing on %1$s</string>
+    <string name="interval_displaydate_waiting_start_today">Backlogged today at %1$s</string>
+    <string name="interval_displaydate_waiting_start_yesterday">Backlogged yesterday at %1$s</string>
+    <string name="interval_displaydate_waiting_start_daysago">Backlogged %1$d days ago</string>
+    <string name="interval_displaydate_waiting_start_longago">Backlogged on %1$s</string>
+    <string name="interval_displaydate_playing_end">Played from %1$s to %2$s</string>
+    <string name="gamerelation_currentinterval_yesterday">Yesterday</string>
+    <string name="interval_displaydate_long">MM/dd/yy</string>
 </resources>
