@@ -7,7 +7,7 @@
 
     <View
         android:id="@+id/border"
-        android:layout_width="8dp"
+        android:layout_width="@dimen/gamerelation_list_verticalbar_width"
         android:layout_height="match_parent"
         android:background="@color/colorAccent"/>
 
@@ -30,7 +30,7 @@
             style="@style/GameRelationList.Cell.Header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
+            android:layout_gravity="center"
             android:layout_marginStart="@dimen/gamerelation_list_inner_items_margin"
             android:gravity="center_vertical"
             android:maxLines="1"

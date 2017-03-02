@@ -85,7 +85,7 @@
 
     <style name="GameRelationList.Cell.Subtitle" parent="Base.TextAppearance.AppCompat.Medium">
         <item name="com.piticlistudio.playednext:font">fonts/Lato-Regular.ttf</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="GameRelationList.Cell.Title.Completed" parent="Base.TextAppearance.AppCompat.Large.Inverse">

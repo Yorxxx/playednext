@@ -14,6 +14,7 @@ import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.HeaderMo
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -105,7 +106,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
             case DONE:
                 return new CompletedItemModel_()
                         .title(item.game().title())
-                        .subtitle("Completed on 01/11/16")
+                        .subtitle(item.getCurrent().get().getDisplayDate(ctx, Calendar.getInstance(), is24hFormat()))
                         .imageURL(item.game().getThumbCoverUrl())
                         .imageloader(picasso);
 //            case DOING:
@@ -123,5 +124,9 @@ public class GameRelationListAdapter extends EpoxyAdapter {
 //                        .boostValue((int)item.getGame().getRating());
         }
         return null;
+    }
+
+    private boolean is24hFormat() {
+        return android.text.format.DateFormat.is24HourFormat(ctx);
     }
 }

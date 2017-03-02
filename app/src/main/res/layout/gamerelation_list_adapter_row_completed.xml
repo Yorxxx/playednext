@@ -4,7 +4,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/gamerelation_list_completed_items_height"
                                     android:layout_marginEnd="@dimen/gamerelation_list_inner_items_margin"
-                                    android:layout_marginStart="@dimen/gamerelation_list_inner_items_margin"
+                                    android:layout_marginStart="@dimen/gamerelation_list_header_border_width"
                                     android:elevation="@dimen/material_card_elevation_resting"
                                     app:cardCornerRadius="@dimen/material_card_corner_radius"
                                     app:cardMaxElevation="@dimen/material_card_elevation_raised">
@@ -48,25 +48,20 @@
             android:orientation="horizontal"
             android:visibility="visible">
 
-            <View
-                android:layout_width="@dimen/gamerelation_list_header_border_width"
-                android:layout_height="match_parent"
-                android:background="@color/gamerelation_completed_color"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/gamerelation_list_item_done_background"
                 android:orientation="horizontal"
-                android:paddingBottom="8dp"
-                android:paddingEnd="8dp"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp"
+                android:paddingBottom="4dp"
+                android:paddingEnd="4dp"
+                android:paddingStart="4dp"
+                android:paddingTop="4dp"
                 android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/cover"
-                    android:layout_width="64dp"
+                    android:layout_width="@dimen/gamerelation_list_completed_cover_size"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
                     android:src="@drawable/sample_cover"/>
