@@ -40,6 +40,9 @@ public class HeaderModel extends EpoxyModelWithHolder<HeaderHolder> {
     @ColorInt
     int color;
 
+    @EpoxyAttribute
+    String subtitle;
+
     @Override
     protected HeaderHolder createNewHolder() {
         return new HeaderHolder();
@@ -65,6 +68,8 @@ public class HeaderModel extends EpoxyModelWithHolder<HeaderHolder> {
         holder.toggle.setImageResource(toggle);
         holder.toggle.setColorFilter(color);
         holder.toggle.setOnClickListener(toggleClickListener);
+        holder.subtitle.setText(subtitle);
+        holder.subtitle.setTextColor(color);
     }
 
     public void setTitle(String title) {
@@ -84,6 +89,9 @@ public class HeaderModel extends EpoxyModelWithHolder<HeaderHolder> {
 
         @BindView(R.id.toggle)
         ImageView toggle;
+
+        @BindView(R.id.subtitle)
+        TextView subtitle;
 
         @Override
         protected void bindView(View itemView) {

@@ -20,10 +20,15 @@
     <string name="game_search_emptylist">No results were found.</string>
     <!-- game search screen end -->
 
+    <!-- game relation list screen start -->
     <string name="gamerelation_list_header_title_done">Done</string>
     <string name="gamerelation_list_header_title_playing">Playing</string>
     <string name="gamerelation_list_header_title_pending">Todo</string>
-    <string name="gamerelation_list_completed_item_subtitle">Completed on %1$s</string>
+    <plurals name="gamerelation_list_header_subtitle">
+        <item quantity="one">- %1$d game</item>
+        <item quantity="other">- %1$d games</item>
+    </plurals>
+    <!-- gamerelation list screen end -->
 
     <string name="interval_displaydate_completed_zero">Completed today at %1$s</string>
     <plurals name="interval_displaydate_completed">

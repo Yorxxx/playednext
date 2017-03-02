@@ -1,13 +1,12 @@
 package com.piticlistudio.playednext.gamerelation.ui.list.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAdapter;
 import com.airbnb.epoxy.EpoxyModel;
-import com.fernandocejas.arrow.collections.Iterables;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.CompletedItemModel_;
@@ -16,7 +15,6 @@ import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.HeaderMo
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -31,6 +29,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
 
     private final Picasso picasso;
     private final Context ctx;
+    private final Resources res;
     private HeaderModel completedHeaderModel;
     private HeaderModel pendingHeaderModel;
     private HeaderModel currentHeaderModel;
@@ -45,13 +44,16 @@ public class GameRelationListAdapter extends EpoxyAdapter {
     public GameRelationListAdapter(Picasso picasso, Context ctx) {
         this.picasso = picasso;
         this.ctx = ctx;
+        res = ctx.getResources();
+
 
         completedHeaderModel = new HeaderModel_()
                 .title(ctx.getString(R.string.gamerelation_list_header_title_done))
                 .color(ContextCompat.getColor(ctx, R.color.gamerelation_completed_color))
                 .icon(R.drawable.gamerelation_completed_status)
                 .toggle(R.drawable.gamerelation_list_header_show)
-                .toggleClickListener(view -> onToggleCompletedItemsVisibility(isDisplayingCompletedItems));
+                .toggleClickListener(view -> onToggleCompletedItemsVisibility(isDisplayingCompletedItems))
+                .subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, completedItems.size(), completedItems.size()));
         currentHeaderModel = new HeaderModel_()
                 .title(ctx.getString(R.string.gamerelation_list_header_title_playing))
                 .color(ContextCompat.getColor(ctx, R.color.gamerelation_current_color))
@@ -69,11 +71,10 @@ public class GameRelationListAdapter extends EpoxyAdapter {
     private void onToggleCompletedItemsVisibility(boolean isEnabled) {
         List<EpoxyModel<?>> itemsToUpdate = new ArrayList<>();
         if (isEnabled) {
-            ((HeaderModel_)completedHeaderModel).toggle(R.drawable.gamerelation_list_header_hide);
+            ((HeaderModel_) completedHeaderModel).toggle(R.drawable.gamerelation_list_header_hide);
             notifyModelChanged(completedHeaderModel);
-        }
-        else {
-            ((HeaderModel_)completedHeaderModel).toggle(R.drawable.gamerelation_list_header_show);
+        } else {
+            ((HeaderModel_) completedHeaderModel).toggle(R.drawable.gamerelation_list_header_show);
             notifyModelChanged(completedHeaderModel);
         }
         for (EpoxyModel<?> model : this.models) {
@@ -127,6 +128,9 @@ public class GameRelationListAdapter extends EpoxyAdapter {
             }
         }
         this.completedItems = newItems;
+
+        ((HeaderModel_)completedHeaderModel).subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, completedItems.size(), completedItems.size()));
+        notifyModelChanged(completedHeaderModel);
     }
 
     @Nullable

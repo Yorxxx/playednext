@@ -30,12 +30,23 @@
         <com.piticlistudio.playednext.ui.widget.CustomTextView
             android:id="@+id/text"
             style="@style/GameRelationList.Cell.Header"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/gamerelation_list_inner_items_margin"
-            android:layout_weight="1"
             android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/gamerelation_list_header_title_done"/>
+
+        <com.piticlistudio.playednext.ui.widget.CustomTextView
+            android:id="@+id/subtitle"
+            style="@style/GameRelationList.Cell.Header.Subtitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/gamerelation_list_inner_items_margin"
+            android:layout_weight="1"
+            android:gravity="bottom"
             android:maxLines="1"
             android:text="@string/lorem"/>
 
