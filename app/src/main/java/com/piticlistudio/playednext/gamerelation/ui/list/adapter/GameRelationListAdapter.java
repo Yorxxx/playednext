@@ -42,8 +42,10 @@ public class GameRelationListAdapter extends EpoxyAdapter {
     private boolean isDisplayingCompletedItems = true;
     private boolean isDisplayingCurrentItems = true;
 
+    private GameRelationAdapterListener listener;
+
     @Inject
-    public GameRelationListAdapter(Picasso picasso, Context ctx) {
+    GameRelationListAdapter(Picasso picasso, Context ctx) {
         this.picasso = picasso;
         this.ctx = ctx;
         res = ctx.getResources();
@@ -70,6 +72,10 @@ public class GameRelationListAdapter extends EpoxyAdapter {
                 .toggle(R.drawable.gamerelation_list_header_show);
 
         addModels(completedHeaderModel, currentHeaderModel, pendingHeaderModel);
+    }
+
+    public void setListener(GameRelationAdapterListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -131,6 +137,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
 
     /**
      * Adds the list of items to the adapter as completed items view models.
+     *
      * @param newItems the items
      */
     private void bindCompletedItems(List<GameRelation> newItems) {
@@ -138,7 +145,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
             for (GameRelation completedItem : newItems) {
                 EpoxyModel viewModel = initModel(completedItem);
                 if (viewModel != null) {
-                    insertModelAfter(viewModel, completedHeaderModel);
+                    insertModelBefore(viewModel, currentHeaderModel);
                 }
             }
         } else {
@@ -152,6 +159,10 @@ public class GameRelationListAdapter extends EpoxyAdapter {
                         GameRelation item = newItems.get(index);
                         model.title(item.game().title());
                         model.imageURL(item.game().getThumbCoverUrl());
+                        model.clickListener(view -> {
+                            if (listener != null)
+                                listener.onGameRelationClicked(item);
+                        });
                     }
                     notifyModelChanged(model);
                     index++;
@@ -175,6 +186,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
 
     /**
      * Adds the list of items to the adapter as current items view models.
+     *
      * @param newItems the items
      */
     private void bindCurrentItems(List<GameRelation> newItems) {
@@ -182,7 +194,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
             for (GameRelation currentItem : newItems) {
                 EpoxyModel viewModel = initModel(currentItem);
                 if (viewModel != null) {
-                    insertModelAfter(viewModel, currentHeaderModel);
+                    insertModelBefore(viewModel, pendingHeaderModel);
                 }
             }
         } else {
@@ -196,6 +208,10 @@ public class GameRelationListAdapter extends EpoxyAdapter {
                         GameRelation item = newItems.get(index);
                         model.title(item.game().title());
                         model.imageURL(item.game().getThumbCoverUrl());
+                        model.clickListener(view -> {
+                            if (listener != null)
+                                listener.onGameRelationClicked(item);
+                        });
                     }
                     notifyModelChanged(model);
                     index++;
@@ -227,13 +243,21 @@ public class GameRelationListAdapter extends EpoxyAdapter {
                         .title(item.game().title())
                         .subtitle(item.getCurrent().get().getDisplayDate(ctx, Calendar.getInstance(), is24hFormat()))
                         .imageURL(item.game().getThumbCoverUrl())
-                        .imageloader(picasso);
+                        .imageloader(picasso)
+                        .clickListener(view -> {
+                            if (listener != null)
+                                listener.onGameRelationClicked(item);
+                        });
             case PLAYING:
                 return new CurrentItemModel_()
                         .title(item.game().title())
                         .subtitle(item.getCurrent().get().getDisplayDate(ctx, Calendar.getInstance(), is24hFormat()))
                         .imageURL(item.game().getThumbCoverUrl())
-                        .imageloader(picasso);
+                        .imageloader(picasso)
+                        .clickListener(view -> {
+                            if (listener != null)
+                                listener.onGameRelationClicked(item);
+                        });
 //            case TOBEDONE:
 //                return new PendingModel_()
 //                        .title(item.getGame().title())
@@ -247,5 +271,15 @@ public class GameRelationListAdapter extends EpoxyAdapter {
 
     private boolean is24hFormat() {
         return android.text.format.DateFormat.is24HourFormat(ctx);
+    }
+
+    public interface GameRelationAdapterListener {
+
+        /**
+         * Callback whenever a relation has been clicked
+         *
+         * @param clickedRelation the relation clicked
+         */
+        void onGameRelationClicked(GameRelation clickedRelation);
     }
 }

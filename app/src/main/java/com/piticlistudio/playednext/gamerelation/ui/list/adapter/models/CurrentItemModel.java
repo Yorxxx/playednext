@@ -41,6 +41,7 @@ public class CurrentItemModel extends BaseItemModel<CurrentItemModel.CurrentHold
                 .fit()
                 .centerCrop()
                 .into(holder.cover);
+        holder.itemView.setOnClickListener(clickListener);
     }
 
     static class CurrentHolder extends EpoxyHolder {
@@ -53,6 +54,9 @@ public class CurrentItemModel extends BaseItemModel<CurrentItemModel.CurrentHold
 
         @BindView(R.id.subtitle)
         TextView subtitle;
+
+        @BindView(R.id.overlay)
+        View itemView;
 
         @Override
         protected void bindView(View itemView) {

@@ -16,6 +16,7 @@ import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
+import com.piticlistudio.playednext.game.ui.detail.view.GameDetailActivity;
 import com.piticlistudio.playednext.game.ui.search.view.GameSearchFragment;
 import com.piticlistudio.playednext.gamerelation.DaggerGameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
@@ -37,21 +38,18 @@ import butterknife.Unbinder;
  * Created by jorge.garcia on 01/03/2017.
  */
 
-public class GameRelationListActivity extends AppCompatActivity implements GameRelationListContract.View, GameSearchFragment.IGameSearchFragmentListener {
+public class GameRelationListActivity extends AppCompatActivity implements GameRelationListContract.View, GameSearchFragment.IGameSearchFragmentListener, GameRelationListAdapter.GameRelationAdapterListener {
 
     private static final String TAG = "GameRelationList";
-    private GameRelationComponent component;
-    private GameRelationListContract.Presenter presenter;
-
     @BindView(R.id.listview)
     RecyclerView listview;
     @BindView(R.id.addBtn)
     FloatingActionButton fabBtn;
-
     Unbinder unbinder;
     @BindView(R.id.reveal)
     RevealBackgroundView reveal;
-
+    private GameRelationComponent component;
+    private GameRelationListContract.Presenter presenter;
     private GameSearchFragment searchView;
     private GameRelationListAdapter adapter;
 
@@ -62,6 +60,7 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     protected AppComponent getAppComponent() {
         return ((AndroidApplication) getApplication()).getApplicationComponent();
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +79,7 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
         listview.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
         listview.setLayoutManager(new LinearLayoutManager(getParent()));
         listview.setAdapter(adapter);
+        adapter.setListener(this);
 
         loadData();
     }
@@ -174,5 +174,15 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
             searchView = null;
             fabBtn.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * Callback whenever a relation has been clicked
+     *
+     * @param clickedRelation the relation clicked
+     */
+    @Override
+    public void onGameRelationClicked(GameRelation clickedRelation) {
+        startActivity(GameDetailActivity.init(this, clickedRelation.game()));
     }
 }

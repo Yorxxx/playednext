@@ -53,6 +53,7 @@ public class CompletedItemModel extends BaseItemModel<CompletedItemModel.Complet
                 .fit()
                 .centerInside()
                 .into(holder.cover);
+        holder.itemView.setOnClickListener(clickListener);
     }
 
     static class CompletedHolder extends EpoxyHolder {
@@ -65,6 +66,9 @@ public class CompletedItemModel extends BaseItemModel<CompletedItemModel.Complet
 
         @BindView(R.id.subtitle)
         TextView subtitle;
+
+        @BindView(R.id.overlay)
+        View itemView;
 
         @CallSuper
         @Override
