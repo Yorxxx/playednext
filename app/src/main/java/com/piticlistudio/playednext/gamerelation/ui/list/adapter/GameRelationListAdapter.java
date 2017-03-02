@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.gamerelation.ui.list.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
@@ -212,7 +213,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
 
         ((HeaderModel_) completedHeaderModel).subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, completedItems.size(), completedItems.size()));
         notifyModelChanged(completedHeaderModel);
-        onToggleCompletedItemsVisibility(isDisplayingCompletedItems);
+        onToggleCompletedItemsVisibility(!isDisplayingCompletedItems);
     }
 
     /**
@@ -261,7 +262,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
 
         ((HeaderModel_) currentHeaderModel).subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, currentItems.size(), currentItems.size()));
         notifyModelChanged(currentHeaderModel);
-        onToggleCurrentItemsVisibility(isDisplayingCurrentItems);
+        onToggleCurrentItemsVisibility(!isDisplayingCurrentItems);
     }
 
     /**
@@ -271,9 +272,10 @@ public class GameRelationListAdapter extends EpoxyAdapter {
      */
     private void bindWaitingItems(List<GameRelation> newItems) {
         if (this.todoItems == null || this.todoItems.isEmpty()) {
-            for (GameRelation completedItem : newItems) {
-                EpoxyModel viewModel = initModel(completedItem);
+            for (int i = 0; i < newItems.size(); i++) {
+                EpoxyModel viewModel = initModel(newItems.get(i));
                 if (viewModel != null) {
+                    ((WaitingItemModel_)viewModel).backgroundColor(backgroundColorForTodoItemAtIndex(i, newItems.size()));
                     addModel(viewModel);
                 }
             }
@@ -288,6 +290,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
                         GameRelation item = newItems.get(index);
                         model.title(item.game().title());
                         model.imageURL(item.game().getThumbCoverUrl());
+                        model.backgroundColor(backgroundColorForTodoItemAtIndex(index, newItems.size()));
                         model.clickListener(view -> {
                             if (listener != null)
                                 listener.onGameRelationClicked(item);
@@ -301,6 +304,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
                 for (int i = index; i < newItems.size(); i++) {
                     EpoxyModel viewModel = initModel(newItems.get(i));
                     if (viewModel != null) {
+                        ((WaitingItemModel_)viewModel).backgroundColor(backgroundColorForTodoItemAtIndex(i, newItems.size()));
                         addModel(viewModel);
                     }
                 }
@@ -311,7 +315,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
         ((HeaderModel_) pendingHeaderModel).subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, todoItems.size(),
                 todoItems.size()));
         notifyModelChanged(pendingHeaderModel);
-        onTogglePendingItemsVisibility(isDisplayingPendingItems);
+        onTogglePendingItemsVisibility(!isDisplayingPendingItems);
     }
 
     @Nullable
@@ -355,6 +359,11 @@ public class GameRelationListAdapter extends EpoxyAdapter {
 
     private boolean is24hFormat() {
         return android.text.format.DateFormat.is24HourFormat(ctx);
+    }
+
+    private int backgroundColorForTodoItemAtIndex(int index, int total) {
+        double value = ((float) index / (float) total);
+        return Color.rgb(255, (int) (value * 153), 0);
     }
 
     public interface GameRelationAdapterListener {
