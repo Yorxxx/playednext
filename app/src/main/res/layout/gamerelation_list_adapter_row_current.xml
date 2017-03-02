@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
-                                    android:layout_height="@dimen/gamerelation_list_completed_items_height"
+                                    android:layout_height="@dimen/gamerelation_list_current_items_height"
                                     android:layout_marginEnd="@dimen/gamerelation_list_inner_items_margin"
                                     android:layout_marginStart="@dimen/gamerelation_list_verticalbar_width"
                                     android:elevation="@dimen/material_card_elevation_resting"
@@ -14,31 +14,31 @@
         android:layout_height="match_parent">
 
         <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@drawable/todo_list_done_swipe_background"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:orientation="horizontal">-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@drawable/todo_list_current_swipe_background"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:orientation="horizontal">-->
 
-            <!--<com.piticlistudio.playednext.ui.widget.CustomTextView-->
-                <!--style="@style/AppTheme.Todo.Cell.Swipe.SendToPending"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginStart="@dimen/todo_list_swipe_icons_margin"-->
-                <!--android:gravity="center"/>-->
+        <!--<com.piticlistudio.vgtodo.ui.widget.CustomTextView-->
+        <!--style="@style/AppTheme.Todo.Cell.Swipe.SendToPending"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginStart="@dimen/todo_list_swipe_icons_margin"-->
+        <!--android:gravity="center"/>-->
 
-            <!--<com.piticlistudio.playednext.ui.widget.CustomTextView-->
-                <!--style="@style/AppTheme.Todo.Cell.Swipe.SendToPlaying"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginEnd="@dimen/todo_list_swipe_icons_margin"-->
-                <!--android:gravity="center"/>-->
+        <!--<com.piticlistudio.vgtodo.ui.widget.CustomTextView-->
+        <!--style="@style/AppTheme.Todo.Cell.Swipe.SendToDone"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginEnd="@dimen/todo_list_swipe_icons_margin"-->
+        <!--android:gravity="center"-->
+        <!--android:text="@string/todo_list_send_to_done"/>-->
 
         <!--</RelativeLayout>-->
-
 
         <LinearLayout
             android:id="@+id/overlay"
@@ -51,17 +51,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/gamerelation_list_item_done_background"
                 android:orientation="horizontal"
-                android:paddingBottom="4dp"
-                android:paddingEnd="4dp"
-                android:paddingStart="4dp"
-                android:paddingTop="4dp"
+                android:paddingBottom="8dp"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
                 android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/cover"
-                    android:layout_width="@dimen/gamerelation_list_completed_cover_size"
+                    android:layout_width="@dimen/gamerelation_list_current_cover_size"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
                     android:src="@drawable/sample_cover"/>
@@ -96,7 +95,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
     </FrameLayout>
 
 </android.support.v7.widget.CardView>

@@ -1,13 +1,13 @@
 package com.piticlistudio.playednext.gamerelation.ui.list.adapter.models;
 
 import android.graphics.Paint;
+import android.support.annotation.CallSuper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyHolder;
-import com.airbnb.epoxy.EpoxyModelWithHolder;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.ui.picasso.GrayscaleTransformation;
 import com.squareup.picasso.Picasso;
@@ -19,20 +19,19 @@ import butterknife.ButterKnife;
  * Adapter model representing a completed relation entity
  * Created by jorge.garcia on 01/03/2017.
  */
-
-public class CompletedItemModel extends EpoxyModelWithHolder<CompletedItemModel.CompletedHolder> {
+public class CompletedItemModel extends BaseItemModel<CompletedItemModel.CompletedHolder> {
 
     @EpoxyAttribute
     String title;
 
-    @EpoxyAttribute
-    String subtitle;
-
-    @EpoxyAttribute
-    String imageURL;
-
-    @EpoxyAttribute
-    Picasso imageloader;
+//    @EpoxyAttribute
+//    String subtitle;
+//
+//    @EpoxyAttribute
+//    String imageURL;
+//
+//    @EpoxyAttribute
+//    Picasso imageloader;
 
     @Override
     protected CompletedHolder createNewHolder() {
@@ -67,6 +66,7 @@ public class CompletedItemModel extends EpoxyModelWithHolder<CompletedItemModel.
         @BindView(R.id.subtitle)
         TextView subtitle;
 
+        @CallSuper
         @Override
         protected void bindView(View itemView) {
             ButterKnife.bind(this, itemView);

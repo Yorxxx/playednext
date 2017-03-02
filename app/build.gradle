@@ -91,7 +91,7 @@ dependencies {
     apt 'com.ryanharter.auto.value:auto-value-gson:0.4.4'
     provided 'com.ryanharter.auto.value:auto-value-gson:0.4.4'
     // Epoxy
-    compile 'com.airbnb.android:epoxy:1.5.0'
+    compile 'com.airbnb.android:epoxy:1.7.5'
     apt 'com.airbnb.android:epoxy-processor:1.5.0'
     // Floating search view
     compile 'com.github.renaudcerrato:FloatingSearchView:1.0.1'
