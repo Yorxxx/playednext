@@ -30,6 +30,13 @@ public class HeaderModel extends EpoxyModelWithHolder<HeaderHolder> {
     int icon;
 
     @EpoxyAttribute
+    @DrawableRes
+    int toggle;
+
+    @EpoxyAttribute
+    View.OnClickListener toggleClickListener;
+
+    @EpoxyAttribute
     @ColorInt
     int color;
 
@@ -55,6 +62,9 @@ public class HeaderModel extends EpoxyModelWithHolder<HeaderHolder> {
         holder.text.setTextColor(color);
         holder.icon.setColorFilter(color);
         holder.border.setBackgroundColor(color);
+        holder.toggle.setImageResource(toggle);
+        holder.toggle.setColorFilter(color);
+        holder.toggle.setOnClickListener(toggleClickListener);
     }
 
     public void setTitle(String title) {
@@ -72,12 +82,12 @@ public class HeaderModel extends EpoxyModelWithHolder<HeaderHolder> {
         @BindView(R.id.border)
         View border;
 
+        @BindView(R.id.toggle)
+        ImageView toggle;
+
         @Override
         protected void bindView(View itemView) {
             ButterKnife.bind(this, itemView);
-            this.text = (TextView) itemView.findViewById(R.id.text);
-            this.icon = (ImageView) itemView.findViewById(R.id.image);
-            this.border = itemView.findViewById(R.id.border);
         }
     }
 }

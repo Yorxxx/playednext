@@ -16,6 +16,7 @@
     <dimen name="gamerelation_list_header_height">60dp</dimen>
     <dimen name="gamerelation_list_header_margin_top">20dp</dimen>
     <dimen name="gamerelation_list_header_icon_size">24dp</dimen>
+    <dimen name="gamerelation_list_header_toggle_size">16dp</dimen>
     <dimen name="gamerelation_list_inner_items_margin">6dp</dimen>
     <dimen name="gamerelation_list_header_border_width">8dp</dimen>
     <dimen name="gamerelation_list_subtitle_margin_top">4dp</dimen>

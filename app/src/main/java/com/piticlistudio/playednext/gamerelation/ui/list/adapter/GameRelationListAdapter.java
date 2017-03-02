@@ -3,9 +3,11 @@ package com.piticlistudio.playednext.gamerelation.ui.list.adapter;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAdapter;
 import com.airbnb.epoxy.EpoxyModel;
+import com.fernandocejas.arrow.collections.Iterables;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.CompletedItemModel_;
@@ -14,6 +16,7 @@ import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.HeaderMo
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -36,6 +39,8 @@ public class GameRelationListAdapter extends EpoxyAdapter {
     private List<GameRelation> currentItems = new ArrayList<>();
     private List<GameRelation> todoItems = new ArrayList<>();
 
+    private boolean isDisplayingCompletedItems = true;
+
     @Inject
     public GameRelationListAdapter(Picasso picasso, Context ctx) {
         this.picasso = picasso;
@@ -44,17 +49,43 @@ public class GameRelationListAdapter extends EpoxyAdapter {
         completedHeaderModel = new HeaderModel_()
                 .title(ctx.getString(R.string.gamerelation_list_header_title_done))
                 .color(ContextCompat.getColor(ctx, R.color.gamerelation_completed_color))
-                .icon(R.drawable.gamerelation_completed_status);
+                .icon(R.drawable.gamerelation_completed_status)
+                .toggle(R.drawable.gamerelation_list_header_show)
+                .toggleClickListener(view -> onToggleCompletedItemsVisibility(isDisplayingCompletedItems));
         currentHeaderModel = new HeaderModel_()
                 .title(ctx.getString(R.string.gamerelation_list_header_title_playing))
                 .color(ContextCompat.getColor(ctx, R.color.gamerelation_current_color))
-                .icon(R.drawable.gamerelation_playing_status);
+                .icon(R.drawable.gamerelation_playing_status)
+                .toggle(R.drawable.gamerelation_list_header_show);
         pendingHeaderModel = new HeaderModel_()
                 .title(ctx.getString(R.string.gamerelation_list_header_title_pending))
                 .color(ContextCompat.getColor(ctx, R.color.gamerelation_pending_color))
-                .icon(R.drawable.gamerelation_waiting_status);
+                .icon(R.drawable.gamerelation_waiting_status)
+                .toggle(R.drawable.gamerelation_list_header_show);
 
         addModels(completedHeaderModel, currentHeaderModel, pendingHeaderModel);
+    }
+
+    private void onToggleCompletedItemsVisibility(boolean isEnabled) {
+        List<EpoxyModel<?>> itemsToUpdate = new ArrayList<>();
+        if (isEnabled) {
+            ((HeaderModel_)completedHeaderModel).toggle(R.drawable.gamerelation_list_header_hide);
+            notifyModelChanged(completedHeaderModel);
+        }
+        else {
+            ((HeaderModel_)completedHeaderModel).toggle(R.drawable.gamerelation_list_header_show);
+            notifyModelChanged(completedHeaderModel);
+        }
+        for (EpoxyModel<?> model : this.models) {
+            if (model instanceof CompletedItemModel_) {
+                itemsToUpdate.add(model);
+            }
+        }
+        if (isEnabled)
+            hideModels(itemsToUpdate);
+        else
+            showModels(itemsToUpdate);
+        this.isDisplayingCompletedItems = !isEnabled;
     }
 
     public void setData(List<GameRelation> completedItems, List<GameRelation> currentItems, List<GameRelation> todoItems) {
