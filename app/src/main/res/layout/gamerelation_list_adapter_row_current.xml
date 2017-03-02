@@ -3,7 +3,7 @@
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/gamerelation_list_current_items_height"
-                                    android:layout_marginEnd="@dimen/gamerelation_list_inner_items_margin"
+                                    android:layout_marginEnd="@dimen/gamerelation_list_verticalbar_width"
                                     android:layout_marginStart="@dimen/gamerelation_list_verticalbar_width"
                                     android:elevation="@dimen/material_card_elevation_resting"
                                     app:cardCornerRadius="@dimen/material_card_corner_radius"

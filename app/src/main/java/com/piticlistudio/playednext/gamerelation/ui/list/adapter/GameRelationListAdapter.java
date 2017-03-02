@@ -13,6 +13,7 @@ import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.Complete
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.CurrentItemModel_;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.HeaderModel;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.HeaderModel_;
+import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.WaitingItemModel_;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
 
     private boolean isDisplayingCompletedItems = true;
     private boolean isDisplayingCurrentItems = true;
+    private boolean isDisplayingPendingItems = true;
 
     private GameRelationAdapterListener listener;
 
@@ -69,7 +71,9 @@ public class GameRelationListAdapter extends EpoxyAdapter {
                 .title(ctx.getString(R.string.gamerelation_list_header_title_pending))
                 .color(ContextCompat.getColor(ctx, R.color.gamerelation_pending_color))
                 .icon(R.drawable.gamerelation_waiting_status)
-                .toggle(R.drawable.gamerelation_list_header_show);
+                .toggle(R.drawable.gamerelation_list_header_show)
+                .toggleClickListener(view -> onTogglePendingItemsVisibility(isDisplayingPendingItems))
+                .subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, todoItems.size(), todoItems.size()));
 
         addModels(completedHeaderModel, currentHeaderModel, pendingHeaderModel);
     }
@@ -129,10 +133,37 @@ public class GameRelationListAdapter extends EpoxyAdapter {
         this.isDisplayingCurrentItems = !isEnabled;
     }
 
+    /**
+     * Called whenever the visibility icon on the pending list has been clicked
+     *
+     * @param isEnabled true if items were previously visible. False otherwise
+     */
+    private void onTogglePendingItemsVisibility(boolean isEnabled) {
+        List<EpoxyModel<?>> itemsToUpdate = new ArrayList<>();
+        if (isEnabled) {
+            ((HeaderModel_) pendingHeaderModel).toggle(R.drawable.gamerelation_list_header_hide);
+            notifyModelChanged(pendingHeaderModel);
+        } else {
+            ((HeaderModel_) pendingHeaderModel).toggle(R.drawable.gamerelation_list_header_show);
+            notifyModelChanged(pendingHeaderModel);
+        }
+        for (EpoxyModel<?> model : this.models) {
+            if (model instanceof WaitingItemModel_) {
+                itemsToUpdate.add(model);
+            }
+        }
+        if (isEnabled)
+            hideModels(itemsToUpdate);
+        else
+            showModels(itemsToUpdate);
+        this.isDisplayingPendingItems = !isEnabled;
+    }
+
     public void setData(List<GameRelation> completedItems, List<GameRelation> currentItems, List<GameRelation> todoItems) {
 
         bindCompletedItems(completedItems);
         bindCurrentItems(currentItems);
+        bindWaitingItems(todoItems);
     }
 
     /**
@@ -233,6 +264,56 @@ public class GameRelationListAdapter extends EpoxyAdapter {
         onToggleCurrentItemsVisibility(isDisplayingCurrentItems);
     }
 
+    /**
+     * Adds the list of items to the adapter as waiting items view models.
+     *
+     * @param newItems the items
+     */
+    private void bindWaitingItems(List<GameRelation> newItems) {
+        if (this.todoItems == null || this.todoItems.isEmpty()) {
+            for (GameRelation completedItem : newItems) {
+                EpoxyModel viewModel = initModel(completedItem);
+                if (viewModel != null) {
+                    addModel(viewModel);
+                }
+            }
+        } else {
+            int index = 0;
+            for (int i = 1; i < this.models.size(); i++) { // First one is always the header
+                if (this.models.get(i) instanceof WaitingItemModel_) {
+                    WaitingItemModel_ model = ((WaitingItemModel_) models.get(i));
+                    if (index >= newItems.size()) {
+                        removeModel(model);
+                    } else {
+                        GameRelation item = newItems.get(index);
+                        model.title(item.game().title());
+                        model.imageURL(item.game().getThumbCoverUrl());
+                        model.clickListener(view -> {
+                            if (listener != null)
+                                listener.onGameRelationClicked(item);
+                        });
+                    }
+                    notifyModelChanged(model);
+                    index++;
+                }
+            }
+            if (index < newItems.size()) {
+                for (int i = index; i < newItems.size(); i++) {
+                    EpoxyModel viewModel = initModel(newItems.get(i));
+                    if (viewModel != null) {
+                        addModel(viewModel);
+                    }
+                }
+            }
+        }
+        this.todoItems = newItems;
+
+        ((HeaderModel_) pendingHeaderModel).subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, todoItems.size(),
+                todoItems.size()));
+        notifyModelChanged(pendingHeaderModel);
+        onTogglePendingItemsVisibility(isDisplayingPendingItems);
+    }
+
     @Nullable
     private EpoxyModel initModel(GameRelation item) {
         if (!item.getCurrent().isPresent())
@@ -258,13 +339,16 @@ public class GameRelationListAdapter extends EpoxyAdapter {
                             if (listener != null)
                                 listener.onGameRelationClicked(item);
                         });
-//            case TOBEDONE:
-//                return new PendingModel_()
-//                        .title(item.getGame().title())
-//                        .subtitle("Added on 14/09/16")
-//                        .imageURL(item.getGame().getThumbCoverUrl())
-//                        .imageloader(picasso)
-//                        .boostValue((int)item.getGame().getRating());
+            case PENDING:
+                return new WaitingItemModel_()
+                        .title(item.game().title())
+                        .subtitle(item.getCurrent().get().getDisplayDate(ctx, Calendar.getInstance(), is24hFormat()))
+                        .imageURL(item.game().getThumbCoverUrl())
+                        .imageloader(picasso)
+                        .clickListener(view -> {
+                            if (listener != null)
+                                listener.onGameRelationClicked(item);
+                        });
         }
         return null;
     }
