@@ -1,15 +1,8 @@
 package com.piticlistudio.playednext.gamerelation.ui.list.adapter.models;
 
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyHolder;
 import com.piticlistudio.playednext.R;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * View model for current items
@@ -35,32 +28,15 @@ public class CurrentItemModel extends BaseItemModel<CurrentItemModel.CurrentHold
 
     @Override
     public void bind(CurrentHolder holder) {
+        super.bind(holder);
         holder.text.setText(title);
-        holder.subtitle.setText(subtitle);
         imageloader.load(imageURL)
                 .fit()
                 .centerCrop()
                 .into(holder.cover);
-        holder.itemView.setOnClickListener(clickListener);
     }
 
-    static class CurrentHolder extends EpoxyHolder {
+    static class CurrentHolder extends BaseItemHolder {
 
-        @BindView(R.id.title)
-        TextView text;
-
-        @BindView(R.id.cover)
-        ImageView cover;
-
-        @BindView(R.id.subtitle)
-        TextView subtitle;
-
-        @BindView(R.id.overlay)
-        View itemView;
-
-        @Override
-        protected void bindView(View itemView) {
-            ButterKnife.bind(this, itemView);
-        }
     }
 }

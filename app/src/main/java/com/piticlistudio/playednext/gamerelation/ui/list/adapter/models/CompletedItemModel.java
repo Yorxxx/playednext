@@ -1,19 +1,11 @@
 package com.piticlistudio.playednext.gamerelation.ui.list.adapter.models;
 
 import android.graphics.Paint;
-import android.support.annotation.CallSuper;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyHolder;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.ui.picasso.GrayscaleTransformation;
-import com.squareup.picasso.Picasso;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Adapter model representing a completed relation entity
@@ -24,15 +16,9 @@ public class CompletedItemModel extends BaseItemModel<CompletedItemModel.Complet
     @EpoxyAttribute
     String title;
 
-//    @EpoxyAttribute
-//    String subtitle;
-//
-//    @EpoxyAttribute
-//    String imageURL;
-//
-//    @EpoxyAttribute
-//    Picasso imageloader;
-
+    /**
+     * This should return a new instance of your {@link EpoxyHolder} class.
+     */
     @Override
     protected CompletedHolder createNewHolder() {
         return new CompletedHolder();
@@ -45,35 +31,17 @@ public class CompletedItemModel extends BaseItemModel<CompletedItemModel.Complet
 
     @Override
     public void bind(CompletedHolder holder) {
+        super.bind(holder);
         holder.text.setText(title);
-        holder.subtitle.setText(subtitle);
         holder.text.setPaintFlags(holder.text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         imageloader.load(imageURL)
                 .transform(new GrayscaleTransformation())
                 .fit()
                 .centerInside()
                 .into(holder.cover);
-        holder.itemView.setOnClickListener(clickListener);
     }
 
-    static class CompletedHolder extends EpoxyHolder {
+    static class CompletedHolder extends BaseItemHolder {
 
-        @BindView(R.id.title)
-        TextView text;
-
-        @BindView(R.id.cover)
-        ImageView cover;
-
-        @BindView(R.id.subtitle)
-        TextView subtitle;
-
-        @BindView(R.id.overlay)
-        View itemView;
-
-        @CallSuper
-        @Override
-        protected void bindView(View itemView) {
-            ButterKnife.bind(this, itemView);
-        }
     }
 }
