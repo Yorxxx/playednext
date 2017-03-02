@@ -95,7 +95,7 @@ public class GameRelationListInteractorTest extends BaseTest {
     }
 
     @Test
-    public void given_mixedItemType_When_LoadCompletedItems_Then_EmitsOnlyCompletedItems() throws Exception {
+    public void given_mixedItemType_When_LoadCompletedItems_Then_EmitsOnlyCompletedItemsSortered() throws Exception {
 
         List<GameRelation> data = new ArrayList<>();
         GameRelation noneRelation = mock(GameRelation.class);
@@ -107,7 +107,18 @@ public class GameRelationListInteractorTest extends BaseTest {
 
         GameRelation completedRelation = mock(GameRelation.class);
         RelationInterval completedInterval = RelationInterval.create(2, RelationInterval.RelationType.DONE, 1000);
+        completedInterval.setEndAt(2000);
         when(completedRelation.getCurrent()).thenReturn(Optional.of(completedInterval));
+
+        GameRelation completedRelation2 = mock(GameRelation.class);
+        RelationInterval completedInterval2 = RelationInterval.create(2, RelationInterval.RelationType.DONE, 1500);
+        completedInterval2.setEndAt(2000);
+        when(completedRelation2.getCurrent()).thenReturn(Optional.of(completedInterval2));
+
+        GameRelation completedRelation3 = mock(GameRelation.class);
+        RelationInterval completedInterval3 = RelationInterval.create(2, RelationInterval.RelationType.DONE, 800);
+        completedInterval3.setEndAt(1000);
+        when(completedRelation3.getCurrent()).thenReturn(Optional.of(completedInterval3));
 
         GameRelation waitingRelation = mock(GameRelation.class);
         RelationInterval waitingInterval = RelationInterval.create(3, RelationInterval.RelationType.PENDING, 2000);
@@ -116,8 +127,10 @@ public class GameRelationListInteractorTest extends BaseTest {
         data.add(noneRelation);
         data.add(playingRelation);
         data.add(completedRelation);
+        data.add(completedRelation3);
         data.add(waitingRelation);
         data.add(completedRelation);
+        data.add(completedRelation2);
         data.add(playingRelation);
         data.add(noneRelation);
 
@@ -132,10 +145,18 @@ public class GameRelationListInteractorTest extends BaseTest {
                 .assertComplete()
                 .assertValueCount(1)
                 .assertValue(check(relations -> {
-                    assertEquals(2, relations.size());
+                    assertEquals(4, relations.size());
                     for (GameRelation relation : relations) {
                         assertTrue(relation.getCurrent().isPresent());
                         assertEquals(RelationInterval.RelationType.DONE, relation.getCurrent().get().type());
+                    }
+                }))
+                .assertValue(check(relations -> {
+                    // Check items are ordered
+                    long previous = 0;
+                    for (int i = 0; i < relations.size(); i++) {
+                        assertTrue(relations.get(i).getCurrent().get().startAt() >= previous);
+                        previous = relations.get(i).getCurrent().get().startAt();
                     }
                 }));
         verify(relationRepository).loadAll();
