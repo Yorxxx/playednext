@@ -2,9 +2,11 @@ package com.piticlistudio.playednext.gamerelation.ui.list.view;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -92,6 +94,19 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     }
 
     /**
+     * Take care of popping the fragment back stack or finishing the activity
+     * as appropriate.
+     */
+    @Override
+    public void onBackPressed() {
+        if (searchView == null)
+            super.onBackPressed();
+        else {
+            searchView.onBackPressed();
+        }
+    }
+
+    /**
      * Sets the data
      *
      * @param completed the list of items completed
@@ -100,7 +115,6 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
      */
     @Override
     public void setData(List<GameRelation> completed, List<GameRelation> current, List<GameRelation> waiting) {
-        Log.d(TAG, "setData() called with: completed = [" + completed + "], current = [" + current + "], waiting = [" + waiting + "]");
         adapter.setData(completed, current, waiting);
     }
 
@@ -145,7 +159,7 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     }
 
     private void revealSearchView(View fromview) {
-        reveal.setRevealColor(Color.WHITE);
+        reveal.setRevealColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
         int[] location = new int[2];
         fromview.getLocationOnScreen(location);
         location[0] += fromview.getWidth() / 2;
@@ -173,13 +187,30 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     @Override
     public void onCloseSearchClicked(View v) {
         if (searchView != null) {
-            int[] location = new int[2];
-            v.getLocationOnScreen(location);
-            location[0] += v.getWidth() / 2;
-            reveal.hideFromLocation(location);
-            getSupportFragmentManager().beginTransaction().remove(searchView).commit();
-            searchView = null;
-            fabBtn.setVisibility(View.VISIBLE);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+            transaction.setCustomAnimations(R.anim.exit_to_top, R.anim.exit_to_top);
+            transaction.remove(searchView);
+            transaction.commit();
+
+            // TODO: 03/03/2017 is there a way to be notified when the transaction has completed?
+            int animDuration = getResources().getInteger(R.integer.gamesearch_exit_anim_duration);
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                int[] location = new int[2];
+                fabBtn.getLocationOnScreen(location);
+                location[0] += fabBtn.getWidth() / 2;
+                reveal.hideFromLocation(location);
+                reveal.setOnStateChangeListener(state -> {
+                    if (state == RevealBackgroundView.STATE_FINISHED) {
+                        searchView = null;
+                        fabBtn.setVisibility(View.VISIBLE);
+                        searchView = null;
+                    }
+                });
+
+
+            }, animDuration);
         }
     }
 

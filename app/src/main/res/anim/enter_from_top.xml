@@ -5,5 +5,5 @@
         android:fromXDelta="0%" android:toXDelta="0%"
         android:interpolator="@android:anim/anticipate_overshoot_interpolator"
         android:fromYDelta="-100%" android:toYDelta="0%"
-        android:duration="1000"/>
+        android:duration="@integer/gamesearch_enter_anim_duration"/>
 </set>

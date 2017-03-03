@@ -71,7 +71,7 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
 
     private GameSearchAdapter adapter;
     private GameSearchPresenter presenter;
-        private IGameSearchFragmentListener listener;
+    private IGameSearchFragmentListener listener;
     private boolean isLoadingMore = false;
     private boolean canLoadMore = false;
 
@@ -153,6 +153,10 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
 
     public void setListener(IGameSearchFragmentListener listener) {
         this.listener = listener;
+    }
+
+    public void onBackPressed() {
+        closeSearch(this.closeBtn);
     }
 
     @Override
