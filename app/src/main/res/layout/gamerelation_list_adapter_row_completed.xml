@@ -13,32 +13,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@drawable/todo_list_done_swipe_background"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:orientation="horizontal">-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gamerelation_list_completed_swipe_background"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <!--<com.piticlistudio.playednext.ui.widget.CustomTextView-->
-                <!--style="@style/AppTheme.Todo.Cell.Swipe.SendToPending"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginStart="@dimen/todo_list_swipe_icons_margin"-->
-                <!--android:gravity="center"/>-->
+            <com.piticlistudio.playednext.ui.widget.CustomTextView
+                style="@style/GameRelationList.Cell.Swipe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:drawableTop="@drawable/gamerelation_list_deleteitem"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/gamerelation_list_swipetodelete"
+                android:textColor="@android:color/white"/>
 
-            <!--<com.piticlistudio.playednext.ui.widget.CustomTextView-->
-                <!--style="@style/AppTheme.Todo.Cell.Swipe.SendToPlaying"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginEnd="@dimen/todo_list_swipe_icons_margin"-->
-                <!--android:gravity="center"/>-->
-
-        <!--</RelativeLayout>-->
-
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/overlay"

@@ -28,6 +28,7 @@
         <item quantity="one">- %1$d game</item>
         <item quantity="other">- %1$d games</item>
     </plurals>
+    <string name="gamerelation_list_swipetodelete">Delete</string>
     <!-- gamerelation list screen end -->
 
     <string name="interval_displaydate_completed_zero">Completed today at %1$s</string>

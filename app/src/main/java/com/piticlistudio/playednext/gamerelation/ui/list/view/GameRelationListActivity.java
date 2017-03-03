@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 
@@ -24,6 +25,7 @@ import com.piticlistudio.playednext.gamerelation.GameRelationModule;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListContract;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.GameRelationListAdapter;
+import com.piticlistudio.playednext.ui.recyclerview.SwipeTouchHelper;
 import com.piticlistudio.playednext.ui.widget.RevealBackgroundView;
 
 import java.util.List;
@@ -80,6 +82,10 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
         listview.setLayoutManager(new LinearLayoutManager(getParent()));
         listview.setAdapter(adapter);
         adapter.setListener(this);
+
+        SwipeTouchHelper swipeTouchHelper = new SwipeTouchHelper(adapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeTouchHelper);
+        itemTouchHelper.attachToRecyclerView(listview);
 
         loadData();
     }

@@ -5,9 +5,12 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAdapter;
 import com.airbnb.epoxy.EpoxyModel;
+import com.airbnb.epoxy.EpoxyViewHolder;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.CompletedItemModel_;
@@ -15,6 +18,7 @@ import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.CurrentI
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.HeaderModel;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.HeaderModel_;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.WaitingItemModel_;
+import com.piticlistudio.playednext.ui.recyclerview.SwipeableAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -28,7 +32,7 @@ import javax.inject.Inject;
  * Created by jorge.garcia on 01/03/2017.
  */
 
-public class GameRelationListAdapter extends EpoxyAdapter {
+public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAdapter {
 
     private final Picasso picasso;
     private final Context ctx;
@@ -210,8 +214,16 @@ public class GameRelationListAdapter extends EpoxyAdapter {
             }
         }
         this.completedItems = newItems;
+        updateCompletedHeaderWithItemsInfo(this.completedItems);
+    }
 
-        ((HeaderModel_) completedHeaderModel).subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, completedItems.size(), completedItems.size()));
+    /**
+     * Binds the CompletedHeaderModel with the info provided by the items
+     *
+     * @param items the items related to the header
+     */
+    private void updateCompletedHeaderWithItemsInfo(List<GameRelation> items) {
+        ((HeaderModel_) completedHeaderModel).subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, items.size(), items.size()));
         notifyModelChanged(completedHeaderModel);
         onToggleCompletedItemsVisibility(!isDisplayingCompletedItems);
     }
@@ -259,8 +271,16 @@ public class GameRelationListAdapter extends EpoxyAdapter {
             }
         }
         this.currentItems = newItems;
+        updateCurrentHeaderWithItemsInfo(this.currentItems);
+    }
 
-        ((HeaderModel_) currentHeaderModel).subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, currentItems.size(), currentItems.size()));
+    /**
+     * Binds the CurrentHeaderModel with the info provided by the items
+     *
+     * @param items the items related to the header
+     */
+    private void updateCurrentHeaderWithItemsInfo(List<GameRelation> items) {
+        ((HeaderModel_) currentHeaderModel).subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, items.size(), items.size()));
         notifyModelChanged(currentHeaderModel);
         onToggleCurrentItemsVisibility(!isDisplayingCurrentItems);
     }
@@ -275,7 +295,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
             for (int i = 0; i < newItems.size(); i++) {
                 EpoxyModel viewModel = initModel(newItems.get(i));
                 if (viewModel != null) {
-                    ((WaitingItemModel_)viewModel).backgroundColor(backgroundColorForTodoItemAtIndex(i, newItems.size()));
+                    ((WaitingItemModel_) viewModel).backgroundColor(backgroundColorForTodoItemAtIndex(i, newItems.size()));
                     addModel(viewModel);
                 }
             }
@@ -304,7 +324,7 @@ public class GameRelationListAdapter extends EpoxyAdapter {
                 for (int i = index; i < newItems.size(); i++) {
                     EpoxyModel viewModel = initModel(newItems.get(i));
                     if (viewModel != null) {
-                        ((WaitingItemModel_)viewModel).backgroundColor(backgroundColorForTodoItemAtIndex(i, newItems.size()));
+                        ((WaitingItemModel_) viewModel).backgroundColor(backgroundColorForTodoItemAtIndex(i, newItems.size()));
                         addModel(viewModel);
                     }
                 }
@@ -314,6 +334,17 @@ public class GameRelationListAdapter extends EpoxyAdapter {
 
         ((HeaderModel_) pendingHeaderModel).subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, todoItems.size(),
                 todoItems.size()));
+        notifyModelChanged(pendingHeaderModel);
+        onTogglePendingItemsVisibility(!isDisplayingPendingItems);
+    }
+
+    /**
+     * Binds the PendingHeaderModel with the info provided by the items
+     *
+     * @param items the items related to the header
+     */
+    private void updateTodoHeaderWithItemsInfo(List<GameRelation> items) {
+        ((HeaderModel_) pendingHeaderModel).subtitle(res.getQuantityString(R.plurals.gamerelation_list_header_subtitle, items.size(), items.size()));
         notifyModelChanged(pendingHeaderModel);
         onTogglePendingItemsVisibility(!isDisplayingPendingItems);
     }
@@ -364,6 +395,65 @@ public class GameRelationListAdapter extends EpoxyAdapter {
     private int backgroundColorForTodoItemAtIndex(int index, int total) {
         double value = ((float) index / (float) total);
         return Color.rgb(255, (int) (value * 153), 0);
+    }
+
+    /**
+     * Returns if the specified position has swipe to right enabled.
+     *
+     * @param position the position to check.
+     * @return true if swipe is enabled. False otherwise.
+     */
+    @Override
+    public boolean isSwipeToRightEnabled(int position) {
+        if (position >= this.models.size())
+            return false;
+        EpoxyModel model = this.models.get(position);
+        return !(model instanceof HeaderModel);
+    }
+
+    /**
+     * Returns if the specified position has swipe to left enabled.
+     *
+     * @param position the position to check.
+     * @return true if swipe is enabled. False otherwise.
+     */
+    @Override
+    public boolean isSwipeToLeftEnabled(int position) {
+        if (position >= this.models.size())
+            return false;
+        EpoxyModel model = this.models.get(position);
+        if (model instanceof HeaderModel || model instanceof CompletedItemModel_) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Indicates that the holder has been swiped
+     *
+     * @param viewHolder the holder.
+     * @param position   the position swiped
+     * @param direction  the direction of the swipe.
+     */
+    @Override
+    public void onItemSwipe(RecyclerView.ViewHolder viewHolder, int position, int direction) {
+        EpoxyModel model = ((EpoxyViewHolder) viewHolder).getModel();
+        removeModel(model);
+        if (model instanceof CompletedItemModel_) {
+            completedItems.remove(position - 1);
+            updateCompletedHeaderWithItemsInfo(completedItems);
+        } else if (model instanceof CurrentItemModel_) {
+            currentItems.remove(position - completedItems.size() - 2);
+            updateCurrentHeaderWithItemsInfo(currentItems);
+        } else if (model instanceof WaitingItemModel_) {
+            todoItems.remove(position - completedItems.size() - currentItems.size() - 3);
+            updateTodoHeaderWithItemsInfo(todoItems);
+        }
+    }
+
+    @Override
+    public View getSwipeView(RecyclerView.ViewHolder viewHolder) {
+        return ((EpoxyViewHolder) viewHolder).itemView.findViewById(R.id.overlay);
     }
 
     public interface GameRelationAdapterListener {
