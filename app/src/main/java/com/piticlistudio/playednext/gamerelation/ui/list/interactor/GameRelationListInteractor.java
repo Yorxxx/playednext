@@ -110,6 +110,7 @@ public class GameRelationListInteractor implements GameRelationListContract.Inte
 
         switch (interval1.type()) {
             case DONE:
+            case PLAYING:
                 if (interval1.startAt() > interval2.startAt())
                     return 1;
                 if (interval1.startAt() < interval2.startAt())
