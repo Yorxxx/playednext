@@ -29,10 +29,10 @@ public abstract class BaseItemModel<T extends BaseItemHolder> extends EpoxyModel
     View.OnClickListener clickListener;
 
     @EpoxyAttribute
-    float translationX;
+    String rightSwipeMessage;
 
     @EpoxyAttribute
-    float translationY;
+    String leftSwipeMessage;
 
     @Override
     public void bind(T holder) {
@@ -40,7 +40,7 @@ public abstract class BaseItemModel<T extends BaseItemHolder> extends EpoxyModel
         holder.text.setText(title);
         holder.subtitle.setText(subtitle);
         holder.itemView.setOnClickListener(clickListener);
-        holder.itemView.setTranslationX(translationX);
-        holder.itemView.setTranslationY(translationY);
+        holder.rightSwipeMessage.setText(rightSwipeMessage);
+        holder.leftSwipeMessage.setText(leftSwipeMessage);
     }
 }

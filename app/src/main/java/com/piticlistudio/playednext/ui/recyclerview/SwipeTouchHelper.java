@@ -60,6 +60,7 @@ public class SwipeTouchHelper extends ItemTouchHelper.Callback {
                 view.setTranslationX(dX);
                 view.setTranslationY(dY);
             }
+            adapter.onSwiping(viewHolder, dX, dY);
             super.onChildDraw(c, recyclerView, viewHolder, 0, 0, actionState, isCurrentlyActive);
         }
     }

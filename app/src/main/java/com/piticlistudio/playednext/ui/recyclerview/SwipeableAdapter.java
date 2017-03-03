@@ -42,4 +42,6 @@ public interface SwipeableAdapter {
      * @return the view
      */
     View getSwipeView(RecyclerView.ViewHolder viewHolder);
+
+    void onSwiping(RecyclerView.ViewHolder viewHolder, float dX, float dY);
 }

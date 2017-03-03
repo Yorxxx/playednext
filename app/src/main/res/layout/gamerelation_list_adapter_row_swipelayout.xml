@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/destroySwipeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gamerelation_list_swipe_destroy_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.piticlistudio.playednext.ui.widget.CustomTextView
+            android:id="@+id/destroyText"
+            style="@style/GameRelationList.Cell.Swipe.Destroy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/positiveSwipeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gamerelation_list_swipe_positive_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.piticlistudio.playednext.ui.widget.CustomTextView
+            android:id="@+id/positiveText"
+            style="@style/GameRelationList.Cell.Swipe.Positive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="@string/gamerelation_list_header_title_done"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

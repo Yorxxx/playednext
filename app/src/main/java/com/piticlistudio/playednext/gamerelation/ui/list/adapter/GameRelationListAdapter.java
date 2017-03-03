@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAdapter;
@@ -362,6 +363,7 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
                         .subtitle(item.getCurrent().get().getDisplayDate(ctx, Calendar.getInstance(), is24hFormat()))
                         .imageURL(item.game().getThumbCoverUrl())
                         .imageloader(picasso)
+                        .rightSwipeMessage(ctx.getString(R.string.gamerelation_list_swipetodelete))
                         .clickListener(view -> {
                             if (listener != null)
                                 listener.onGameRelationClicked(item);
@@ -372,6 +374,8 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
                         .subtitle(item.getCurrent().get().getDisplayDate(ctx, Calendar.getInstance(), is24hFormat()))
                         .imageURL(item.game().getThumbCoverUrl())
                         .imageloader(picasso)
+                        .rightSwipeMessage(ctx.getString(R.string.gamerelation_list_swipetodelete))
+                        .leftSwipeMessage(ctx.getString(R.string.gamerelation_list_header_title_done))
                         .clickListener(view -> {
                             if (listener != null)
                                 listener.onGameRelationClicked(item);
@@ -382,6 +386,8 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
                         .subtitle(item.getCurrent().get().getDisplayDate(ctx, Calendar.getInstance(), is24hFormat()))
                         .imageURL(item.game().getThumbCoverUrl())
                         .imageloader(picasso)
+                        .rightSwipeMessage(ctx.getString(R.string.gamerelation_list_swipetodelete))
+                        .leftSwipeMessage(ctx.getString(R.string.gamerelation_list_header_title_playing))
                         .clickListener(view -> {
                             if (listener != null)
                                 listener.onGameRelationClicked(item);
@@ -481,6 +487,12 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
     @Override
     public View getSwipeView(RecyclerView.ViewHolder viewHolder) {
         return ((EpoxyViewHolder) viewHolder).itemView.findViewById(R.id.overlay);
+    }
+
+    @Override
+    public void onSwiping(RecyclerView.ViewHolder viewHolder, float dX, float dY) {
+        ((EpoxyViewHolder) viewHolder).itemView.findViewById(R.id.positiveSwipeLayout).setVisibility(dX > 0 ? View.INVISIBLE : View.VISIBLE);
+        ((EpoxyViewHolder) viewHolder).itemView.findViewById(R.id.destroySwipeLayout).setVisibility(dX > 0 ? View.VISIBLE : View.INVISIBLE);
     }
 
     public interface GameRelationAdapterListener {

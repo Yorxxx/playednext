@@ -25,9 +25,17 @@ public abstract class BaseItemHolder extends EpoxyHolder {
     @BindView(R.id.overlay)
     View itemView;
 
+    @BindView(R.id.destroyText)
+    TextView rightSwipeMessage;
+
+    @BindView(R.id.positiveText)
+    TextView leftSwipeMessage;
+
     @CallSuper
     @Override
     protected void bindView(View itemView) {
         ButterKnife.bind(this, itemView);
+        this.rightSwipeMessage = (TextView) itemView.findViewById(R.id.destroyText);
+        this.leftSwipeMessage = (TextView) itemView.findViewById(R.id.positiveText);
     }
 }
