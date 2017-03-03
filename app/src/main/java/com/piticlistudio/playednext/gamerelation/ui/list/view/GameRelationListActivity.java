@@ -25,6 +25,7 @@ import com.piticlistudio.playednext.gamerelation.GameRelationModule;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListContract;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.GameRelationListAdapter;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 import com.piticlistudio.playednext.ui.recyclerview.SwipeTouchHelper;
 import com.piticlistudio.playednext.ui.widget.RevealBackgroundView;
 
@@ -190,5 +191,17 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     @Override
     public void onGameRelationClicked(GameRelation clickedRelation) {
         startActivity(GameDetailActivity.init(this, clickedRelation.game()));
+    }
+
+    /**
+     * Callback when a change on the current relation type has been requested
+     *
+     * @param relation    the relation requested to update its type
+     * @param currentType the current type of the relation
+     * @param newType     the new requested type
+     */
+    @Override
+    public void onGameRelationChanged(GameRelation relation, RelationInterval.RelationType currentType, RelationInterval.RelationType newType) {
+        Log.d(TAG, "onGameRelationChanged() called with: relation = [" + relation + "], currentType = [" + currentType + "], newType = [" + newType + "]");
     }
 }

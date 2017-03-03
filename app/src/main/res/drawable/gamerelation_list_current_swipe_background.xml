@@ -4,8 +4,8 @@
 
     <gradient
         android:angle="0"
-        android:centerColor="@color/gamerelation_list_action_destroy_background_end"
-        android:endColor="@color/gamerelation_list_action_destroy_background_end"
+        android:centerColor="#9E8D5D"
+        android:endColor="@color/gamerelation_list_action_positive_background_start"
         android:startColor="@color/gamerelation_list_action_destroy_background_start"
         android:type="linear"/>
 

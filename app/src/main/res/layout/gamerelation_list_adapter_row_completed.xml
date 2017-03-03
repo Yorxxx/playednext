@@ -21,16 +21,11 @@
             android:orientation="horizontal">
 
             <com.piticlistudio.playednext.ui.widget.CustomTextView
-                style="@style/GameRelationList.Cell.Swipe"
+                style="@style/GameRelationList.Cell.Swipe.Destroy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:drawableTop="@drawable/gamerelation_list_deleteitem"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="@string/gamerelation_list_swipetodelete"
-                android:textColor="@android:color/white"/>
+                android:layout_marginStart="10dp"/>
 
         </RelativeLayout>
 

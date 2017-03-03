@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAdapter;
@@ -18,6 +19,7 @@ import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.CurrentI
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.HeaderModel;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.HeaderModel_;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.models.WaitingItemModel_;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 import com.piticlistudio.playednext.ui.recyclerview.SwipeableAdapter;
 import com.squareup.picasso.Picasso;
 
@@ -440,14 +442,39 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
         EpoxyModel model = ((EpoxyViewHolder) viewHolder).getModel();
         removeModel(model);
         if (model instanceof CompletedItemModel_) {
-            completedItems.remove(position - 1);
+            GameRelation relation = completedItems.get(position - 1);
+            completedItems.remove(relation);
             updateCompletedHeaderWithItemsInfo(completedItems);
+            if (listener != null) {
+                if (direction == ItemTouchHelper.RIGHT || direction == ItemTouchHelper.END) {
+                    listener.onGameRelationChanged(relation, RelationInterval.RelationType.DONE, RelationInterval.RelationType.NONE);
+                }
+            }
         } else if (model instanceof CurrentItemModel_) {
-            currentItems.remove(position - completedItems.size() - 2);
+            GameRelation relation = currentItems.get(position - completedItems.size() - 2);
+            currentItems.remove(relation);
             updateCurrentHeaderWithItemsInfo(currentItems);
+            if (listener != null) {
+                if (direction == ItemTouchHelper.LEFT || direction == ItemTouchHelper.START) {
+                    listener.onGameRelationChanged(relation, RelationInterval.RelationType.PLAYING, RelationInterval.RelationType.DONE);
+                }
+                else if (direction == ItemTouchHelper.RIGHT || direction == ItemTouchHelper.END) {
+                    listener.onGameRelationChanged(relation, RelationInterval.RelationType.PLAYING, RelationInterval.RelationType.NONE);
+                }
+            }
+
         } else if (model instanceof WaitingItemModel_) {
-            todoItems.remove(position - completedItems.size() - currentItems.size() - 3);
+            GameRelation relation = todoItems.get(position - completedItems.size() - currentItems.size() - 3);
+            todoItems.remove(relation);
             updateTodoHeaderWithItemsInfo(todoItems);
+            if (listener != null) {
+                if (direction == ItemTouchHelper.LEFT || direction == ItemTouchHelper.START) {
+                    listener.onGameRelationChanged(relation, RelationInterval.RelationType.PENDING, RelationInterval.RelationType.PLAYING);
+                }
+                else if (direction == ItemTouchHelper.RIGHT || direction == ItemTouchHelper.END) {
+                    listener.onGameRelationChanged(relation, RelationInterval.RelationType.PENDING, RelationInterval.RelationType.NONE);
+                }
+            }
         }
     }
 
@@ -464,5 +491,14 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
          * @param clickedRelation the relation clicked
          */
         void onGameRelationClicked(GameRelation clickedRelation);
+
+        /**
+         * Callback when a change on the current relation type has been requested
+         *
+         * @param relation    the relation requested to update its type
+         * @param currentType the current type of the relation
+         * @param newType     the new requested type
+         */
+        void onGameRelationChanged(GameRelation relation, RelationInterval.RelationType currentType, RelationInterval.RelationType newType);
     }
 }

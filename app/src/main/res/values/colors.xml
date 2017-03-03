@@ -14,6 +14,8 @@
 
     <color name="radiobutton_checked">#FF5722</color>
 
-    <color name="gamerelation_list_doneitem_swipe_background_start">#FF4d4d</color>
-    <color name="gamerelation_list_doneitem_swipe_background_end">#FF0000</color>
+    <color name="gamerelation_list_action_destroy_background_start">#FF4d4d</color>
+    <color name="gamerelation_list_action_destroy_background_end">#FF0000</color>
+    <color name="gamerelation_list_action_positive_background_end">#08E700</color>
+    <color name="gamerelation_list_action_positive_background_start">#66B266</color>
 </resources>

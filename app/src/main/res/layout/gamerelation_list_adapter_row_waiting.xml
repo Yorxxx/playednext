@@ -13,35 +13,40 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@drawable/todo_list_pending_swipe_background"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:orientation="horizontal">-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gamerelation_list_waiting_swipe_background"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <!--<com.piticlistudio.vgtodo.ui.widget.CustomTextView-->
-                <!--style="@style/AppTheme.Todo.Cell.Swipe.SendToDone"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginStart="@dimen/todo_list_swipe_icons_margin"-->
-                <!--android:gravity="center"/>-->
+            <com.piticlistudio.playednext.ui.widget.CustomTextView
+                style="@style/GameRelationList.Cell.Swipe.Destroy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"/>
 
-            <!--<com.piticlistudio.vgtodo.ui.widget.CustomTextView-->
-                <!--style="@style/AppTheme.Todo.Cell.Swipe.SendToPlaying"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginEnd="@dimen/todo_list_swipe_icons_margin"-->
-                <!--android:gravity="center"/>-->
+            <com.piticlistudio.playednext.ui.widget.CustomTextView
+                style="@style/GameRelationList.Cell.Swipe.Destroy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"/>
 
-        <!--</RelativeLayout>-->
+            <com.piticlistudio.playednext.ui.widget.CustomTextView
+                style="@style/GameRelationList.Cell.Swipe.Positive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="@string/gamerelation_list_header_title_playing"/>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/overlay"
             android:layout_width="match_parent"
+            android:background="@color/cardview_light_background"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:visibility="visible">
