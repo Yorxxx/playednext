@@ -5,15 +5,15 @@ import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.utils.AutoGson;
 
 /**
- * Implementation of IReleaseDateData by net provider
+ * Implementation of IReleaseDateData by IGDB
  * Created by jorge.garcia on 15/02/2017.
  */
 @AutoGson
 @AutoValue
-public abstract class NetReleaseDate implements IReleaseDateData {
+public abstract class IGDBReleaseDate implements IReleaseDateData {
 
-    public static NetReleaseDate create(long date, String human) {
-        return new AutoValue_NetReleaseDate(date, human);
+    public static IGDBReleaseDate create(long date, String human) {
+        return new AutoValue_IGDBReleaseDate(date, human);
     }
 
     public abstract long date();

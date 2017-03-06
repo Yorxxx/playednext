@@ -8,7 +8,6 @@ import com.piticlistudio.playednext.releasedate.model.entity.datasource.RealmRel
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -21,22 +20,24 @@ public class RealmGameReleaseTest {
     private final RealmReleaseDate date = new RealmReleaseDate("human", 2000);
     private final RealmGameRelease data = new RealmGameRelease(platform, date);
 
-
     @Test
-    public void getPlatform() throws Exception {
+    public void given_RealmGameRelease_When_GetPlatform_Then_ReturnsPlatform() throws Exception {
 
+        RealmGameRelease data = new RealmGameRelease();
+        data.setPlatform(platform);
+        data.setRelease(date);
+
+        // Act
         NetworkEntityIdRelation<IPlatformData> result = data.getPlatform();
 
-        assertNotNull(result);
         assertEquals(platform.getId(), result.id);
         assertTrue(result.data.isPresent());
         assertEquals(platform, result.data.get());
     }
 
     @Test
-    public void getDate() throws Exception {
+    public void given_RealmGameRelease_When_GetDate_Then_ReturnsDate() throws Exception {
 
         assertEquals(date, data.getDate());
     }
-
 }

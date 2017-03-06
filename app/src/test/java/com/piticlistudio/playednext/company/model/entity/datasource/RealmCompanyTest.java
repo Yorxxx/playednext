@@ -14,7 +14,11 @@ public class RealmCompanyTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(50, data.getId());
+
+        // Act
+        data.setId(100);
+
+        assertEquals(100, data.getId());
     }
 
     @Test

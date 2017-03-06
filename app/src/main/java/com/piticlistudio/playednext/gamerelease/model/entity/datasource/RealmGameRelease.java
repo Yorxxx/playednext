@@ -8,7 +8,6 @@ import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatfo
 import com.piticlistudio.playednext.releasedate.model.entity.datasource.IReleaseDateData;
 import com.piticlistudio.playednext.releasedate.model.entity.datasource.RealmReleaseDate;
 
-
 import io.realm.RealmObject;
 
 public class RealmGameRelease extends RealmObject implements IGameReleaseDateData {
@@ -31,7 +30,7 @@ public class RealmGameRelease extends RealmObject implements IGameReleaseDateDat
      */
     @Override
     public NetworkEntityIdRelation<IPlatformData> getPlatform() {
-        return new NetworkEntityIdRelation<IPlatformData>(platform.getId(), Optional.of(platform));
+        return new NetworkEntityIdRelation<>(platform.getId(), Optional.of(platform));
     }
 
     /**
@@ -42,5 +41,13 @@ public class RealmGameRelease extends RealmObject implements IGameReleaseDateDat
     @Override
     public IReleaseDateData getDate() {
         return release;
+    }
+
+    public void setPlatform(RealmPlatform platform) {
+        this.platform = platform;
+    }
+
+    public void setRelease(RealmReleaseDate release) {
+        this.release = release;
     }
 }

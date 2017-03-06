@@ -11,7 +11,7 @@ import io.reactivex.Single;
  * Created by jorge.garcia on 14/02/2017.
  */
 
-public class RealmGenreRepositoryImpl extends BaseRealmRepository<RealmGenre> implements IGenreRepositoryDatasource<IGenreData> {
+public class RealmGenreRepositoryImpl extends BaseRealmRepository<RealmGenre> implements IGenreRepositoryDatasource {
 
     public RealmGenreRepositoryImpl() {
         super(RealmGenre.class);
@@ -37,7 +37,7 @@ public class RealmGenreRepositoryImpl extends BaseRealmRepository<RealmGenre> im
      */
     @Override
     public Single<IGenreData> save(IGenreData data) {
-        return super.store((RealmGenre)data)
+        return super.store((RealmGenre) data)
                 .map(value -> value);
     }
 }

@@ -14,7 +14,7 @@ import com.piticlistudio.playednext.gamerelease.model.entity.datasource.RealmGam
 import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
-import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
+import com.piticlistudio.playednext.image.model.entity.datasource.IGDBImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
@@ -171,7 +171,7 @@ public class GameFactory {
     public static IGDBGame provideNetGame(int id, String title) {
 
         IGDBGame response = IGDBGame.create(id, title, "slug", "url", 1000, 2500);
-        response.cover = NetImageData.create("//images.igdb.com/igdb/image/upload/t_thumb/irhaovusoqq5xk6a8wff.png", 800, 500, "imageid");
+        response.cover = IGDBImageData.create("//images.igdb.com/igdb/image/upload/t_thumb/irhaovusoqq5xk6a8wff.png", 800, 500, "imageid");
         response.category = 100;
         response.collection = 200;
         response.hypes = 179;
@@ -184,7 +184,7 @@ public class GameFactory {
         response.publishers = new ArrayList<>(Arrays.asList(publishers));
         response.screenshots = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            response.screenshots.add(NetImageData.create("url", 800, 500, "i"));
+            response.screenshots.add(IGDBImageData.create("url", 800, 500, "i"));
         }
         response.rating = 88;
         response.rating_count = 99;

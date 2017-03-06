@@ -5,7 +5,7 @@ import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGDBGame
 import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGameReleaseDateData;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
-import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
+import com.piticlistudio.playednext.image.model.entity.datasource.IGDBImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 
@@ -68,7 +68,7 @@ public class IGDBGameTest {
 
     @Test
     public void getCover() throws Exception {
-        final NetImageData cover = NetImageData.create("url", 200, 300, "id");
+        final IGDBImageData cover = IGDBImageData.create("url", 200, 300, "id");
 
         data.cover = cover;
         assertNotNull(data.getCover());
@@ -85,10 +85,10 @@ public class IGDBGameTest {
 
     @Test
     public void getScreenshots() throws Exception {
-        final NetImageData screen1 = NetImageData.create("url", 200, 300, "id");
-        final NetImageData screen2 = NetImageData.create("url2", 200, 300, "id2");
-        final NetImageData screen3 = NetImageData.create("url3", 200, 300, "id3");
-        List<NetImageData> screens = new ArrayList<>();
+        final IGDBImageData screen1 = IGDBImageData.create("url", 200, 300, "id");
+        final IGDBImageData screen2 = IGDBImageData.create("url2", 200, 300, "id2");
+        final IGDBImageData screen3 = IGDBImageData.create("url3", 200, 300, "id3");
+        List<IGDBImageData> screens = new ArrayList<>();
         screens.add(screen1);
         screens.add(screen2);
         screens.add(screen3);

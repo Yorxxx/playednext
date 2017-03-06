@@ -5,7 +5,7 @@ import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 import com.piticlistudio.playednext.releasedate.model.entity.datasource.IReleaseDateData;
-import com.piticlistudio.playednext.releasedate.model.entity.datasource.NetReleaseDate;
+import com.piticlistudio.playednext.releasedate.model.entity.datasource.IGDBReleaseDate;
 import com.piticlistudio.playednext.utils.AutoGson;
 
 @AutoGson
@@ -39,6 +39,6 @@ public abstract class IGDBGameRelease implements IGameReleaseDateData {
      */
     @Override
     public IReleaseDateData getDate() {
-        return NetReleaseDate.create(date(), human());
+        return IGDBReleaseDate.create(date(), human());
     }
 }

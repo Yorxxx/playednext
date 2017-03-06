@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.image.model.entity;
 
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 
@@ -28,11 +28,8 @@ public abstract class ImageData {
      *
      * @return the full or null.
      */
-    @Nullable
+    @NonNull
     public String getFullUrl() {
-        if (thumbUrl() == null) {
-            return null;
-        }
         return getThumbUrl().replace("/t_thumb", "");
     }
 
@@ -41,10 +38,8 @@ public abstract class ImageData {
      *
      * @return the full or null.
      */
+    @NonNull
     public String getThumbUrl() {
-        if (thumbUrl() == null) {
-            return null;
-        }
         StringBuilder sb = new StringBuilder();
         if (!thumbUrl().startsWith("http:"))
             sb.append("http:");

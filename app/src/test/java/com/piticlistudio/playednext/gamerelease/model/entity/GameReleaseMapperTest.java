@@ -6,11 +6,9 @@ import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGDBGame
 import com.piticlistudio.playednext.gamerelease.model.entity.datasource.RealmGameRelease;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.model.entity.PlatformMapper;
-import com.piticlistudio.playednext.platform.model.entity.datasource.NetPlatform;
 import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
 import com.piticlistudio.playednext.releasedate.model.entity.ReleaseDate;
 import com.piticlistudio.playednext.releasedate.model.entity.ReleaseDateMapper;
-import com.piticlistudio.playednext.releasedate.model.entity.datasource.NetReleaseDate;
 import com.piticlistudio.playednext.releasedate.model.entity.datasource.RealmReleaseDate;
 
 import org.junit.Test;

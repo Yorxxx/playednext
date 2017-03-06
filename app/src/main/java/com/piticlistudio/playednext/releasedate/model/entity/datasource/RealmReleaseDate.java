@@ -51,4 +51,8 @@ public class RealmReleaseDate extends RealmObject implements IReleaseDateData {
     public void setDate(long date) {
         this.date = date;
     }
+
+    public void setHuman(String human) {
+        this.human = human;
+    }
 }

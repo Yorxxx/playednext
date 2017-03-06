@@ -12,7 +12,7 @@ import io.reactivex.Single;
  * Created by jorge.garcia on 14/02/2017.
  */
 
-public class IGDBPlatformRepositoryImpl implements IPlatformRepositoryDatasource<IPlatformData> {
+public class IGDBPlatformRepositoryImpl implements IPlatformRepositoryDatasource {
 
     private final PlatformModule.NetService service;
 

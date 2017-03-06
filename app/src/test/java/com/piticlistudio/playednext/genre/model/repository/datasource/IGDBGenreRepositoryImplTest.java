@@ -3,8 +3,8 @@ package com.piticlistudio.playednext.genre.model.repository.datasource;
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.genre.GenreModule;
+import com.piticlistudio.playednext.genre.model.entity.datasource.IGDBGenre;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
-import com.piticlistudio.playednext.genre.model.entity.datasource.NetGenre;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
  * Test cases for NetGenreRepositoryImpl
  * Created by jorge.garcia on 14/02/2017.
  */
-public class NetGenreRepositoryImplTest extends BaseTest {
+public class IGDBGenreRepositoryImplTest extends BaseTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
@@ -41,13 +41,13 @@ public class NetGenreRepositoryImplTest extends BaseTest {
     GenreModule.NetService service;
 
     @InjectMocks
-    private NetGenreRepositoryImpl repository;
+    private IGDBGenreRepositoryImpl repository;
 
-    private NetGenre data = NetGenre.create(10, "name", "url", "slug", 1000, 2000);
+    private IGDBGenre data = IGDBGenre.create(10, "name", "url", "slug", 1000, 2000);
 
     @Test
     public void load() throws Exception {
-        List<NetGenre> responseList = new ArrayList<>();
+        List<IGDBGenre> responseList = new ArrayList<>();
         responseList.add(data);
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
@@ -64,14 +64,14 @@ public class NetGenreRepositoryImplTest extends BaseTest {
     @Test
     public void load_onErrorRetry() throws Exception {
 
-        List<NetGenre> responseList = new ArrayList<>();
+        List<IGDBGenre> responseList = new ArrayList<>();
         responseList.add(data);
         when(service.load(anyInt(), anyString()))
-                .thenReturn(Observable.fromCallable(new Callable<List<NetGenre>>() {
+                .thenReturn(Observable.fromCallable(new Callable<List<IGDBGenre>>() {
                     private boolean firstEmitted;
 
                     @Override
-                    public List<NetGenre> call() throws Exception {
+                    public List<IGDBGenre> call() throws Exception {
                         if (!firstEmitted) { // We throw on first failure
                             firstEmitted = true;
                             throw new RuntimeException(":(");
@@ -94,7 +94,7 @@ public class NetGenreRepositoryImplTest extends BaseTest {
     @Test
     public void load_empty() throws Exception {
 
-        List<NetGenre> responseList = new ArrayList<>();
+        List<IGDBGenre> responseList = new ArrayList<>();
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
         // Act
@@ -110,7 +110,7 @@ public class NetGenreRepositoryImplTest extends BaseTest {
     @Test
     public void save() throws Exception {
 
-        NetGenre data = NetGenre.create(10, "name", "url", "slug", 1000, 2000);
+        IGDBGenre data = IGDBGenre.create(10, "name", "url", "slug", 1000, 2000);
 
         // Act
         TestObserver<IGenreData> result = repository.save(data).test();

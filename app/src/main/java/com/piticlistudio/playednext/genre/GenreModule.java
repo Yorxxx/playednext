@@ -1,12 +1,12 @@
 package com.piticlistudio.playednext.genre;
 
+import com.piticlistudio.playednext.APIKeys;
 import com.piticlistudio.playednext.genre.model.entity.GenreMapper;
-import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
-import com.piticlistudio.playednext.genre.model.entity.datasource.NetGenre;
+import com.piticlistudio.playednext.genre.model.entity.datasource.IGDBGenre;
 import com.piticlistudio.playednext.genre.model.repository.GenreRepository;
 import com.piticlistudio.playednext.genre.model.repository.IGenreRepository;
+import com.piticlistudio.playednext.genre.model.repository.datasource.IGDBGenreRepositoryImpl;
 import com.piticlistudio.playednext.genre.model.repository.datasource.IGenreRepositoryDatasource;
-import com.piticlistudio.playednext.genre.model.repository.datasource.NetGenreRepositoryImpl;
 import com.piticlistudio.playednext.genre.model.repository.datasource.RealmGenreRepositoryImpl;
 
 import java.util.List;
@@ -36,19 +36,19 @@ public class GenreModule {
 
     @Provides
     @Named("net")
-    public IGenreRepositoryDatasource<IGenreData> provideNetRepository(NetService service) {
-        return new NetGenreRepositoryImpl(service);
+    public IGenreRepositoryDatasource provideNetRepository(NetService service) {
+        return new IGDBGenreRepositoryImpl(service);
     }
 
     @Provides
     @Named("db")
-    public IGenreRepositoryDatasource<IGenreData> provideDBRepository() {
+    public IGenreRepositoryDatasource provideDBRepository() {
         return new RealmGenreRepositoryImpl();
     }
 
     @Provides
-    public IGenreRepository provideRepository(@Named("db") IGenreRepositoryDatasource<IGenreData> local,
-                                              @Named("net") IGenreRepositoryDatasource<IGenreData> remote,
+    public IGenreRepository provideRepository(@Named("db") IGenreRepositoryDatasource local,
+                                              @Named("net") IGenreRepositoryDatasource remote,
                                               GenreMapper mapper) {
         return new GenreRepository(local, remote, mapper);
     }
@@ -57,9 +57,9 @@ public class GenreModule {
 
         @Headers({
                 "Accept: application/json",
-                "X-Mashape-Key: XxTvUubZsDmshGVnDjpP4ZnVFfaLp1FLO7Vjsnzi8CSsAfuObi"
+                "X-Mashape-Key: " + APIKeys.IGDB_KEY
         })
         @GET("/genres/{id}/")
-        Observable<List<NetGenre>> load(@Path("id") int id, @Query("fields") String fields);
+        Observable<List<IGDBGenre>> load(@Path("id") int id, @Query("fields") String fields);
     }
 }

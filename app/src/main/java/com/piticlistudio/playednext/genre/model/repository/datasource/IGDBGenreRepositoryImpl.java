@@ -12,12 +12,12 @@ import io.reactivex.Single;
  * Created by jorge.garcia on 14/02/2017.
  */
 
-public class NetGenreRepositoryImpl implements IGenreRepositoryDatasource<IGenreData> {
+public class IGDBGenreRepositoryImpl implements IGenreRepositoryDatasource {
 
     private final GenreModule.NetService service;
 
     @Inject
-    public NetGenreRepositoryImpl(GenreModule.NetService service) {
+    public IGDBGenreRepositoryImpl(GenreModule.NetService service) {
         this.service = service;
     }
 

@@ -17,8 +17,8 @@ import javax.inject.Named;
 public class GenreRepository extends BaseRepository<Genre, IGenreData> implements IGenreRepository {
 
     @Inject
-    public GenreRepository(@Named("db") IGenreRepositoryDatasource<IGenreData> dbImpl,
-                           @Named("net") IGenreRepositoryDatasource<IGenreData> netImpl,
+    public GenreRepository(@Named("db") IGenreRepositoryDatasource dbImpl,
+                           @Named("net") IGenreRepositoryDatasource netImpl,
                            GenreMapper mapper) {
         super(dbImpl, netImpl, mapper);
     }

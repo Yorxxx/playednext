@@ -17,8 +17,8 @@ import javax.inject.Named;
 public class PlatformRepository extends BaseRepository<Platform, IPlatformData> implements IPlatformRepository {
 
     @Inject
-    public PlatformRepository(@Named("db") IPlatformRepositoryDatasource<IPlatformData> dbImpl,
-                              @Named("net") IPlatformRepositoryDatasource<IPlatformData> netImpl,
+    public PlatformRepository(@Named("db") IPlatformRepositoryDatasource dbImpl,
+                              @Named("net") IPlatformRepositoryDatasource netImpl,
                               PlatformMapper mapper) {
         super(dbImpl, netImpl, mapper);
     }

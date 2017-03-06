@@ -7,8 +7,8 @@ import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData
 import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGDBGameRelease;
 import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGameReleaseDateData;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
+import com.piticlistudio.playednext.image.model.entity.datasource.IGDBImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
-import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 import com.piticlistudio.playednext.utils.AutoGson;
@@ -46,8 +46,8 @@ public abstract class IGDBGame implements IGameDatasource {
     public List<Integer> themes = new ArrayList<>();
     public List<Integer> genres;
     public long first_release_date;
-    public NetImageData cover;
-    public List<NetImageData> screenshots;
+    public IGDBImageData cover;
+    public List<IGDBImageData> screenshots;
     public List<IGDBGameRelease> release_dates = new ArrayList<>();
 
     public static IGDBGame create(int id, String name, String slug, String url, long createdAt, long updatedAt) {

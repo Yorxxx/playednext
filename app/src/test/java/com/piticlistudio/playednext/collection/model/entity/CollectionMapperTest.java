@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.collection.model.entity;
 
 import com.fernandocejas.arrow.optional.Optional;
+import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
 import com.piticlistudio.playednext.collection.model.entity.datasource.IGDBCollection;
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 
@@ -12,7 +13,10 @@ import org.mockito.junit.MockitoRule;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test cases
@@ -27,32 +31,38 @@ public class CollectionMapperTest {
     CollectionMapper mapper;
 
     @Test
-    public void transform() throws Exception {
+    public void given_nullData_when_transform_Then_ReturnsAbsent() throws Exception {
 
-        Optional<Collection> result = mapper.transform(new RealmCollection());
+        ICollectionData collection = null;
+        Optional<Collection> result = mapper.transform(collection);
 
         // Assert
         assertNotNull(result);
         assertFalse(result.isPresent());
-
-        RealmCollection collection = new RealmCollection(0, "name");
-        result = mapper.transform(collection);
-
-        // Assert
-        assertNotNull(result);
-        assertTrue(result.isPresent());
-        assertEquals(collection.getId(), result.get().id());
-        assertEquals(collection.getName(), result.get().name());
-
-        // Act
-        IGDBCollection igdbCollection = IGDBCollection.create(0, "name", "url", 1000, 2000, new ArrayList<>());
-        result = mapper.transform(igdbCollection);
-
-        // Assert
-        assertNotNull(result);
-        assertTrue(result.isPresent());
-        assertEquals(igdbCollection.id(), result.get().id());
-        assertEquals(igdbCollection.name(), result.get().name());
     }
 
+    @Test
+    public void given_missingNameData_when_tranform_Then_ReturnsAbsent() throws Exception {
+
+        ICollectionData collection = new RealmCollection();
+        Optional<Collection> result = mapper.transform(collection);
+
+        // Assert
+        assertNotNull(result);
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void given_validData_When_transform_Then_ReturnsMappedResult() throws Exception {
+
+        // Act
+        ICollectionData igdbCollection = IGDBCollection.create(0, "name", "url", 1000, 2000, new ArrayList<>());
+        Optional<Collection> result = mapper.transform(igdbCollection);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isPresent());
+        assertEquals(igdbCollection.getId(), result.get().id());
+        assertEquals(igdbCollection.getName(), result.get().name());
+    }
 }

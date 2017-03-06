@@ -14,6 +14,11 @@ public class RealmImageDataTest {
 
     @Test
     public void getId() throws Exception {
+        data = new RealmImageData();
+        data.setId("id");
+        data.setThumbUrl("url");
+        data.setHeight(100);
+        data.setWidth(200);
         assertEquals("id", data.getId());
     }
 

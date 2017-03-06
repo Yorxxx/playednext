@@ -3,8 +3,8 @@ package com.piticlistudio.playednext.platform.model.repository.datasource;
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.platform.PlatformModule;
+import com.piticlistudio.playednext.platform.model.entity.datasource.IGDBPlatform;
 import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
-import com.piticlistudio.playednext.platform.model.entity.datasource.NetPlatform;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,11 +43,11 @@ public class IGDBPlatformRepositoryImplTest extends BaseTest {
     @InjectMocks
     private IGDBPlatformRepositoryImpl repository;
 
-    private NetPlatform data = NetPlatform.create(10, "name", "slug", "url", 1000, 2000);
+    private IGDBPlatform data = IGDBPlatform.create(10, "name", "slug", "url", 1000, 2000);
 
     @Test
     public void load() throws Exception {
-        List<NetPlatform> responseList = new ArrayList<>();
+        List<IGDBPlatform> responseList = new ArrayList<>();
         responseList.add(data);
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
@@ -64,14 +64,14 @@ public class IGDBPlatformRepositoryImplTest extends BaseTest {
     @Test
     public void load_onErrorRetry() throws Exception {
 
-        List<NetPlatform> responseList = new ArrayList<>();
+        List<IGDBPlatform> responseList = new ArrayList<>();
         responseList.add(data);
         when(service.load(anyInt(), anyString()))
-                .thenReturn(Observable.fromCallable(new Callable<List<NetPlatform>>() {
+                .thenReturn(Observable.fromCallable(new Callable<List<IGDBPlatform>>() {
                     private boolean firstEmitted;
 
                     @Override
-                    public List<NetPlatform> call() throws Exception {
+                    public List<IGDBPlatform> call() throws Exception {
                         if (!firstEmitted) { // We throw on first failure
                             firstEmitted = true;
                             throw new RuntimeException(":(");
@@ -94,7 +94,7 @@ public class IGDBPlatformRepositoryImplTest extends BaseTest {
     @Test
     public void load_empty() throws Exception {
 
-        List<NetPlatform> responseList = new ArrayList<>();
+        List<IGDBPlatform> responseList = new ArrayList<>();
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
         // Act

@@ -1,7 +1,5 @@
 package com.piticlistudio.playednext.genre.model.entity;
 
-import com.piticlistudio.playednext.genre.model.entity.datasource.NetGenre;
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;

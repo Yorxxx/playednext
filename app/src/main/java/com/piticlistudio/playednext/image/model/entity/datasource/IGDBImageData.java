@@ -4,17 +4,17 @@ import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.utils.AutoGson;
 
 /**
- * Representation of IImageData by net module
+ * Representation of IImageData by IGDB
  *
  * @see IImageData
  * Created by jorge.garcia on 13/02/2017.
  */
 @AutoValue
 @AutoGson
-public abstract class NetImageData implements IImageData {
+public abstract class IGDBImageData implements IImageData {
 
-    public static NetImageData create(String url, int width, int height, String id) {
-        return new AutoValue_NetImageData(url, width, height, id);
+    public static IGDBImageData create(String url, int width, int height, String id) {
+        return new AutoValue_IGDBImageData(url, width, height, id);
     }
 
     public abstract String url();

@@ -1,14 +1,18 @@
-package com.piticlistudio.playednext.platform.model.entity.datasource;
+package com.piticlistudio.playednext.genre.model.entity.datasource;
 
 import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.utils.AutoGson;
 
+/**
+ * Implementation of a IGenreData by backend
+ * Created by jorge.garcia on 14/02/2017.
+ */
 @AutoGson
 @AutoValue
-public abstract class NetPlatform implements IPlatformData {
+public abstract class IGDBGenre implements IGenreData {
 
-    public static NetPlatform create(int id, String name, String slug, String url, long createdAt, long updatedAt) {
-        return new AutoValue_NetPlatform(id, name, slug, url, createdAt, updatedAt);
+    public static IGDBGenre create(int id, String name, String slug, String url, long createdAt, long updatedAt) {
+        return new AutoValue_IGDBGenre(id, name, slug, url, createdAt, updatedAt);
     }
 
     public abstract int id();

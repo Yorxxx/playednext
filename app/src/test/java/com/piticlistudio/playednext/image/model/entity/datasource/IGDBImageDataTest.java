@@ -8,15 +8,15 @@ import static org.junit.Assert.*;
  * Test cases
  * Created by jorge.garcia on 13/02/2017.
  */
-public class NetImageDataTest {
+public class IGDBImageDataTest {
 
-    private NetImageData data = NetImageData.create("url", 100, 200, "id");
+    private IGDBImageData data = IGDBImageData.create("url", 100, 200, "id");
 
     @Test
     public void create() throws Exception {
 
         // Act
-        NetImageData data = NetImageData.create("url", 100, 200, "id");
+        IGDBImageData data = IGDBImageData.create("url", 100, 200, "id");
 
         assertNotNull(data);
         assertEquals("url", data.url());

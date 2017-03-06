@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.company.model.entity.datasource;
 
 import com.google.auto.value.AutoValue;
-import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
+import com.piticlistudio.playednext.image.model.entity.datasource.IGDBImageData;
 import com.piticlistudio.playednext.utils.AutoGson;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public abstract class IGDBCompany implements ICompanyData {
     public int country;
     public List<Integer> published;
     public List<Integer> developed;
-    public NetImageData logo;
+    public IGDBImageData logo;
     public String description;
     public String website;
 

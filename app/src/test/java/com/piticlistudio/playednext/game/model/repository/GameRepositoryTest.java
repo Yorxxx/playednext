@@ -759,4 +759,42 @@ public class GameRepositoryTest extends BaseGameTest {
         assertEquals(to.releases.size(), source.getReleases().size());
         verify(platformRepository, times(source.getReleases().size())).load(anyInt());
     }
+
+    @Test
+    public void given_releaseMapError_When_loadRelease_Then_RemovesInvalidReleaseFromList() throws Exception {
+
+        doAnswer(invocation -> {
+            int id = (int)invocation.getArguments()[0];
+            return Observable.just(Platform.create(id, "platform_"+id));
+        }).when(platformRepository).load(anyInt());
+
+        Game to = Game.create(10, "title");
+        to.releases = new ArrayList<>();
+
+        RealmGame source = GameFactory.provideRealmGame(10, "title");
+        RealmList<RealmGameRelease> realmReleases = new RealmList<>();
+        RealmPlatform realmPlatform1 = new RealmPlatform(1, "name1");
+        RealmReleaseDate realmDate1 = new RealmReleaseDate(null, 0); // Invalid release date
+        RealmPlatform realmPlatform2 = new RealmPlatform(2, "name2");
+        RealmReleaseDate realmDate2 = new RealmReleaseDate("human-date", 1000);
+        realmReleases.add(new RealmGameRelease(realmPlatform1, realmDate1));
+        realmReleases.add(new RealmGameRelease(realmPlatform2, realmDate2));
+        source.setReleases(realmReleases);
+
+        // Act
+        TestObserver<Game> result = repository.loadReleases(source, to).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(1)
+                .assertValue(to);
+
+        assertEquals(1, to.releases.size());
+        verify(platformRepository, times(2)).load(anyInt());
+        assertEquals(1, to.releases.size());
+        assertEquals(2, to.releases.get(0).platform().id());
+        assertEquals("human-date", to.releases.get(0).releaseDate().humanDate());
+    }
 }

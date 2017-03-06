@@ -11,7 +11,7 @@ import io.reactivex.Single;
  * Created by jorge.garcia on 15/02/2017.
  */
 
-public class RealmPlatformRepositoryImpl extends BaseRealmRepository<RealmPlatform> implements IPlatformRepositoryDatasource<IPlatformData> {
+public class RealmPlatformRepositoryImpl extends BaseRealmRepository<RealmPlatform> implements IPlatformRepositoryDatasource {
 
     public RealmPlatformRepositoryImpl() {
         super(RealmPlatform.class);

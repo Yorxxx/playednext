@@ -1,11 +1,8 @@
 package com.piticlistudio.playednext.platform;
 
-import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
-import com.piticlistudio.playednext.genre.model.repository.datasource.IGenreRepositoryDatasource;
-import com.piticlistudio.playednext.genre.model.repository.datasource.RealmGenreRepositoryImpl;
+import com.piticlistudio.playednext.APIKeys;
 import com.piticlistudio.playednext.platform.model.entity.PlatformMapper;
-import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
-import com.piticlistudio.playednext.platform.model.entity.datasource.NetPlatform;
+import com.piticlistudio.playednext.platform.model.entity.datasource.IGDBPlatform;
 import com.piticlistudio.playednext.platform.model.repository.IPlatformRepository;
 import com.piticlistudio.playednext.platform.model.repository.PlatformRepository;
 import com.piticlistudio.playednext.platform.model.repository.datasource.IGDBPlatformRepositoryImpl;
@@ -39,19 +36,19 @@ public class PlatformModule {
 
     @Provides
     @Named("net")
-    public IPlatformRepositoryDatasource<IPlatformData> provideNetRepository(NetService service) {
+    public IPlatformRepositoryDatasource provideNetRepository(NetService service) {
         return new IGDBPlatformRepositoryImpl(service);
     }
 
     @Provides
     @Named("db")
-    public IPlatformRepositoryDatasource<IPlatformData> provideDBRepository() {
+    public IPlatformRepositoryDatasource provideDBRepository() {
         return new RealmPlatformRepositoryImpl();
     }
 
     @Provides
-    public IPlatformRepository provideRepository(@Named("db") IPlatformRepositoryDatasource<IPlatformData> local,
-                                                 @Named("net") IPlatformRepositoryDatasource<IPlatformData> remote,
+    public IPlatformRepository provideRepository(@Named("db") IPlatformRepositoryDatasource local,
+                                                 @Named("net") IPlatformRepositoryDatasource remote,
                                                  PlatformMapper mapper) {
         return new PlatformRepository(local, remote, mapper);
     }
@@ -60,9 +57,9 @@ public class PlatformModule {
 
         @Headers({
                 "Accept: application/json",
-                "X-Mashape-Key: XxTvUubZsDmshGVnDjpP4ZnVFfaLp1FLO7Vjsnzi8CSsAfuObi"
+                "X-Mashape-Key: " + APIKeys.IGDB_KEY
         })
         @GET("/platforms/{id}/")
-        Observable<List<NetPlatform>> load(@Path("id") int id, @Query("fields") String fields);
+        Observable<List<IGDBPlatform>> load(@Path("id") int id, @Query("fields") String fields);
     }
 }

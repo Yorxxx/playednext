@@ -67,4 +67,20 @@ public class RealmImageData extends RealmObject implements IImageData {
     public String getUrl() {
         return thumbUrl;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
 }
