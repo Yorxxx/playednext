@@ -14,12 +14,14 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -31,8 +33,8 @@ import static org.mockito.Mockito.when;
  */
 public class GameRelationListInteractorTest extends BaseTest {
 
-    @Rule
-    public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
+//    @Rule
+//    public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
 
     @Mock
     IGameRelationRepository relationRepository;
@@ -274,5 +276,76 @@ public class GameRelationListInteractorTest extends BaseTest {
                     }
                 }));
         verify(relationRepository).loadAll();
+    }
+
+    @Test
+    public void given_multipleIdenticalEmissionsByRepository_When_LoadCurrentItems_Then_OnlyEmitsIfItemsHaveChanged() throws Exception {
+
+        List<GameRelation> data = new ArrayList<>();
+        GameRelation noneRelation = mock(GameRelation.class);
+        when(noneRelation.getCurrent()).thenReturn(Optional.absent());
+
+        GameRelation playingRelation = mock(GameRelation.class);
+        RelationInterval playingInterval = RelationInterval.create(1, RelationInterval.RelationType.PLAYING, 1000);
+        when(playingRelation.getCurrent()).thenReturn(Optional.of(playingInterval));
+
+        GameRelation playingRelation2 = mock(GameRelation.class);
+        RelationInterval playingInterval2 = RelationInterval.create(1, RelationInterval.RelationType.PLAYING, 800);
+        when(playingRelation2.getCurrent()).thenReturn(Optional.of(playingInterval2));
+
+        GameRelation playingRelation3 = mock(GameRelation.class);
+        RelationInterval playingInterval3 = RelationInterval.create(1, RelationInterval.RelationType.PLAYING, 1100);
+        when(playingRelation3.getCurrent()).thenReturn(Optional.of(playingInterval3));
+
+        GameRelation completedRelation = mock(GameRelation.class);
+        RelationInterval completedInterval = RelationInterval.create(2, RelationInterval.RelationType.DONE, 1000);
+        when(completedRelation.getCurrent()).thenReturn(Optional.of(completedInterval));
+
+        GameRelation waitingRelation = mock(GameRelation.class);
+        RelationInterval waitingInterval = RelationInterval.create(3, RelationInterval.RelationType.PENDING, 2000);
+        when(waitingRelation.getCurrent()).thenReturn(Optional.of(waitingInterval));
+
+        data.add(noneRelation);
+        data.add(playingRelation3);
+        data.add(playingRelation);
+        data.add(completedRelation);
+        data.add(waitingRelation);
+        data.add(playingRelation3);
+        data.add(playingRelation2);
+        data.add(completedRelation);
+        data.add(playingRelation);
+        data.add(playingRelation2);
+        data.add(noneRelation);
+
+        doAnswer(invocation -> Observable.interval(1, TimeUnit.SECONDS)
+                .take(3)
+                .map(aLong -> data))
+                .when(relationRepository).loadAll();
+
+        // Act
+        TestObserver<List<GameRelation>> result = interactor.loadCurrentItems().test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(1)
+                .assertValue(check(relations -> {
+                    assertEquals(6, relations.size());
+                    for (GameRelation relation : relations) {
+                        assertTrue(relation.getCurrent().isPresent());
+                        assertEquals(RelationInterval.RelationType.PLAYING, relation.getCurrent().get().type());
+                    }
+                }))
+                .assertValue(check(relations -> {
+                    // Check items are ordered
+                    long previous = 0;
+                    for (int i = 0; i < relations.size(); i++) {
+                        assertTrue(relations.get(i).getCurrent().get().startAt() >= previous);
+                        previous = relations.get(i).getCurrent().get().startAt();
+                    }
+                }));
+        verify(relationRepository).loadAll();
+
     }
 }

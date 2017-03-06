@@ -36,7 +36,8 @@ public class GameRelationListInteractor implements GameRelationListContract.Inte
      */
     @Override
     public Observable<List<GameRelation>> loadCompletedItems() {
-        return loadFilteredByType(RelationInterval.RelationType.DONE);
+        return loadFilteredByType(RelationInterval.RelationType.DONE)
+                .distinctUntilChanged();
     }
 
     /**
@@ -46,7 +47,8 @@ public class GameRelationListInteractor implements GameRelationListContract.Inte
      */
     @Override
     public Observable<List<GameRelation>> loadCurrentItems() {
-        return loadFilteredByType(RelationInterval.RelationType.PLAYING);
+        return loadFilteredByType(RelationInterval.RelationType.PLAYING)
+                .distinctUntilChanged();
     }
 
     /**
@@ -56,7 +58,8 @@ public class GameRelationListInteractor implements GameRelationListContract.Inte
      */
     @Override
     public Observable<List<GameRelation>> loadWaitingItems() {
-        return loadFilteredByType(RelationInterval.RelationType.PENDING);
+        return loadFilteredByType(RelationInterval.RelationType.PENDING)
+                .distinctUntilChanged();
     }
 
     /**

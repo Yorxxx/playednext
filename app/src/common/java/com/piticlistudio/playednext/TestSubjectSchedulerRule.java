@@ -8,6 +8,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.internal.schedulers.ExecutorScheduler;
 import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.schedulers.TestScheduler;
 
 public class TestSubjectSchedulerRule implements TestRule {
@@ -27,8 +28,8 @@ public class TestSubjectSchedulerRule implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-//                RxJavaPlugins.setIoSchedulerHandler(
-//                        scheduler -> testScheduler);
+                RxJavaPlugins.setIoSchedulerHandler(
+                        scheduler -> Schedulers.trampoline());
                 RxJavaPlugins.setComputationSchedulerHandler(
                         scheduler -> testScheduler);
                 RxJavaPlugins.setNewThreadSchedulerHandler(

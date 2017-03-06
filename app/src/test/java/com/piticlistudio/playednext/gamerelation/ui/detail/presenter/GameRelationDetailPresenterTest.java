@@ -154,7 +154,7 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         assertEquals(RelationInterval.RelationType.PLAYING, data.getCurrent().get().type());
         assertTrue(data.getCurrent().get().startAt() > 0);
         assertEquals(1, data.getStatuses().size());
-        assertTrue(data.getUpdatedAt() > updatedAt);
+        assertTrue(data.getUpdatedAt() >= updatedAt);
     }
 
     @Test
@@ -185,7 +185,7 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         assertTrue(data.getStatuses().get(0).getEndAt() > 0);
         assertTrue(data.getStatuses().get(1).startAt() >= data.getStatuses().get(0).getEndAt());
         assertEquals(0, data.getStatuses().get(1).getEndAt());
-        assertTrue(data.getUpdatedAt() > updatedAt);
+        assertTrue(data.getUpdatedAt() >= updatedAt);
     }
 
     @Test
@@ -209,6 +209,6 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         assertEquals(1, data.getStatuses().size());
         assertFalse(data.getCurrent().isPresent());
         assertTrue(data.getStatuses().get(0).getEndAt() > 0);
-        assertTrue(data.getUpdatedAt() > updatedAt);
+        assertTrue(data.getUpdatedAt() >= updatedAt);
     }
 }

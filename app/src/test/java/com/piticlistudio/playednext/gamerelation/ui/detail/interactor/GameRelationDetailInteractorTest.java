@@ -132,7 +132,7 @@ public class GameRelationDetailInteractorTest extends BaseTest {
                 .assertValue(check(data -> {
                     assertNotNull(data);
                     assertNotNull(data.game());
-                    assertTrue(data.createdAt() > currentTime);
+                    assertTrue(data.createdAt() >= currentTime);
                 }));
         verify(gameRepository).load(10);
     }

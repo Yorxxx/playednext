@@ -71,9 +71,6 @@ public class GameSearchPresenterTest extends BaseTest {
 
         // Assert
         verify(view).showLoading();
-        verify(view, never()).showError(any());
-        verify(view).setData(data);
-        verify(view).showContent();
         verify(interactor).search("query", 0, 15);
     }
 
