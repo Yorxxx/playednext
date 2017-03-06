@@ -5,7 +5,8 @@ import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.collection.CollectionComponent;
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.collection.model.entity.Collection;
-import com.piticlistudio.playednext.collection.model.entity.datasource.NetCollection;
+import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
+import com.piticlistudio.playednext.collection.model.entity.datasource.IGDBCollection;
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 import com.piticlistudio.playednext.collection.model.repository.datasource.ICollectionRepositoryDatasource;
 
@@ -37,18 +38,18 @@ import static org.mockito.Mockito.when;
  */
 public class CollectionRepositoryTest extends BaseTest {
 
-    private final RealmCollection localData = new RealmCollection(100, "name");
-    private final NetCollection remoteData = NetCollection.create(100, "name", "url", 1000, 2000, new ArrayList<>());
+    private final ICollectionData localData = new RealmCollection(100, "name");
+    private final ICollectionData remoteData = IGDBCollection.create(100, "name", "url", 1000, 2000, new ArrayList<>());
     @Rule
     public DaggerMockRule<CollectionComponent> rule = new DaggerMockRule<>(CollectionComponent.class, new CollectionModule());
     @Rule
     public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
     @Mock
     @Named("db")
-    ICollectionRepositoryDatasource<RealmCollection> dbSource;
+    ICollectionRepositoryDatasource dbSource;
     @Mock
     @Named("net")
-    ICollectionRepositoryDatasource<NetCollection> netSource;
+    ICollectionRepositoryDatasource netSource;
     @InjectFromComponent
     private ICollectionRepository repository;
 
@@ -81,7 +82,7 @@ public class CollectionRepositoryTest extends BaseTest {
     @Test
     public void load_localDatasource_mapError() throws Exception {
 
-        RealmCollection data = new RealmCollection();
+        ICollectionData data = new RealmCollection();
         when(dbSource.load(anyInt())).thenReturn(Single.just(data).delay(2, TimeUnit.SECONDS));
         when(netSource.load(anyInt())).thenReturn(Single.just(remoteData).delay(10, TimeUnit.SECONDS));
 
@@ -104,8 +105,8 @@ public class CollectionRepositoryTest extends BaseTest {
         result.assertValueCount(1);
         result.assertComplete();
         result.assertValue(check(gameCollection -> {
-            assertEquals(remoteData.id(), gameCollection.id());
-            assertEquals(remoteData.name(), gameCollection.name());
+            assertEquals(remoteData.getId(), gameCollection.id());
+            assertEquals(remoteData.getName(), gameCollection.name());
         }));
         verify(netSource).load(0);
         verify(dbSource).load(0);
@@ -126,8 +127,8 @@ public class CollectionRepositoryTest extends BaseTest {
         result.assertValueCount(1);
         result.assertComplete();
         result.assertValue(check(gameCollection -> {
-            assertEquals(remoteData.id(), gameCollection.id());
-            assertEquals(remoteData.name(), gameCollection.name());
+            assertEquals(remoteData.getId(), gameCollection.id());
+            assertEquals(remoteData.getName(), gameCollection.name());
         }));
         verify(netSource).load(0);
         verify(dbSource).load(0);

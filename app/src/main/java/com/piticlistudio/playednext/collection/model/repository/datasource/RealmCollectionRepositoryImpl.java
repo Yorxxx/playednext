@@ -6,7 +6,7 @@ import com.piticlistudio.playednext.mvp.model.repository.datasource.BaseRealmRep
 
 import io.reactivex.Single;
 
-public class RealmCollectionRepositoryImpl extends BaseRealmRepository<RealmCollection> implements ICollectionRepositoryDatasource<ICollectionData> {
+public class RealmCollectionRepositoryImpl extends BaseRealmRepository<RealmCollection> implements ICollectionRepositoryDatasource {
 
     public RealmCollectionRepositoryImpl() {
         super(RealmCollection.class);

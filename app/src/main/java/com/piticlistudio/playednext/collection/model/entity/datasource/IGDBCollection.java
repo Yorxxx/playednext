@@ -6,12 +6,12 @@ import com.piticlistudio.playednext.utils.AutoGson;
 import java.util.List;
 
 /**
- * Collection data representation on Net entity
+ * Collection data representation on IGDB
  * Created by jorge.garcia on 10/02/2017.
  */
 @AutoValue
 @AutoGson
-public abstract class NetCollection implements ICollectionData {
+public abstract class IGDBCollection implements ICollectionData {
 
     public abstract int id();
 
@@ -25,8 +25,8 @@ public abstract class NetCollection implements ICollectionData {
 
     public abstract List<Integer> games();
 
-    public static NetCollection create(int id, String name, String url, long createdAt, long updatedAt, List<Integer> gameIds) {
-        return new AutoValue_NetCollection(id, name, url, createdAt, updatedAt, gameIds);
+    public static IGDBCollection create(int id, String name, String url, long createdAt, long updatedAt, List<Integer> gameIds) {
+        return new AutoValue_IGDBCollection(id, name, url, createdAt, updatedAt, gameIds);
     }
 
     /**

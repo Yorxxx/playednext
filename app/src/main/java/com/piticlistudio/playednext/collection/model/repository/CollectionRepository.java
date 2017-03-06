@@ -18,8 +18,8 @@ import javax.inject.Named;
 public class CollectionRepository extends BaseRepository<Collection, ICollectionData> implements ICollectionRepository {
 
     @Inject
-    public CollectionRepository(@Named("db") ICollectionRepositoryDatasource<ICollectionData> dbImpl,
-                                @Named("net") ICollectionRepositoryDatasource<ICollectionData> netImpl,
+    public CollectionRepository(@Named("db") ICollectionRepositoryDatasource dbImpl,
+                                @Named("net") ICollectionRepositoryDatasource netImpl,
                                 CollectionMapper mapper) {
         super(dbImpl, netImpl, mapper);
     }

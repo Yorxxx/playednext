@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.collection.model.repository.datasource;
 import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
-import com.piticlistudio.playednext.collection.model.entity.datasource.NetCollection;
+import com.piticlistudio.playednext.collection.model.entity.datasource.IGDBCollection;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
  * Test cases
  * Created by jorge.garcia on 10/02/2017.
  */
-public class NetCollectionRepositoryImplTest {
+public class IGDBCollectionRepositoryImplTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
@@ -37,16 +37,16 @@ public class NetCollectionRepositoryImplTest {
     public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
 
     @Mock
-    CollectionModule.NetService service;
+    CollectionModule.IGDBService service;
 
     @InjectMocks
-    private NetCollectionRepositoryImpl repository;
+    private IGDBCollectionRepositoryImpl repository;
 
-    private NetCollection data = NetCollection.create(10, "name", "url", 1000, 2000, new ArrayList<>());
+    private IGDBCollection data = IGDBCollection.create(10, "name", "url", 1000, 2000, new ArrayList<>());
 
     @Test
     public void load() throws Exception {
-        List<NetCollection> responseList = new ArrayList<>();
+        List<IGDBCollection> responseList = new ArrayList<>();
         responseList.add(data);
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
@@ -63,14 +63,14 @@ public class NetCollectionRepositoryImplTest {
     @Test
     public void load_onErrorRetry() throws Exception {
 
-        List<NetCollection> responseList = new ArrayList<>();
+        List<IGDBCollection> responseList = new ArrayList<>();
         responseList.add(data);
         when(service.load(anyInt(), anyString()))
-                .thenReturn(Observable.fromCallable(new Callable<List<NetCollection>>() {
+                .thenReturn(Observable.fromCallable(new Callable<List<IGDBCollection>>() {
                     private boolean firstEmitted;
 
                     @Override
-                    public List<NetCollection> call() throws Exception {
+                    public List<IGDBCollection> call() throws Exception {
                         if (!firstEmitted) { // We throw on first failure
                             firstEmitted = true;
                             throw new RuntimeException(":(");
@@ -93,7 +93,7 @@ public class NetCollectionRepositoryImplTest {
     @Test
     public void load_empty() throws Exception {
 
-        List<NetCollection> responseList = new ArrayList<>();
+        List<IGDBCollection> responseList = new ArrayList<>();
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
         // Act
@@ -109,7 +109,7 @@ public class NetCollectionRepositoryImplTest {
     @Test
     public void save() throws Exception {
 
-        NetCollection data = NetCollection.create(50, "name", "url", 1000, 2000, new ArrayList<>());
+        IGDBCollection data = IGDBCollection.create(50, "name", "url", 1000, 2000, new ArrayList<>());
 
         // Act
         TestObserver<ICollectionData> result = repository.save(data).test();

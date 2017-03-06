@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.collection.model.entity;
 
 import com.fernandocejas.arrow.optional.Optional;
-import com.piticlistudio.playednext.collection.model.entity.datasource.NetCollection;
+import com.piticlistudio.playednext.collection.model.entity.datasource.IGDBCollection;
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 
 import org.junit.Rule;
@@ -45,14 +45,14 @@ public class CollectionMapperTest {
         assertEquals(collection.getName(), result.get().name());
 
         // Act
-        NetCollection netCollection = NetCollection.create(0, "name", "url", 1000, 2000, new ArrayList<>());
-        result = mapper.transform(netCollection);
+        IGDBCollection igdbCollection = IGDBCollection.create(0, "name", "url", 1000, 2000, new ArrayList<>());
+        result = mapper.transform(igdbCollection);
 
         // Assert
         assertNotNull(result);
         assertTrue(result.isPresent());
-        assertEquals(netCollection.id(), result.get().id());
-        assertEquals(netCollection.name(), result.get().name());
+        assertEquals(igdbCollection.id(), result.get().id());
+        assertEquals(igdbCollection.name(), result.get().name());
     }
 
 }

@@ -2,7 +2,6 @@ package com.piticlistudio.playednext.collection.model.repository.datasource;
 
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
-import com.piticlistudio.playednext.collection.model.entity.datasource.NetCollection;
 
 import javax.inject.Inject;
 
@@ -12,12 +11,12 @@ import io.reactivex.Single;
  * Repository implementation for Collection entities provided by the Net module
  * Created by jorge.garcia on 10/02/2017.
  */
-public class NetCollectionRepositoryImpl implements ICollectionRepositoryDatasource<ICollectionData> {
+public class IGDBCollectionRepositoryImpl implements ICollectionRepositoryDatasource {
 
-    private final CollectionModule.NetService service;
+    private final CollectionModule.IGDBService service;
 
     @Inject
-    public NetCollectionRepositoryImpl(CollectionModule.NetService service) {
+    public IGDBCollectionRepositoryImpl(CollectionModule.IGDBService service) {
         this.service = service;
     }
 
@@ -34,7 +33,7 @@ public class NetCollectionRepositoryImpl implements ICollectionRepositoryDatasou
                 .map(responses -> {
                     if (responses.size() == 0)
                         throw new RuntimeException("Not found");
-                    return (ICollectionData)responses.get(0);
+                    return (ICollectionData) responses.get(0);
                 }).firstOrError();
     }
 

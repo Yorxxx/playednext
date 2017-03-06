@@ -3,7 +3,8 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
 apply plugin: "net.ltgt.apt"
-apply plugin: 'jacoco-android'
+apply from: rootProject.file("gradle/codeQuality.gradle")
+
 
 android {
     compileSdkVersion 25
@@ -48,12 +49,6 @@ android {
         androidTest {
             java.srcDir sharedTestDir
         }
-    }
-    jacocoAndroidUnitTestReport {
-        excludes += ['**/io.realm/**']
-        csv.enabled false
-        html.enabled true
-        xml.enabled true
     }
 }
 
