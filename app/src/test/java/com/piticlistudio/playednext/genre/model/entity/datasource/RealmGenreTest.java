@@ -14,7 +14,11 @@ public class RealmGenreTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(50, data.getId());
+
+        data = new RealmGenre();
+        data.setId(100);
+
+        assertEquals(100, data.getId());
     }
 
     @Test

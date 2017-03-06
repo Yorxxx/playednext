@@ -32,6 +32,21 @@ public class GameRelationTest {
     }
 
     @Test
+    public void given_nullStatuses_When_getCurrentStatus_Then_ReturnsAbsent() throws Exception {
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+        result.setStatuses(null);
+
+        // Act
+        Optional<RelationInterval> current = result.getCurrent();
+
+        // Assert
+        assertNotNull(current);
+        assertFalse(current.isPresent());
+
+    }
+
+    @Test
     public void given_noStatuses_When_getCurrentStatus_Then_ReturnsAbsent() throws Exception {
 
         Game game = GameFactory.provide(10, "title");

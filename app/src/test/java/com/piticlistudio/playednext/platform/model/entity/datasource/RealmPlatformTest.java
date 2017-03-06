@@ -14,7 +14,11 @@ public class RealmPlatformTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(50, data.getId());
+
+        data = new RealmPlatform();
+        data.setId(100);
+
+        assertEquals(100, data.getId());
     }
 
     @Test

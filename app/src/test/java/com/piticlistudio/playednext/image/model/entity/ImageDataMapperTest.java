@@ -2,12 +2,16 @@ package com.piticlistudio.playednext.image.model.entity;
 
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.BaseTest;
+import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.RealmImageData;
 
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test cases for ImageDataMapper
@@ -19,32 +23,45 @@ public class ImageDataMapperTest extends BaseTest {
     ImageDataMapper mapper;
 
     @Test
-    public void transform() throws Exception {
-
-        RealmImageData data = null;
+    public void given_nullData_When_Transform_Then_ReturnsAbsent() throws Exception {
+        IImageData data = null;
         // Act
         Optional<ImageData> result = mapper.transform(data);
 
         // Assert
         assertNotNull(result);
         assertFalse(result.isPresent());
+    }
 
-        // Arrange
-        data = new RealmImageData(null, "url", 200, 200);
+    @Test
+    public void given_missingIdData_When_Transform_Then_ReturnsAbsent() throws Exception {
 
+        IImageData data = new RealmImageData(null, "url", 200, 200);
         // Act
-        result = mapper.transform(data);
+        Optional<ImageData> result = mapper.transform(data);
 
         // Assert
         assertNotNull(result);
         assertFalse(result.isPresent());
+    }
 
+    @Test
+    public void given_missingUrlData_When_Transform_Then_ReturnsAbsent() throws Exception {
+        IImageData data = new RealmImageData("10", null, 200, 200);
+        // Act
+        Optional<ImageData> result = mapper.transform(data);
 
-        // Arrange
-        data = new RealmImageData("id", "url", 200, 200);
+        // Assert
+        assertNotNull(result);
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void given_validData_When_Transform_Then_MapsData() throws Exception {
+        IImageData data = new RealmImageData("id", "url", 200, 200);
 
         // Act
-        result = mapper.transform(data);
+        Optional<ImageData> result = mapper.transform(data);
 
         // Assert
         assertNotNull(result);
@@ -54,5 +71,4 @@ public class ImageDataMapperTest extends BaseTest {
         assertEquals(data.getHeight(), result.get().fullHeight());
         assertEquals(data.getWidth(), result.get().fullWidth());
     }
-
 }
