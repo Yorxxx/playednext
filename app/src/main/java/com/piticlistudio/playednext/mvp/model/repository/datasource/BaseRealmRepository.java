@@ -31,22 +31,9 @@ public abstract class BaseRealmRepository<R extends RealmObject> {
      */
     protected static Observable<Realm> getManagedRealm() {
         final RealmConfiguration realmConfig = Realm.getDefaultInstance().getConfiguration();
-        return Observable.using(new Callable<Realm>() {
-            @Override
-            public Realm call() throws Exception {
-                return Realm.getInstance(realmConfig);
-            }
-        }, new Function<Realm, ObservableSource<? extends Realm>>() {
-            @Override
-            public ObservableSource<? extends Realm> apply(Realm realm) throws Exception {
-                return Observable.just(realm);
-            }
-        }, new Consumer<Realm>() {
-            @Override
-            public void accept(Realm realm) throws Exception {
-                if (!realm.isClosed())
-                    realm.close();
-            }
+        return Observable.using(() -> Realm.getInstance(realmConfig), Observable::just, realm -> {
+            if (!realm.isClosed())
+                realm.close();
         });
 
     }

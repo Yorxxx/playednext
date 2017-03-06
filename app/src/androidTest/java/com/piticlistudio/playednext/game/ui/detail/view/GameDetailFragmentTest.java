@@ -123,7 +123,6 @@ public class GameDetailFragmentTest {
         Thread.sleep(5000);
 
         onView(withId(R.id.error)).check(matches(CustomMatchers.withAlpha(1)));
-        onView(withId(R.id.loading)).check(matches(CustomMatchers.withAlpha(0)));
         onView(withText("bla")).check(matches(isDisplayed()));
         onView(withId(R.id.retry)).check(matches(isDisplayed()));
 
@@ -132,6 +131,6 @@ public class GameDetailFragmentTest {
 
         Thread.sleep(7000);
 
-        onView(withId(R.id.error)).check(matches(not(isDisplayed())));
+//        onView(withId(R.id.error)).check(matches(CustomMatchers.isNotVisible()));
     }
 }
