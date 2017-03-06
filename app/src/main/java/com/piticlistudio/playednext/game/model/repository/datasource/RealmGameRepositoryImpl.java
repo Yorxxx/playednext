@@ -15,7 +15,7 @@ import io.realm.RealmResults;
  * Repository for Realm entities
  * Created by jorge.garcia on 10/02/2017.
  */
-public class RealmGameRepositoryImpl extends BaseRealmRepository<RealmGame> implements IGamedatasourceRepository<IGameDatasource> {
+public class RealmGameRepositoryImpl extends BaseRealmRepository<RealmGame> implements IGamedatasourceRepository {
 
     public RealmGameRepositoryImpl() {
         super(RealmGame.class);

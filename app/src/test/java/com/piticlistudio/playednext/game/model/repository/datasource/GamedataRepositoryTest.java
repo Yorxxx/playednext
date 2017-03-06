@@ -5,8 +5,8 @@ import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.game.model.GamedataComponent;
 import com.piticlistudio.playednext.game.model.GamedataModule;
+import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
-import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 
 import org.junit.Rule;
@@ -40,17 +40,17 @@ public class GamedataRepositoryTest extends BaseTest {
 
     @Mock
     @Named("db")
-    public IGamedatasourceRepository<IGameDatasource> dbImpl;
+    public IGamedatasourceRepository dbImpl;
 
     @Mock
     @Named("net")
-    public IGamedatasourceRepository<IGameDatasource> netImpl;
+    public IGamedatasourceRepository netImpl;
 
     @InjectFromComponent
     private GamedataRepository repository;
 
     private RealmGame localData = GameFactory.provideRealmGame(10, "title");
-    private NetGame remoteData = GameFactory.provideNetGame(10, "title");
+    private IGDBGame remoteData = GameFactory.provideNetGame(10, "title");
 
 
     @Test

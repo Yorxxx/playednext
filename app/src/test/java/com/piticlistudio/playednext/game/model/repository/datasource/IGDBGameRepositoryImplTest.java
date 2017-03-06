@@ -4,8 +4,8 @@ import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.game.model.GamedataModule;
+import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
-import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
  * Test cases for NetGameRepository
  * Created by jorge.garcia on 10/02/2017.
  */
-public class NetGameRepositoryImplTest extends BaseTest {
+public class IGDBGameRepositoryImplTest extends BaseTest {
 
     @Rule
     public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
@@ -39,15 +39,15 @@ public class NetGameRepositoryImplTest extends BaseTest {
     GamedataModule.NetService service;
 
     @InjectMocks
-    private NetGameRepositoryImpl repository;
+    private IGDBGameRepositoryImpl repository;
 
 
     @Test
     public void load() throws Exception {
 
-        NetGame response1 = GameFactory.provideNetGame(1, "1");
-        NetGame response2 = GameFactory.provideNetGame(2, "2");
-        List<NetGame> responseList = new ArrayList<>();
+        IGDBGame response1 = GameFactory.provideNetGame(1, "1");
+        IGDBGame response2 = GameFactory.provideNetGame(2, "2");
+        List<IGDBGame> responseList = new ArrayList<>();
         responseList.add(response1);
         responseList.add(response2);
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(1, TimeUnit.SECONDS));
@@ -66,17 +66,17 @@ public class NetGameRepositoryImplTest extends BaseTest {
     @Test
     public void load_onErrorRetry() throws Exception {
 
-        NetGame response1 = GameFactory.provideNetGame(1, "1");
-        NetGame response2 = GameFactory.provideNetGame(2, "2");
-        List<NetGame> responseList = new ArrayList<>();
+        IGDBGame response1 = GameFactory.provideNetGame(1, "1");
+        IGDBGame response2 = GameFactory.provideNetGame(2, "2");
+        List<IGDBGame> responseList = new ArrayList<>();
         responseList.add(response1);
         responseList.add(response2);
         when(service.load(anyInt(), anyString()))
-                .thenReturn(Observable.fromCallable(new Callable<List<NetGame>>() {
+                .thenReturn(Observable.fromCallable(new Callable<List<IGDBGame>>() {
                     private boolean firstEmitted;
 
                     @Override
-                    public List<NetGame> call() throws Exception {
+                    public List<IGDBGame> call() throws Exception {
                         if (!firstEmitted) { // We throw on first failure
                             firstEmitted = true;
                             throw new RuntimeException(":(");
@@ -101,18 +101,18 @@ public class NetGameRepositoryImplTest extends BaseTest {
     @Test
     public void search() throws Exception {
 
-        NetGame response1 = GameFactory.provideNetGame(1, "1");
-        NetGame response2 = GameFactory.provideNetGame(2, "2");
-        List<NetGame> responseList = new ArrayList<>();
+        IGDBGame response1 = GameFactory.provideNetGame(1, "1");
+        IGDBGame response2 = GameFactory.provideNetGame(2, "2");
+        List<IGDBGame> responseList = new ArrayList<>();
         responseList.add(response1);
         responseList.add(response2);
 
         when(service.search(anyInt(), anyString(), anyString(), anyInt()))
-                .thenReturn(Observable.fromCallable(new Callable<List<NetGame>>() {
+                .thenReturn(Observable.fromCallable(new Callable<List<IGDBGame>>() {
                     private boolean firstEmitted;
 
                     @Override
-                    public List<NetGame> call() throws Exception {
+                    public List<IGDBGame> call() throws Exception {
                         if (!firstEmitted) { // We throw on first failure
                             firstEmitted = true;
                             throw new RuntimeException(":(");
@@ -142,9 +142,9 @@ public class NetGameRepositoryImplTest extends BaseTest {
     @Test
     public void search_retry() throws Exception {
 
-        NetGame response1 = GameFactory.provideNetGame(1, "1");
-        NetGame response2 = GameFactory.provideNetGame(2, "2");
-        List<NetGame> responseList = new ArrayList<>();
+        IGDBGame response1 = GameFactory.provideNetGame(1, "1");
+        IGDBGame response2 = GameFactory.provideNetGame(2, "2");
+        List<IGDBGame> responseList = new ArrayList<>();
         responseList.add(response1);
         responseList.add(response2);
         when(service.search(anyInt(), anyString(), anyString(), anyInt()))
@@ -165,7 +165,7 @@ public class NetGameRepositoryImplTest extends BaseTest {
     @Test
     public void save() throws Exception {
 
-        NetGame data = GameFactory.provideNetGame(1, "name");
+        IGDBGame data = GameFactory.provideNetGame(1, "name");
 
         // Act
         TestObserver<IGameDatasource> result = repository.save(data).test();

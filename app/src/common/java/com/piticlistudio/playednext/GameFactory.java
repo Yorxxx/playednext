@@ -6,7 +6,7 @@ import com.piticlistudio.playednext.collection.model.entity.datasource.RealmColl
 import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.game.model.entity.Game;
-import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
+import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
 import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGDBGameRelease;
@@ -168,9 +168,9 @@ public class GameFactory {
      * @param title the title
      * @return the NetGame
      */
-    public static NetGame provideNetGame(int id, String title) {
+    public static IGDBGame provideNetGame(int id, String title) {
 
-        NetGame response = NetGame.create(id, title, "slug", "url", 1000, 2500);
+        IGDBGame response = IGDBGame.create(id, title, "slug", "url", 1000, 2500);
         response.cover = NetImageData.create("//images.igdb.com/igdb/image/upload/t_thumb/irhaovusoqq5xk6a8wff.png", 800, 500, "imageid");
         response.category = 100;
         response.collection = 200;

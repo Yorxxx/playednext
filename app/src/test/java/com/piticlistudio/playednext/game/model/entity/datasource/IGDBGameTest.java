@@ -8,7 +8,6 @@ import com.piticlistudio.playednext.image.model.entity.datasource.IImageData;
 import com.piticlistudio.playednext.image.model.entity.datasource.NetImageData;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
 import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
-import com.piticlistudio.playednext.releasedate.model.entity.datasource.NetReleaseDate;
 
 import org.junit.Test;
 
@@ -24,9 +23,9 @@ import static org.junit.Assert.assertTrue;
  * Test cases
  * Created by jorge.garcia on 10/02/2017.
  */
-public class NetGameTest {
+public class IGDBGameTest {
 
-    private NetGame data = NetGame.create(10, "name", "slug", "url", 1000, 2500);
+    private IGDBGame data = IGDBGame.create(10, "name", "slug", "url", 1000, 2500);
 
 
     @Test

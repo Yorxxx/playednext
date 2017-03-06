@@ -18,12 +18,12 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Representation of a IGameDatasource provided by Net Module
+ * Representation of a IGameDatasource provided by IGDB
  * Created by jorge.garcia on 10/02/2017.
  */
 @AutoValue
 @AutoGson
-public abstract class NetGame implements IGameDatasource {
+public abstract class IGDBGame implements IGameDatasource {
 
     public String summary;
     public String storyline;
@@ -50,8 +50,8 @@ public abstract class NetGame implements IGameDatasource {
     public List<NetImageData> screenshots;
     public List<IGDBGameRelease> release_dates = new ArrayList<>();
 
-    public static NetGame create(int id, String name, String slug, String url, long createdAt, long updatedAt) {
-        return new AutoValue_NetGame(id, name, slug, url, createdAt, updatedAt);
+    public static IGDBGame create(int id, String name, String slug, String url, long createdAt, long updatedAt) {
+        return new AutoValue_IGDBGame(id, name, slug, url, createdAt, updatedAt);
     }
 
     public abstract int id();

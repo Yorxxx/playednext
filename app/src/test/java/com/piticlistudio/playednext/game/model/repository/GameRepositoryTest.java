@@ -17,8 +17,8 @@ import com.piticlistudio.playednext.game.model.BaseGameTest;
 import com.piticlistudio.playednext.game.model.GamedataComponent;
 import com.piticlistudio.playednext.game.model.GamedataModule;
 import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
-import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
 import com.piticlistudio.playednext.gamerelease.model.entity.datasource.RealmGameRelease;
@@ -348,7 +348,7 @@ public class GameRepositoryTest extends BaseGameTest {
     @Test
     public void loadCollection_noCollection() throws Exception {
 
-        NetGame source = GameFactory.provideNetGame(10, "title");
+        IGDBGame source = GameFactory.provideNetGame(10, "title");
         source.collection = -1;
         Game to = Game.create(10, "title");
 
@@ -388,7 +388,7 @@ public class GameRepositoryTest extends BaseGameTest {
     @Test
     public void loadCollection_requestsCollection() throws Exception {
 
-        NetGame source = GameFactory.provideNetGame(10, "title");
+        IGDBGame source = GameFactory.provideNetGame(10, "title");
         assertTrue(source.getCollection().isPresent());
         assertFalse(source.getCollection().get().data.isPresent());
 
@@ -490,7 +490,7 @@ public class GameRepositoryTest extends BaseGameTest {
     @Test
     public void loadDevelopers_noDevelopers() throws Exception {
 
-        NetGame source = GameFactory.provideNetGame(10, "title");
+        IGDBGame source = GameFactory.provideNetGame(10, "title");
         source.developers.clear();
         Game to = Game.create(10, "title");
 
@@ -544,7 +544,7 @@ public class GameRepositoryTest extends BaseGameTest {
         Game to = Game.create(10, "title");
         to.developers = new ArrayList<>();
 
-        NetGame source = GameFactory.provideNetGame(10, "title");
+        IGDBGame source = GameFactory.provideNetGame(10, "title");
         assertTrue(source.getDevelopers().size() > 0);
 
         // Act
@@ -564,7 +564,7 @@ public class GameRepositoryTest extends BaseGameTest {
     @Test
     public void loadGenres_empty() throws Exception {
 
-        NetGame from = GameFactory.provideNetGame(10, "title");
+        IGDBGame from = GameFactory.provideNetGame(10, "title");
         from.genres.clear();
         Game dest = Game.create(10, "title");
 
@@ -617,7 +617,7 @@ public class GameRepositoryTest extends BaseGameTest {
         Game to = Game.create(10, "title");
         to.genres = new ArrayList<>();
 
-        NetGame source = GameFactory.provideNetGame(10, "title");
+        IGDBGame source = GameFactory.provideNetGame(10, "title");
         assertTrue(source.getGenres().size() > 0);
 
         // Act
@@ -637,7 +637,7 @@ public class GameRepositoryTest extends BaseGameTest {
     @Test
     public void loadPlatforms_noPlatforms() throws Exception {
 
-        NetGame from = GameFactory.provideNetGame(10, "title");
+        IGDBGame from = GameFactory.provideNetGame(10, "title");
         from.release_dates.clear();
         Game dest = Game.create(10, "title");
 
@@ -685,7 +685,7 @@ public class GameRepositoryTest extends BaseGameTest {
         Game to = Game.create(10, "title");
         to.platforms = new ArrayList<>();
 
-        NetGame source = GameFactory.provideNetGame(10, "title");
+        IGDBGame source = GameFactory.provideNetGame(10, "title");
         assertTrue(source.getPlatforms().size() > 0);
 
         doAnswer(invocation -> {
@@ -710,7 +710,7 @@ public class GameRepositoryTest extends BaseGameTest {
     @Test
     public void loadReleases_noReleases() throws Exception {
 
-        NetGame from = GameFactory.provideNetGame(10, "title");
+        IGDBGame from = GameFactory.provideNetGame(10, "title");
         from.release_dates.clear();
         Game dest = Game.create(10, "title");
 

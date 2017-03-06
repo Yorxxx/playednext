@@ -16,12 +16,12 @@ import io.reactivex.Observable;
 
 public class GamedataRepository implements IGamedataRepository {
 
-    private final IGamedatasourceRepository<IGameDatasource> dbImpl;
-    private final IGamedatasourceRepository<IGameDatasource> netImpl;
+    private final IGamedatasourceRepository dbImpl;
+    private final IGamedatasourceRepository netImpl;
 
     @Inject
-    public GamedataRepository(@Named("db") IGamedatasourceRepository<IGameDatasource> dbImpl,
-                              @Named("net") IGamedatasourceRepository<IGameDatasource> netImpl) {
+    public GamedataRepository(@Named("db") IGamedatasourceRepository dbImpl,
+                              @Named("net") IGamedatasourceRepository netImpl) {
         this.dbImpl = dbImpl;
         this.netImpl = netImpl;
     }

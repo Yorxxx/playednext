@@ -2,7 +2,7 @@ package com.piticlistudio.playednext.game.model.repository.datasource;
 
 import com.piticlistudio.playednext.game.model.GamedataModule;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
-import com.piticlistudio.playednext.game.model.entity.datasource.NetGame;
+import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ import io.reactivex.functions.Function;
  * Created by jorge.garcia on 10/02/2017.
  */
 
-public class NetGameRepositoryImpl implements IGamedatasourceRepository<IGameDatasource> {
+public class IGDBGameRepositoryImpl implements IGamedatasourceRepository {
 
     private final GamedataModule.NetService service;
 
     @Inject
-    public NetGameRepositoryImpl(GamedataModule.NetService service) {
+    public IGDBGameRepositoryImpl(GamedataModule.NetService service) {
         this.service = service;
     }
 
@@ -40,7 +40,7 @@ public class NetGameRepositoryImpl implements IGamedatasourceRepository<IGameDat
                 .firstOrError()
                 .retry(1)
                 .flatMap(netGames -> Observable.fromIterable(netGames)
-                        .map((Function<NetGame, IGameDatasource>) netGame -> netGame)
+                        .map((Function<IGDBGame, IGameDatasource>) netGame -> netGame)
                         .toList());
     }
 
@@ -54,7 +54,7 @@ public class NetGameRepositoryImpl implements IGamedatasourceRepository<IGameDat
     public Single<IGameDatasource> load(int id) {
         return service.load(id, "*")
                 .retry(1)
-                .map((Function<List<NetGame>, IGameDatasource>) netGames -> {
+                .map((Function<List<IGDBGame>, IGameDatasource>) netGames -> {
                     if (netGames.size() == 0)
                         throw new RuntimeException("Not found");
                     return netGames.get(0);
