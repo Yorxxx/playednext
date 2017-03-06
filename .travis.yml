@@ -10,7 +10,6 @@ android:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
     - tools
-    - tools
     - platform-tools
 
     # The BuildTools version used by your project
@@ -20,27 +19,27 @@ android:
     - android-$ANDROID_API_LEVEL
 
     # Additional components
-    - addon-google_apis-google-$ANDROID_API_LEVEL
-    - extra-google-google_play_services
-    - extra-google-m2repository
+    #- addon-google_apis-google-$ANDROID_API_LEVEL
+    #- extra-google-google_play_services
+    #- extra-google-m2repository
     - extra-android-m2repository
-    - extra-google-google_play_services
-    - extra-android-support
-    - sys-img-armeabi-v7a-google_apis-21
+    #- extra-google-google_play_services
+    #- extra-android-support
+    #- sys-img-armeabi-v7a-google_apis-21
 
   licenses:
     - '.+'
 
-before_install:
-  - echo y | sudo apt-get update
-  - echo y | sudo apt-get install openjdk-7-jre
-  - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
-  - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
-  - export JAVA_HOME=$JAVA8_HOME
-  - chmod +x gradlew
-
 script:
   - ./gradlew test
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
