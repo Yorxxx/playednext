@@ -18,8 +18,8 @@ import javax.inject.Named;
 public class CompanyRepository extends BaseRepository<Company, ICompanyData> implements ICompanyRepository {
 
     @Inject
-    public CompanyRepository(@Named("db") ICompanyRepositoryDataSource<ICompanyData> dbImpl,
-                             @Named("net") ICompanyRepositoryDataSource<ICompanyData> netImpl,
+    public CompanyRepository(@Named("db") ICompanyRepositoryDataSource dbImpl,
+                             @Named("net") ICompanyRepositoryDataSource netImpl,
                              CompanyMapper mapper) {
         super(dbImpl, netImpl, mapper);
     }

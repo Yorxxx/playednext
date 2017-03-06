@@ -8,9 +8,9 @@ import static org.junit.Assert.*;
  * Test cases
  * Created by jorge.garcia on 13/02/2017.
  */
-public class NetCompanyTest {
+public class IGDBCompanyTest {
 
-    private NetCompany data = NetCompany.create(50, "company_name", "company_url", "company_slug", 1000, 2000);
+    private IGDBCompany data = IGDBCompany.create(50, "company_name", "company_url", "company_slug", 1000, 2000);
 
     @Test
     public void create() throws Exception {

@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.collection;
 
+import com.piticlistudio.playednext.APIKeys;
 import com.piticlistudio.playednext.collection.model.entity.CollectionMapper;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
 import com.piticlistudio.playednext.collection.model.entity.datasource.IGDBCollection;
@@ -33,7 +34,7 @@ public class CollectionModule {
 
         @Headers({
                 "Accept: application/json",
-                "X-Mashape-Key: XxTvUubZsDmshGVnDjpP4ZnVFfaLp1FLO7Vjsnzi8CSsAfuObi"
+                "X-Mashape-Key: " + APIKeys.IGDB_KEY
         })
         @GET("/collections/{id}/")
         Observable<List<IGDBCollection>> load(@Path("id") int id, @Query("fields") String fields);

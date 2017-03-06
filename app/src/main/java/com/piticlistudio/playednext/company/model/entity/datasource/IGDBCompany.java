@@ -7,12 +7,12 @@ import com.piticlistudio.playednext.utils.AutoGson;
 import java.util.List;
 
 /**
- * Entity defining a company representation by net provider
+ * Entity defining a company representation by IGDB provider
  * Created by jorge.garcia on 13/02/2017.
  */
 @AutoValue
 @AutoGson
-public abstract class NetCompany implements ICompanyData {
+public abstract class IGDBCompany implements ICompanyData {
 
     public int country;
     public List<Integer> published;
@@ -21,8 +21,8 @@ public abstract class NetCompany implements ICompanyData {
     public String description;
     public String website;
 
-    public static NetCompany create(int id, String name, String url, String slug, long createdAt, long updatedAt) {
-        return new AutoValue_NetCompany(id, name, url, slug, createdAt, updatedAt);
+    public static IGDBCompany create(int id, String name, String url, String slug, long createdAt, long updatedAt) {
+        return new AutoValue_IGDBCompany(id, name, url, slug, createdAt, updatedAt);
     }
 
     public abstract int id();

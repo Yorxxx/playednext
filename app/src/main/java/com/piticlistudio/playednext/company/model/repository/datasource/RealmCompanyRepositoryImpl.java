@@ -11,7 +11,7 @@ import io.reactivex.Single;
  * Created by jorge.garcia on 13/02/2017.
  */
 
-public class RealmCompanyRepositoryImpl extends BaseRealmRepository<RealmCompany> implements ICompanyRepositoryDataSource<ICompanyData> {
+public class RealmCompanyRepositoryImpl extends BaseRealmRepository<RealmCompany> implements ICompanyRepositoryDataSource {
 
     public RealmCompanyRepositoryImpl() {
         super(RealmCompany.class);
@@ -37,7 +37,7 @@ public class RealmCompanyRepositoryImpl extends BaseRealmRepository<RealmCompany
      */
     @Override
     public Single<ICompanyData> save(ICompanyData data) {
-        return super.store((RealmCompany)data)
+        return super.store((RealmCompany) data)
                 .map(result -> result);
     }
 }

@@ -1,13 +1,12 @@
 package com.piticlistudio.playednext.company.model;
 
+import com.piticlistudio.playednext.APIKeys;
 import com.piticlistudio.playednext.company.model.entity.CompanyMapper;
-import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
-import com.piticlistudio.playednext.company.model.entity.datasource.NetCompany;
-import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
+import com.piticlistudio.playednext.company.model.entity.datasource.IGDBCompany;
 import com.piticlistudio.playednext.company.model.repository.CompanyRepository;
 import com.piticlistudio.playednext.company.model.repository.ICompanyRepository;
 import com.piticlistudio.playednext.company.model.repository.datasource.ICompanyRepositoryDataSource;
-import com.piticlistudio.playednext.company.model.repository.datasource.NetCompanyRepositoryImpl;
+import com.piticlistudio.playednext.company.model.repository.datasource.IGDBCompanyRepositoryImpl;
 import com.piticlistudio.playednext.company.model.repository.datasource.RealmCompanyRepositoryImpl;
 
 import java.util.List;
@@ -37,19 +36,19 @@ public class CompanyModule {
 
     @Provides
     @Named("net")
-    public ICompanyRepositoryDataSource<ICompanyData> provideNetRepository(NetService service) {
-        return new NetCompanyRepositoryImpl(service);
+    public ICompanyRepositoryDataSource provideNetRepository(NetService service) {
+        return new IGDBCompanyRepositoryImpl(service);
     }
 
     @Provides
     @Named("db")
-    public ICompanyRepositoryDataSource<ICompanyData> provideDBRepository() {
+    public ICompanyRepositoryDataSource provideDBRepository() {
         return new RealmCompanyRepositoryImpl();
     }
 
     @Provides
-    public ICompanyRepository provideRepository(@Named("db") ICompanyRepositoryDataSource<ICompanyData> local,
-                                                @Named("net") ICompanyRepositoryDataSource<ICompanyData> remote,
+    public ICompanyRepository provideRepository(@Named("db") ICompanyRepositoryDataSource local,
+                                                @Named("net") ICompanyRepositoryDataSource remote,
                                                 CompanyMapper mapper) {
         return new CompanyRepository(local, remote, mapper);
     }
@@ -58,9 +57,9 @@ public class CompanyModule {
 
         @Headers({
                 "Accept: application/json",
-                "X-Mashape-Key: XxTvUubZsDmshGVnDjpP4ZnVFfaLp1FLO7Vjsnzi8CSsAfuObi"
+                "X-Mashape-Key: " + APIKeys.IGDB_KEY
         })
         @GET("/companies/{id}/")
-        Observable<List<NetCompany>> load(@Path("id") int id, @Query("fields") String fields);
+        Observable<List<IGDBCompany>> load(@Path("id") int id, @Query("fields") String fields);
     }
 }

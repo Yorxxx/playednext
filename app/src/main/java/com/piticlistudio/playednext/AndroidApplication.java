@@ -8,7 +8,7 @@ import com.piticlistudio.playednext.company.model.CompanyModule;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.di.component.DaggerAppComponent;
 import com.piticlistudio.playednext.di.module.AppModule;
-import com.piticlistudio.playednext.di.module.NetModule;
+import com.piticlistudio.playednext.di.module.IGDBModule;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.DaggerGamedataComponent;
@@ -122,7 +122,7 @@ public class AndroidApplication extends Application {
 
         gamedataComponent = DaggerGamedataComponent.builder()
                 .gamedataModule(new GamedataModule())
-                .netModule(new NetModule())
+                .iGDBModule(new IGDBModule())
                 .build();
 
         gameComponent = gamedataComponent.plus(new AppModule(this), new GameModule(), new CollectionModule(), new CompanyModule(), new

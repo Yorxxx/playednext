@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.company.model.repository.datasource;
 import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.company.model.CompanyModule;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
-import com.piticlistudio.playednext.company.model.entity.datasource.NetCompany;
+import com.piticlistudio.playednext.company.model.entity.datasource.IGDBCompany;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
  * Test cases
  * Created by jorge.garcia on 13/02/2017.
  */
-public class NetCompanyRepositoryImplTest {
+public class IGDBCompanyRepositoryImplTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
@@ -40,13 +40,13 @@ public class NetCompanyRepositoryImplTest {
     CompanyModule.NetService service;
 
     @InjectMocks
-    private NetCompanyRepositoryImpl repository;
+    private IGDBCompanyRepositoryImpl repository;
 
-    private NetCompany data = NetCompany.create(10, "name", "url", "slug", 1000, 2000);
+    private IGDBCompany data = IGDBCompany.create(10, "name", "url", "slug", 1000, 2000);
 
     @Test
     public void load() throws Exception {
-        List<NetCompany> responseList = new ArrayList<>();
+        List<IGDBCompany> responseList = new ArrayList<>();
         responseList.add(data);
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
@@ -63,14 +63,14 @@ public class NetCompanyRepositoryImplTest {
     @Test
     public void load_onErrorRetry() throws Exception {
 
-        List<NetCompany> responseList = new ArrayList<>();
+        List<IGDBCompany> responseList = new ArrayList<>();
         responseList.add(data);
         when(service.load(anyInt(), anyString()))
-                .thenReturn(Observable.fromCallable(new Callable<List<NetCompany>>() {
+                .thenReturn(Observable.fromCallable(new Callable<List<IGDBCompany>>() {
                     private boolean firstEmitted;
 
                     @Override
-                    public List<NetCompany> call() throws Exception {
+                    public List<IGDBCompany> call() throws Exception {
                         if (!firstEmitted) { // We throw on first failure
                             firstEmitted = true;
                             throw new RuntimeException(":(");
@@ -93,7 +93,7 @@ public class NetCompanyRepositoryImplTest {
     @Test
     public void load_empty() throws Exception {
 
-        List<NetCompany> responseList = new ArrayList<>();
+        List<IGDBCompany> responseList = new ArrayList<>();
         when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(2, TimeUnit.SECONDS));
 
         // Act
@@ -109,7 +109,7 @@ public class NetCompanyRepositoryImplTest {
     @Test
     public void save() throws Exception {
 
-        NetCompany data = NetCompany.create(10, "name", "url", "slug", 1000, 2000);
+        IGDBCompany data = IGDBCompany.create(10, "name", "url", "slug", 1000, 2000);
 
         // Act
         TestObserver<ICompanyData> result = repository.save(data).test();

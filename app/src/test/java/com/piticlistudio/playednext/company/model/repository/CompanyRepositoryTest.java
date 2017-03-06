@@ -5,7 +5,8 @@ import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.company.model.CompanyComponent;
 import com.piticlistudio.playednext.company.model.CompanyModule;
 import com.piticlistudio.playednext.company.model.entity.Company;
-import com.piticlistudio.playednext.company.model.entity.datasource.NetCompany;
+import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
+import com.piticlistudio.playednext.company.model.entity.datasource.IGDBCompany;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.company.model.repository.datasource.ICompanyRepositoryDataSource;
 
@@ -37,18 +38,18 @@ import static org.mockito.Mockito.when;
 public class CompanyRepositoryTest extends BaseTest {
 
 
-    private final RealmCompany localData = new RealmCompany(100, "name");
-    private final NetCompany remoteData = NetCompany.create(100, "name", "url", "slug", 1000, 2000);
+    private final ICompanyData localData = new RealmCompany(100, "name");
+    private final ICompanyData remoteData = IGDBCompany.create(100, "name", "url", "slug", 1000, 2000);
     @Rule
     public DaggerMockRule<CompanyComponent> rule = new DaggerMockRule<>(CompanyComponent.class, new CompanyModule());
     @Rule
     public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
     @Mock
     @Named("db")
-    ICompanyRepositoryDataSource<RealmCompany> dbSource;
+    ICompanyRepositoryDataSource dbSource;
     @Mock
     @Named("net")
-    ICompanyRepositoryDataSource<NetCompany> netSource;
+    ICompanyRepositoryDataSource netSource;
     @InjectFromComponent
     private ICompanyRepository repository;
 
@@ -81,7 +82,7 @@ public class CompanyRepositoryTest extends BaseTest {
     @Test
     public void load_localDatasource_mapError() throws Exception {
 
-        RealmCompany data = new RealmCompany();
+        ICompanyData data = new RealmCompany();
         when(dbSource.load(anyInt())).thenReturn(Single.just(data).delay(2, TimeUnit.SECONDS));
         when(netSource.load(anyInt())).thenReturn(Single.just(remoteData).delay(10, TimeUnit.SECONDS));
 
@@ -104,8 +105,8 @@ public class CompanyRepositoryTest extends BaseTest {
         result.assertValueCount(1);
         result.assertComplete();
         result.assertValue(check(gameCollection -> {
-            assertEquals(remoteData.id(), gameCollection.id());
-            assertEquals(remoteData.name(), gameCollection.name());
+            assertEquals(remoteData.getId(), gameCollection.id());
+            assertEquals(remoteData.getName(), gameCollection.name());
         }));
         verify(netSource).load(0);
         verify(dbSource).load(0);
@@ -126,8 +127,8 @@ public class CompanyRepositoryTest extends BaseTest {
         result.assertValueCount(1);
         result.assertComplete();
         result.assertValue(check(gameCollection -> {
-            assertEquals(remoteData.id(), gameCollection.id());
-            assertEquals(remoteData.name(), gameCollection.name());
+            assertEquals(remoteData.getId(), gameCollection.id());
+            assertEquals(remoteData.getName(), gameCollection.name());
         }));
         verify(netSource).load(0);
         verify(dbSource).load(0);
