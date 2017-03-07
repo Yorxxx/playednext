@@ -66,9 +66,11 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
     @Override
     public void detachView(boolean retainInstance) {
         super.detachView(retainInstance);
-        if (loadDisposable != null)
-            loadDisposable.dispose();
-        saveDisposable.dispose();
+        if (!retainInstance) {
+            if (loadDisposable != null)
+                loadDisposable.dispose();
+            saveDisposable.dispose();
+        }
     }
 
     /**
@@ -78,13 +80,13 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
      */
     @Override
     public void loadData(int id) {
-        if (isViewAvailable() && getView() != null) {
+        if (getView() != null) {
             getView().showLoading();
             loadDisposable = interactor.load(id)
                     .onErrorResumeNext(throwable -> {
                         return interactor.create(id);
                     })
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::showData, this::showError);
         }
@@ -103,14 +105,14 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
     }
 
     private void showData(GameRelation data) {
-        if (isViewAvailable() && getView() != null) {
+        if (getView() != null) {
             getView().setData(data);
             getView().showContent();
         }
     }
 
     private void showError(Throwable error) {
-        if (isViewAvailable() && getView() != null) {
+        if (getView() != null) {
             getView().showError(error);
         }
     }

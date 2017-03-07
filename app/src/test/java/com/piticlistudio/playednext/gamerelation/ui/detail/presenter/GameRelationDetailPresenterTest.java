@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.gamerelation.ui.detail.presenter;
 
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.TestSchedulerRule;
+import com.piticlistudio.playednext.TestSubjectSchedulerRule;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
@@ -13,11 +14,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.plugins.RxJavaPlugins;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -29,6 +33,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
@@ -39,7 +44,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 public class GameRelationDetailPresenterTest extends BaseTest {
 
     @Rule
-    public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
+    public TestSubjectSchedulerRule testSchedulerRule = new TestSubjectSchedulerRule();
     @Mock
     GameRelationDetailContract.Interactor interactor;
     @Mock
@@ -50,7 +55,6 @@ public class GameRelationDetailPresenterTest extends BaseTest {
     @Before
     public void setUp() throws Exception {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler(__ -> testSchedulerRule.getTestScheduler());
-        presenter.attachView(view);
     }
 
     @After
@@ -59,7 +63,22 @@ public class GameRelationDetailPresenterTest extends BaseTest {
     }
 
     @Test
+    public void given_viewIsNotAttached_When_LoadData_Then_DoesNotHaveAnyViewInteraction() throws Exception {
+
+        presenter.attachView(null);
+
+        // Act
+        presenter.loadData(10);
+
+        // Assert
+        verifyZeroInteractions(view);
+        verifyZeroInteractions(interactor);
+    }
+
+    @Test
     public void Given_InteractorLoadSuccess_When_LoadingRelation_Then_ShowsRelation() throws Exception {
+
+        presenter.attachView(view);
 
         Game game = Game.create(10, "title");
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
@@ -81,6 +100,8 @@ public class GameRelationDetailPresenterTest extends BaseTest {
 
     @Test
     public void Given_InteractorLoadError_When_LoadingRelation_ThenCreatesAndShowsRelation() throws Exception {
+
+        presenter.attachView(view);
 
         Game game = Game.create(10, "title");
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
@@ -107,6 +128,8 @@ public class GameRelationDetailPresenterTest extends BaseTest {
     @Test
     public void Given_InteractorLoadAndCreationError_When_LoadingRelation_ThenShowsError() throws Exception {
 
+        presenter.attachView(view);
+
         Throwable error = new Exception("bla");
         doReturn(Observable.error(error)).when(interactor).create(10);
 
@@ -129,7 +152,33 @@ public class GameRelationDetailPresenterTest extends BaseTest {
     }
 
     @Test
+    public void given_viewDetaches_When_LoadsData_Then_DoesNotShowData() throws Exception {
+
+        presenter.attachView(view);
+
+        Game game = Game.create(10, "title");
+        GameRelation data = GameRelation.create(game, System.currentTimeMillis());
+        doReturn(Observable.just(data).delay(5, TimeUnit.SECONDS)).when(interactor).load(10);
+
+        // Act
+        presenter.loadData(10);
+        testSchedulerRule.getTestScheduler().advanceTimeBy(2, TimeUnit.SECONDS);
+        presenter.detachView(true); // Detach view while loading data
+        testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
+
+        // Assert
+        verify(view).showLoading();
+        verify(view, never()).setData(data);
+        verify(view, never()).showContent();
+        verify(view, never()).showError(any(Throwable.class));
+        verify(interactor).load(10);
+        verify(interactor, never()).create(10);
+    }
+
+    @Test
     public void Given_MultipleConsecutiveSaveCalls_When_SavingRelation_ThenSavesOnlyOnceAndLast() throws Exception {
+
+        presenter.attachView(view);
 
         Game game = Game.create(10, "name");
         GameRelation data = GameRelation.create(game, 1);
@@ -162,6 +211,8 @@ public class GameRelationDetailPresenterTest extends BaseTest {
     @Test
     public void Given_SingleSaveCall_When_SavingRelation_ThenSavesData() throws Exception {
 
+        presenter.attachView(view);
+
         Game game = Game.create(10, "name");
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
         long updatedAt = data.getUpdatedAt();
@@ -193,6 +244,8 @@ public class GameRelationDetailPresenterTest extends BaseTest {
     @Test
     public void given_disabledStatus_When_SavingRelation_ThenSavesData() throws Exception {
 
+        presenter.attachView(view);
+
         Game game = Game.create(10, "name");
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
         long updatedAt = data.getUpdatedAt();
@@ -217,6 +270,8 @@ public class GameRelationDetailPresenterTest extends BaseTest {
     @Test
     public void given_detachView_When_IsLoadingData_Then_ClearsLoadDisposable() throws Exception {
 
+        presenter.attachView(view);
+
         // Arrange
         Game game = Game.create(10, "title");
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
@@ -237,6 +292,8 @@ public class GameRelationDetailPresenterTest extends BaseTest {
     @Test
     public void given_detachesView_When_IsSavingData_Then_DisposesSave() throws Exception {
 
+        presenter.attachView(view);
+
         Game game = Game.create(10, "name");
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
         data.getStatuses().add(RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000));
@@ -256,5 +313,57 @@ public class GameRelationDetailPresenterTest extends BaseTest {
 
         // Assert
         assertTrue(presenter.saveDisposable.isDisposed());
+    }
+
+    @Test
+    public void given_detachesRetainedView_When_IsSavingData_Then_DoesNotDisposesSaveAction() throws Exception {
+
+        presenter.attachView(view);
+
+        Game game = Game.create(10, "name");
+        GameRelation data = GameRelation.create(game, System.currentTimeMillis());
+        long updatedAt = data.getUpdatedAt();
+        data.getStatuses().add(RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000));
+        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+
+        // Act
+        presenter.save(data, RelationInterval.RelationType.PENDING, false);
+        testSchedulerRule.getTestScheduler().advanceTimeBy(500, TimeUnit.MILLISECONDS);
+        presenter.detachView(true);
+
+        // Continue
+        testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
+
+        // Assert
+        verifyZeroInteractions(view);
+        assertEquals(1, data.getStatuses().size());
+        assertFalse(data.getCurrent().isPresent());
+        assertTrue(data.getStatuses().get(0).getEndAt() > 0);
+        assertTrue(data.getUpdatedAt() >= updatedAt);
+        verify(interactor).save(data);
+    }
+
+    @Test
+    public void given_errorAfterDetachedView_When_SavingData_Then_DoesNotShowError() throws Exception {
+
+        presenter.attachView(view);
+
+        Game game = Game.create(10, "name");
+        GameRelation data = GameRelation.create(game, System.currentTimeMillis());
+        data.getStatuses().add(RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000));
+        Throwable error = new Exception("bla");
+        doAnswer(invocation -> Observable.error(error).delay(5, TimeUnit.SECONDS)).when(interactor).save(data);
+
+        // Act
+        presenter.save(data, RelationInterval.RelationType.PLAYING, false);
+        presenter.detachView(true);
+
+        // Continue
+        testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
+
+        // Assert
+        verify(view, never()).showError(any(Throwable.class));
+        verify(view, never()).showContent();
+        verify(interactor).save(data);
     }
 }
