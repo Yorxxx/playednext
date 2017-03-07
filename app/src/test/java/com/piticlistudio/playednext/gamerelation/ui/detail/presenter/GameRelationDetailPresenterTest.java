@@ -21,6 +21,8 @@ import io.reactivex.android.plugins.RxAndroidPlugins;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -210,5 +212,49 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         assertFalse(data.getCurrent().isPresent());
         assertTrue(data.getStatuses().get(0).getEndAt() > 0);
         assertTrue(data.getUpdatedAt() >= updatedAt);
+    }
+
+    @Test
+    public void given_detachView_When_IsLoadingData_Then_ClearsLoadDisposable() throws Exception {
+
+        // Arrange
+        Game game = Game.create(10, "title");
+        GameRelation data = GameRelation.create(game, System.currentTimeMillis());
+        doReturn(Observable.just(data).delay(5, TimeUnit.SECONDS)).when(interactor).load(10);
+
+        presenter.loadData(10);
+
+        assertNotNull(presenter.loadDisposable);
+        assertFalse(presenter.loadDisposable.isDisposed());
+
+        // Act
+        presenter.detachView(false);
+
+        // Assert
+        assertTrue(presenter.loadDisposable.isDisposed());
+    }
+
+    @Test
+    public void given_detachesView_When_IsSavingData_Then_DisposesSave() throws Exception {
+
+        Game game = Game.create(10, "name");
+        GameRelation data = GameRelation.create(game, System.currentTimeMillis());
+        data.getStatuses().add(RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000));
+        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+        doAnswer(invocation -> {
+            RelationInterval.RelationType type = (RelationInterval.RelationType)invocation.getArguments()[0];
+            return RelationInterval.create(10, type, System.currentTimeMillis());
+        }).when(interactor).create(any(RelationInterval.RelationType.class));
+
+        presenter.save(data, RelationInterval.RelationType.PLAYING, true);
+
+        assertNotNull(presenter.saveDisposable);
+        assertFalse(presenter.saveDisposable.isDisposed());
+
+        // Act
+        presenter.detachView(false);
+
+        // Assert
+        assertTrue(presenter.saveDisposable.isDisposed());
     }
 }

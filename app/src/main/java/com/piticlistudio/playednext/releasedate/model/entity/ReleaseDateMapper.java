@@ -25,12 +25,8 @@ public class ReleaseDateMapper implements Mapper<ReleaseDate, IReleaseDateData> 
      */
     @Override
     public Optional<ReleaseDate> transform(IReleaseDateData data) {
-        if (data == null || data.getHumanDate() == null)
+        if (data == null || data.getHumanDate() == null || !data.getDate().isPresent())
             return Optional.absent();
-        if (data.getDate().isPresent()) {
-            return Optional.of(ReleaseDate.create(data.getDate().get(), data.getHumanDate()));
-        } else {
-            return Optional.of(ReleaseDate.create(0, data.getHumanDate()));
-        }
+        return Optional.of(ReleaseDate.create(data.getDate().get(), data.getHumanDate()));
     }
 }

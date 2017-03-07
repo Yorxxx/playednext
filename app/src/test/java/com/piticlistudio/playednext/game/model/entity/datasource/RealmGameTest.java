@@ -124,6 +124,19 @@ public class RealmGameTest {
     }
 
     @Test
+    public void given_nullDevelopers_When_getDevelopers_Then_ReturnsEmptyList() throws Exception {
+
+        data.setDevelopers(null);
+
+        // Act
+        List<NetworkEntityIdRelation<ICompanyData>> result = data.getDevelopers();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void getDevelopers() throws Exception {
 
         RealmList<RealmCompany> developers = new RealmList<>();
@@ -144,6 +157,19 @@ public class RealmGameTest {
             assertEquals(result.get(i).id, developers.get(i).getId());
         }
 
+    }
+
+    @Test
+    public void given_nullPublishers_When_getPublishers_Then_ReturnsEmptyList() throws Exception {
+
+        data.setPublishers(null);
+
+        // Act
+        List<NetworkEntityIdRelation<ICompanyData>> result = data.getPublishers();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -169,6 +195,19 @@ public class RealmGameTest {
     }
 
     @Test
+    public void given_nullGenres_When_getGenres_Then_ReturnsEmptyList() throws Exception {
+
+        data.setGenres(null);
+
+        // Act
+        List<NetworkEntityIdRelation<IGenreData>> result = data.getGenres();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void getGenres() throws Exception {
 
         RealmList<RealmGenre> genres = new RealmList<>();
@@ -191,6 +230,19 @@ public class RealmGameTest {
     }
 
     @Test
+    public void given_nullReleases_When_getReleases_Then_ReturnsEmptyList() throws Exception {
+
+        data.setReleases(null);
+
+        // ACt
+        List<IGameReleaseDateData> result = data.getReleases();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void getReleases() throws Exception {
         RealmList<RealmGameRelease> releases = new RealmList<>();
         for (int i = 0; i < 3; i++) {
@@ -209,6 +261,19 @@ public class RealmGameTest {
         for (int i = 0; i < result.size(); i++) {
             assertEquals(releases.get(i), result.get(i));
         }
+    }
+
+    @Test
+    public void given_nullPlatforms_When_getPlatforms_Then_ReturnsEmptyList() throws Exception {
+
+        data.setPlatforms(null);
+
+        // Act
+        List<NetworkEntityIdRelation<IPlatformData>> result = data.getPlatforms();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 
     @Test

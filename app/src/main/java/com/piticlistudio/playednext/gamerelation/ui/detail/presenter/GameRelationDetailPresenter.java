@@ -1,7 +1,5 @@
 package com.piticlistudio.playednext.gamerelation.ui.detail.presenter;
 
-import android.util.Pair;
-
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
 import com.piticlistudio.playednext.mvp.ui.MvpPresenter;
@@ -11,10 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
@@ -27,9 +23,9 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
         .Presenter<GameRelationDetailContract.View> {
 
     private final GameRelationDetailContract.Interactor interactor;
+    Disposable loadDisposable;
+    Disposable saveDisposable;
     private PublishSubject<UpdateRelationEntity> saveSubject = PublishSubject.create();
-    private Disposable loadDisposable;
-    private Disposable saveDisposable;
 
     @Inject
     GameRelationDetailPresenter(GameRelationDetailContract.Interactor interactor) {
@@ -72,8 +68,7 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
         super.detachView(retainInstance);
         if (loadDisposable != null)
             loadDisposable.dispose();
-        if (saveDisposable != null)
-            saveDisposable.dispose();
+        saveDisposable.dispose();
     }
 
     /**
