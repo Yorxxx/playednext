@@ -23,7 +23,7 @@ public class GameRelationListPresenter extends MvpPresenter<GameRelationListCont
 
     private final GameRelationListContract.Interactor interactor;
 
-    private Disposable loadDisposable;
+    Disposable loadDisposable;
 
     @Inject
     GameRelationListPresenter(GameRelationListContract.Interactor interactor) {
@@ -35,7 +35,7 @@ public class GameRelationListPresenter extends MvpPresenter<GameRelationListCont
      */
     @Override
     public void loadData() {
-        if (isViewAvailable() && getView() != null) {
+        if (getView() != null) {
             getView().showLoading();
             loadDisposable = Observable.combineLatest(interactor.loadCompletedItems(), interactor.loadCurrentItems(), interactor
                     .loadWaitingItems(), ItemsResult::new)
@@ -51,7 +51,7 @@ public class GameRelationListPresenter extends MvpPresenter<GameRelationListCont
      */
     @Override
     public void detachView(boolean retainInstance) {
-        if (loadDisposable != null && !loadDisposable.isDisposed())
+        if (loadDisposable != null)
             loadDisposable.dispose();
         loadDisposable = null;
         super.detachView(retainInstance);
@@ -73,20 +73,20 @@ public class GameRelationListPresenter extends MvpPresenter<GameRelationListCont
         interactor.save(data).subscribe();
     }
 
-    private void showData(ItemsResult result) {
-        if (isViewAvailable() && getView() != null) {
+    void showData(ItemsResult result) {
+        if (getView() != null) {
             getView().setData(result.completedItems, result.currentItems, result.waitingItems);
             getView().showContent();
         }
     }
 
-    private void showError(Throwable error) {
-        if (isViewAvailable() && getView() != null) {
+    void showError(Throwable error) {
+        if (getView() != null) {
             getView().showError(error);
         }
     }
 
-    private class ItemsResult {
+    class ItemsResult {
 
         List<GameRelation> completedItems;
         List<GameRelation> currentItems;

@@ -22,8 +22,13 @@ import io.reactivex.Observable;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
@@ -57,7 +62,83 @@ public class GameDetailPresenterTest extends BaseTest {
     }
 
     @Test
-    public void loadData() {
+    public void given_detachView_When_NotLoadingData_Then_ClearsResources() throws Exception {
+
+        presenter.detachView(false);
+
+        // Assert
+        assertNull(presenter.gameLoadDisposable);
+    }
+
+    @Test
+    public void given_detachView_When_LoadingData_Then_ClearsResources() throws Exception {
+
+        Game initialData = GameFactory.provide(100, "title");
+        doReturn(Observable.just(initialData).delay(5, TimeUnit.SECONDS)).when(interactor).load(anyInt());
+        presenter.loadData(10);
+
+        testSchedulerRule.getTestScheduler().advanceTimeBy(1, TimeUnit.SECONDS);
+
+        // Act
+        presenter.detachView(false);
+
+        // Assert
+        assertNull(presenter.gameLoadDisposable);
+        verify(view, never()).setData(initialData);
+        verify(view, never()).showContent();
+    }
+
+    @Test
+    public void given_viewIsNull_When_LoadData_Then_DoesNotInteractWithTheView() throws Exception {
+
+        presenter.detachView(false);
+
+        // Act
+        presenter.loadData(10);
+
+        // Assert
+        verifyZeroInteractions(view);
+    }
+
+    @Test
+    public void given_success_When_LoadData_Then_ShowsData() throws Exception {
+
+        Game game = GameFactory.provide(100, "title");
+        doReturn(Observable.just(game).delay(5, TimeUnit.SECONDS)).when(interactor).load(anyInt());
+
+        // Act
+        presenter.loadData(10);
+
+        verify(view).showLoading();
+        testSchedulerRule.getTestScheduler().advanceTimeBy(10, TimeUnit.SECONDS);
+        verify(view).setData(game);
+        verify(view).showContent();
+    }
+
+    @Test
+    public void given_success_When_loadDataAgain_Then_DisposesPreviousAndShowsData() throws Exception {
+
+        Game game = GameFactory.provide(100, "title");
+        Game game2 = GameFactory.provide(200, "title");
+        doReturn(Observable.just(game).delay(5, TimeUnit.SECONDS)).when(interactor).load(100);
+        doReturn(Observable.just(game2).delay(5, TimeUnit.SECONDS)).when(interactor).load(200);
+
+        presenter.loadData(100);
+        testSchedulerRule.getTestScheduler().advanceTimeBy(1, TimeUnit.SECONDS);
+
+        // Act
+        presenter.loadData(200);
+
+        // Assert
+        verify(view, times(2)).showLoading();
+        testSchedulerRule.getTestScheduler().advanceTimeBy(10, TimeUnit.SECONDS);
+        verify(view).setData(game2);
+        verify(view, never()).setData(game);
+        verify(view).showContent();
+    }
+
+    @Test
+    public void given_multipleEmissions_When_LoadData_Then_ShowsEveryEmission() {
 
         Game initialData = GameFactory.provide(100, "title");
         initialData.collection = Optional.absent();
@@ -106,7 +187,7 @@ public class GameDetailPresenterTest extends BaseTest {
     }
 
     @Test
-    public void loadData_error() {
+    public void given_error_when_loadData_Then_showsErrorAndData() {
 
         Game initialData = GameFactory.provide(100, "title");
 
@@ -138,4 +219,30 @@ public class GameDetailPresenterTest extends BaseTest {
         verify(interactor).load(100);
     }
 
+    @Test
+    public void given_viewIsNull_When_ShowData_Then_DoesNotInteracWithTheView() throws Exception {
+
+        Game initialData = GameFactory.provide(100, "title");
+
+        presenter.detachView(false);
+
+        // Act
+        presenter.showData(initialData);
+
+        // Assert
+        verifyZeroInteractions(view);
+    }
+
+    @Test
+    public void given_viewIsNull_When_ShowError_Then_DoesNotInteractWithTheView() throws Exception {
+
+        Throwable error = new Exception("bla");
+        presenter.detachView(false);
+
+        // Act
+        presenter.showError(error);
+
+        // Assert
+        verifyZeroInteractions(view);
+    }
 }
