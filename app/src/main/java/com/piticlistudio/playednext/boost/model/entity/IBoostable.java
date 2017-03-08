@@ -8,9 +8,30 @@ package com.piticlistudio.playednext.boost.model.entity;
 public interface IBoostable {
 
     /**
+     * Returns if the current entity has the boost enabled
+     *
+     * @return true if is enabled. False otherwise
+     */
+    boolean isBoostEnabled();
+
+    /**
      * Returns the last release
      *
      * @return the last release
      */
     long getLastRelease();
+
+    /**
+     * Returns the first release
+     *
+     * @return the first release
+     */
+    long getFirstRelease();
+
+    /**
+     * Returns since when is the item being on the todo list
+     *
+     * @return the timestamp
+     */
+    long getWaitingStartedAt();
 }
