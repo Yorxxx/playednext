@@ -62,6 +62,65 @@ public class GameRelationListPresenterTest extends BaseTest {
     }
 
     @Test
+    public void given_viewIsDetached_When_BeforeLoading_Then_DetachesView() throws Exception {
+
+        presenter.detachView(false);
+
+        // Assert
+        assertNull(presenter.loadDisposable);
+        assertNull(presenter.getView());
+    }
+
+    @Test
+    public void given_viewIsDetached_When_IsLoadingData_Then_DetachesView() throws Exception {
+
+        // Arrange
+        List<GameRelation> completedItems = new ArrayList<>();
+        completedItems.add(GameRelation.create(Game.create(10, "title"), System.currentTimeMillis()));
+        completedItems.add(GameRelation.create(Game.create(11, "title"), System.currentTimeMillis()));
+        doReturn(Observable.just(completedItems).delay(1, TimeUnit.SECONDS)).when(interactor).loadCompletedItems();
+
+        List<GameRelation> currentItems = new ArrayList<>();
+        currentItems.add(GameRelation.create(Game.create(12, "title"), System.currentTimeMillis()));
+        doReturn(Observable.just(currentItems).delay(500, TimeUnit.MILLISECONDS)).when(interactor).loadCurrentItems();
+
+        List<GameRelation> waitingItems = new ArrayList<>();
+        waitingItems.add(GameRelation.create(Game.create(13, "title"), System.currentTimeMillis()));
+        doReturn(Observable.just(waitingItems).delay(1500, TimeUnit.MILLISECONDS)).when(interactor).loadWaitingItems();
+
+        presenter.loadData();
+        testSchedulerRule.getTestScheduler().advanceTimeBy(1, TimeUnit.SECONDS);
+
+        // Act
+        // Detach view while it is loading data
+        presenter.detachView(false);
+
+        // Advance remaining time
+        testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
+
+        // Assert
+        verify(view).showLoading();
+        verify(view, never()).setData(any(), any(), any());
+        verify(view, never()).showContent();
+        assertNull(presenter.loadDisposable);
+        assertNull(presenter.getView());
+    }
+
+    @Test
+    public void given_loadData_When_ViewIsNotAttached_Then_DoesNothing() throws Exception {
+
+        // Arrange
+        presenter.detachView(false);
+
+        // Act
+        presenter.loadData();
+
+        // Assert
+        verifyZeroInteractions(view);
+        verifyZeroInteractions(interactor);
+    }
+
+    @Test
     public void given_interactorLoadCompletedError_When_Load_Then_EmitsError() throws Exception {
         Throwable error = new Exception("bla");
         doReturn(Observable.error(error).delay(1, TimeUnit.SECONDS)).when(interactor).loadCompletedItems();
@@ -235,5 +294,71 @@ public class GameRelationListPresenterTest extends BaseTest {
         assertTrue(data.getCurrent().isPresent());
         assertEquals(newInterval, data.getCurrent().get());
         verify(interactor).save(data);
+    }
+
+    @Test
+    public void given_saveRelation_When_NoCurrentStatus_Then_AddsAndSavesData() throws Exception {
+
+        long currentTime = System.currentTimeMillis();
+        Game game = Game.create(10, "name");
+        GameRelation data = GameRelation.create(game, 1000);
+        data.setUpdatedAt(1500);
+        assertFalse(data.getCurrent().isPresent());
+
+        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+        RelationInterval newInterval = RelationInterval.create(2, RelationInterval.RelationType.PLAYING, System.currentTimeMillis());
+        when(interactor.create(RelationInterval.RelationType.PLAYING)).thenReturn(newInterval);
+
+        // Act
+        presenter.save(data, RelationInterval.RelationType.PLAYING);
+
+        // Assert
+        verifyZeroInteractions(view);
+        assertEquals(1, data.getStatuses().size());
+        verify(interactor).create(RelationInterval.RelationType.PLAYING);
+        assertEquals(newInterval, data.getStatuses().get(0));
+        assertTrue(newInterval.startAt() >= currentTime);
+        assertEquals(0, newInterval.getEndAt());
+        assertTrue(data.getCurrent().isPresent());
+        assertEquals(newInterval, data.getCurrent().get());
+        verify(interactor).save(data);
+    }
+
+    @Test
+    public void given_showData_When_ViewIsNull_Then_DoesNotInteractWithTheView() throws Exception {
+
+        List<GameRelation> completedItems = new ArrayList<>();
+        completedItems.add(GameRelation.create(Game.create(10, "title"), System.currentTimeMillis()));
+        completedItems.add(GameRelation.create(Game.create(11, "title"), System.currentTimeMillis()));
+        completedItems.add(GameRelation.create(Game.create(21, "title"), System.currentTimeMillis()));
+
+        List<GameRelation> currentItems = new ArrayList<>();
+        currentItems.add(GameRelation.create(Game.create(12, "title"), System.currentTimeMillis()));
+        doReturn(Observable.just(currentItems).delay(500, TimeUnit.MILLISECONDS)).when(interactor).loadCurrentItems();
+
+        List<GameRelation> waitingItems = new ArrayList<>();
+        waitingItems.add(GameRelation.create(Game.create(13, "title"), System.currentTimeMillis()));
+        doReturn(Observable.just(waitingItems).delay(500, TimeUnit.MILLISECONDS)).when(interactor).loadWaitingItems();
+
+        presenter.detachView(false);
+
+        // Act
+        presenter.showData(presenter.new ItemsResult(completedItems, currentItems, waitingItems));
+
+        // Assert
+        verifyZeroInteractions(view);
+    }
+
+    @Test
+    public void given_showError_When_ViewIsNull_Then_DoesNotShowError() throws Exception {
+
+        Throwable error = new Exception("bla");
+        presenter.detachView(false);
+
+        // Act
+        presenter.showError(error);
+
+        // Assert
+        verifyZeroInteractions(view);
     }
 }
