@@ -26,6 +26,8 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailF
     private final static String EXTRA_GAMEID = "gameId";
     private Game currentData = null;
 
+    GameDetailFragment currentFragment;
+
     /**
      * Initializes a new intent to launch this activity
      *
@@ -47,7 +49,8 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailF
         if (savedInstanceState == null) {
             if (getIntent().hasExtra(EXTRA_GAMEID)) {
                 int gameId = getIntent().getIntExtra(EXTRA_GAMEID, 0);
-                getSupportFragmentManager().beginTransaction().replace(android.R.id.content, GameDetailFragment.newInstance(gameId)).commit();
+                currentFragment = GameDetailFragment.newInstance(gameId);
+                getSupportFragmentManager().beginTransaction().replace(android.R.id.content, currentFragment).commit();
             }
         }
     }

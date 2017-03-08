@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.game;
 import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.game.ui.detail.interactor.GameDetailInteractor;
+import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
 import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
 import com.piticlistudio.playednext.game.ui.search.interactor.GameSearchInteractor;
 
@@ -24,5 +25,10 @@ public class GameModule {
     @Provides
     public GameSearchContract.Interactor provideSearchInteractor(GameRepository repository) {
         return new GameSearchInteractor(repository);
+    }
+
+    @Provides
+    public GameDetailContract.Presenter provideDetailPresenter(GameDetailContract.Interactor interactor) {
+        return new GameDetailPresenter(interactor);
     }
 }

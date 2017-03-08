@@ -103,15 +103,6 @@ public class AndroidApplication extends Application {
         Realm.setDefaultConfiguration(config);
 
         initializeComponents();
-
-//        RealmGameRelationRepositoryImpl repository = new RealmGameRelationRepositoryImpl();
-//        repository.loadAll()
-//                .subscribe(new Consumer<List<IGameRelationDatasource>>() {
-//                    @Override
-//                    public void accept(List<IGameRelationDatasource> iGameRelationDatasources) throws Exception {
-//                        Log.d(TAG, "Load all triggered with " + iGameRelationDatasources.size() + " elements");
-//                    }
-//                });
     }
 
     private void initializeComponents() {

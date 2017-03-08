@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnticipateInterpolator;
@@ -31,7 +30,6 @@ import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
-import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
 import com.piticlistudio.playednext.game.ui.detail.view.adapter.GameDetailAdapter;
 import com.piticlistudio.playednext.gamerelation.ui.detail.view.GameRelationDetailView;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
@@ -94,7 +92,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     private GameDetailAdapter adapter;
     private PlatformLabelGridAdapter platformAdapter;
     private Disposable screenshotViewerDisposable;
-    private GameDetailPresenter presenter;
+    private GameDetailContract.Presenter presenter;
     private PublishSubject<View> doubleClickSubject = PublishSubject.create();
     private Callbacks mCallbacks = sDummyCallbacks;
     private int requestedGameId = 0;
@@ -217,11 +215,13 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
      */
     @Override
     public void showLoading() {
-        if (error.getTranslationY() == 0 && !isRetrying) {
+        if (!isRetrying) {
             this.error.animate().translationY(-5000).setInterpolator(new AnticipateInterpolator()).setDuration(300).start();
+            loading.animate().alpha(1).setDuration(300).start();
         } else {
-            if (loading.getAlpha() != 1)
-                loading.animate().alpha(1).setDuration(300).start();
+            loading.animate().alpha(0).setDuration(300).start();
+            retryBtn.setAlpha(0);
+            loadingRetry.setAlpha(1);
         }
 
     }
@@ -233,9 +233,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     public void showContent() {
         isRetrying = false;
         loading.animate().alpha(0).setDuration(300).start();
-        if (error.getTranslationY() == 0) {
-            this.error.animate().translationY(-5000).alpha(0).setInterpolator(new AnticipateInterpolator()).setDuration(800).start();
-        }
+        this.error.animate().translationY(-5000).alpha(0).setInterpolator(new AnticipateInterpolator()).setDuration(800).start();
     }
 
     /**
@@ -303,7 +301,6 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     public void retryRequest() {
         isRetrying = true;
         retryBtn.animate().alpha(0).setDuration(300).start();
-        loadingRetry.animate().alpha(1).setDuration(300).start();
         loadData(requestedGameId);
     }
 
