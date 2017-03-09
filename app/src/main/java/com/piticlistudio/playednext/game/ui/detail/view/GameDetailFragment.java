@@ -137,7 +137,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
         listview.setAdapter(adapter);
 
         int spanScount = getSpanCount();
-        platformAdapter = new PlatformLabelGridAdapter();
+        platformAdapter = new PlatformLabelGridAdapter(getAppComponent().platformUtils());
         platformAdapter.setSpanCount(spanScount);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), spanScount);
         gridLayoutManager.setSpanSizeLookup(platformAdapter.getSpanSizeLookup());

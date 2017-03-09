@@ -17,6 +17,8 @@ import com.piticlistudio.playednext.game.model.GamedataModule;
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
 
+import java.io.IOException;
+
 import io.realm.DynamicRealm;
 import io.realm.FieldAttribute;
 import io.realm.Realm;
@@ -57,6 +59,12 @@ public class AndroidApplication extends Application {
                 .build();
 
         gameComponent = gamedataComponent.plus(new GameModule(), new CollectionModule(), new CompanyModule(), new GenreModule(), new PlatformModule());
+
+        try {
+            appComponent.platformUtils().parse(getApplicationContext().getAssets().open("platformsui.json"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 //        // TODO: 10/02/2017 remove
 //        final GameRepository repository = gameComponent.repository();
