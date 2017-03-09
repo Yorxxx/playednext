@@ -26,7 +26,7 @@ public class BoostTypes {
      * Boost of the item that is on the waiting list
      */
     public static class WAITING_TIME {
-        public final static int id = 2;
+        public final static int id = 3;
         public static int value = 0; // To be filled by calculator
     }
 }

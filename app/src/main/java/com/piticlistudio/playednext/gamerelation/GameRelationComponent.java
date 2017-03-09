@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.gamerelation;
 
+import com.piticlistudio.playednext.boost.BoostModule;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelationMapper;
@@ -12,7 +13,7 @@ import com.piticlistudio.playednext.relationinterval.RelationIntervalModule;
 import dagger.Component;
 
 @Component(dependencies = {GameComponent.class, AppComponent.class},
-        modules = {GameRelationModule.class, RelationIntervalModule.class})
+        modules = {GameRelationModule.class, RelationIntervalModule.class, BoostModule.class})
 public interface GameRelationComponent {
 
     GameRelationDetailPresenter detailPresenter();

@@ -17,6 +17,7 @@ import android.view.View;
 
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
+import com.piticlistudio.playednext.boost.BoostModule;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.ui.detail.view.GameDetailActivity;
@@ -76,6 +77,7 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
                 .appComponent(getAppComponent())
                 .gameComponent(getGameComponent())
                 .gameRelationModule(new GameRelationModule())
+                .boostModule(new BoostModule())
                 .build();
         presenter = component.listPresenter();
         presenter.attachView(this);

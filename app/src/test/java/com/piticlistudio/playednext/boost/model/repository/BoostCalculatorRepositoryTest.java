@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.boost.model.entity.BoostItem;
 import com.piticlistudio.playednext.boost.model.entity.BoostTypes;
+import com.piticlistudio.playednext.boost.model.entity.BoostTypesTest;
 import com.piticlistudio.playednext.boost.model.entity.IBoostable;
 
 import org.junit.Test;
@@ -128,6 +129,20 @@ public class BoostCalculatorRepositoryTest extends BaseTest {
                     assertEquals(BoostTypes.RECENTLY_RELEASED.id, boost.type());
                     assertEquals(BoostTypes.RECENTLY_RELEASED.value, boost.value());
                 }));
+    }
+
+    @Test
+    public void given_itemToBeReleased_When_isTenYearsLaunchCelebration_Then_ReturnsFalse() throws Exception {
+        IBoostable item = mock(IBoostable.class);
+        when(item.isBoostEnabled()).thenReturn(true);
+        when(item.getFirstRelease()).thenReturn(System.currentTimeMillis() + AlarmManager.INTERVAL_DAY);
+
+        // Act
+        boolean result = repository.isTenYearsLaunchCelebration(item);
+
+        // Assert
+        assertFalse(result);
+
     }
 
     @Test

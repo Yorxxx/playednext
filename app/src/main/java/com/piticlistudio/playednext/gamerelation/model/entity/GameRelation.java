@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.gamerelation.model.entity;
 
 import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
+import com.piticlistudio.playednext.boost.model.entity.BoostItem;
 import com.piticlistudio.playednext.boost.model.entity.IBoostable;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
@@ -18,6 +19,7 @@ public abstract class GameRelation implements IBoostable {
 
     private long updatedAt;
     private List<RelationInterval> statuses = new ArrayList<>();
+    private List<BoostItem> boosts = new ArrayList<>();
 
     public static GameRelation create(Game game, long createdAt) {
         GameRelation data = new AutoValue_GameRelation(game.id(), game, createdAt);
@@ -108,5 +110,21 @@ public abstract class GameRelation implements IBoostable {
             return getCurrent().get().startAt();
         }
         return 0;
+    }
+
+    public List<BoostItem> getBoosts() {
+        return boosts;
+    }
+
+    public void setBoosts(List<BoostItem> boosts) {
+        this.boosts = boosts;
+    }
+
+    public long getBoostValue() {
+        long value = 0;
+        for (BoostItem boost : boosts) {
+            value += boost.value();
+        }
+        return value;
     }
 }
