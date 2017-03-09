@@ -1,0 +1,50 @@
+{
+  "linux": {
+    "color": "#ffcc00",
+    "acronym": "lnx"
+  },
+  "Nintendo 64": {
+    "color": "#C1BED1",
+    "acronym": "n64"
+  },
+  "Wii": {
+    "color": "#d9d9d9",
+    "acronym": "Wii"
+  },
+  "PC (Microsoft Windows)": {
+    "color": "#78909C",
+    "acronym": "PC"
+  },
+  "PlayStation": {
+    "color": "#E3E3E3",
+    "acronym": "PSone"
+  },
+  "PlayStation 2": {
+    "color": "#0000CC",
+    "acronym": "PS2"
+  },
+  "PlayStation 3": {
+    "color": "#192730",
+    "acronym": "PS3"
+  },
+  "Xbox": {
+    "color": "#353535",
+    "acronym": "XBX"
+  },
+  "Xbox 360": {
+    "color": "#90C048",
+    "acronym": "X360"
+  },
+  "PC DOS": {
+    "color": "#000000",
+    "acronym": "DOS"
+  },
+  "Mac": {
+    "color": "#ffffff",
+    "acronym": "OSX"
+  },
+  "Commodore C64/128": {
+    "color": "#6C8995",
+    "acronym": "C64"
+  }
+}
