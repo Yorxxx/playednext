@@ -10,6 +10,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Test cases for GameRelation
@@ -136,5 +138,105 @@ public class GameRelationTest {
         // Assert
         assertNotNull(current);
         assertFalse(current.isPresent());
+    }
+
+    @Test
+    public void given_nonCurrentStatus_When_IsBoostEnabled_Then_ReturnsFalse() throws Exception {
+
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+
+        // Act
+        assertFalse(result.isBoostEnabled());
+    }
+
+    @Test
+    public void given_statusIsNotWaiting_When_IsBoostEnabled_Then_ReturnsFalse() throws Exception {
+
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+        RelationInterval interval = RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000);
+        interval.setEndAt(2000);
+        RelationInterval interval2 = RelationInterval.create(1, RelationInterval.RelationType.PLAYING, 2000);
+        interval2.setEndAt(3000);
+        RelationInterval interval3 = RelationInterval.create(1, RelationInterval.RelationType.DONE, 3000);
+        interval3.setEndAt(4000);
+        result.getStatuses().add(interval);
+        result.getStatuses().add(interval2);
+        result.getStatuses().add(interval3);
+
+        // Act
+        assertFalse(result.isBoostEnabled());
+    }
+
+    @Test
+    public void given_statusIsWaiting_When_IsBoostEnabled_Then_ReturnsTrue() throws Exception {
+
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+        RelationInterval interval = RelationInterval.create(1, RelationInterval.RelationType.DONE, 1000);
+        interval.setEndAt(2000);
+        RelationInterval interval2 = RelationInterval.create(1, RelationInterval.RelationType.PENDING, 2000);
+        result.getStatuses().add(interval);
+        result.getStatuses().add(interval2);
+
+        // Act
+        assertTrue(result.isBoostEnabled());
+    }
+
+    @Test
+    public void given_any_When_getLastRelease_Then_ReturnsGameLastRelease() throws Exception {
+
+        Game game = mock(Game.class);
+        GameRelation result = GameRelation.create(game, 100);
+        when(game.getLastRelease()).thenReturn(100L);
+
+        // Assert
+        assertEquals(100L, result.getLastRelease());
+    }
+
+    @Test
+    public void given_any_When_getFirstRelease_Then_ReturnsGameFirstRelease() throws Exception {
+
+        Game game = mock(Game.class);
+        GameRelation result = GameRelation.create(game, 100);
+        when(game.getFirstRelease()).thenReturn(100L);
+
+        // Assert
+        assertEquals(100L, result.getFirstRelease());
+    }
+
+    @Test
+    public void given_nonWaitingStatus_When_getWaitingStartedAt_Then_ReturnsZero() throws Exception {
+
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+        RelationInterval interval = RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000);
+        interval.setEndAt(2000);
+        RelationInterval interval2 = RelationInterval.create(1, RelationInterval.RelationType.PLAYING, 2000);
+        interval2.setEndAt(3000);
+        RelationInterval interval3 = RelationInterval.create(1, RelationInterval.RelationType.DONE, 3000);
+        interval3.setEndAt(4000);
+        result.getStatuses().add(interval);
+        result.getStatuses().add(interval2);
+        result.getStatuses().add(interval3);
+
+        // Assert
+        assertEquals(0, result.getWaitingStartedAt());
+    }
+
+    @Test
+    public void given_waitingStatus_When_getWaitingStartedAt_Then_ReturnsIntervalStart() throws Exception {
+
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+        RelationInterval interval = RelationInterval.create(1, RelationInterval.RelationType.PLAYING, 1000);
+        interval.setEndAt(2000);
+        RelationInterval interval2 = RelationInterval.create(1, RelationInterval.RelationType.PENDING, 2000);
+        result.getStatuses().add(interval);
+        result.getStatuses().add(interval2);
+
+        // Assert
+        assertEquals(2000, result.getWaitingStartedAt());
     }
 }
