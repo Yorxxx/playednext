@@ -29,4 +29,12 @@ public class BoostTypes {
         public final static int id = 3;
         public static int value = 0; // To be filled by calculator
     }
+
+    /**
+     * Negative boost indicating that the item has been completed
+     */
+    public static class COMPLETED_COUNT {
+        public final static int id = 4;
+        public static int value = -100;
+    }
 }

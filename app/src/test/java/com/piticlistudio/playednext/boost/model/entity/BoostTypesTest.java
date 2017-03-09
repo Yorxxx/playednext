@@ -21,7 +21,6 @@ public class BoostTypesTest {
     public void given_TEN_YEARS_CELEBRATION_when_getValues_Then_Returns2000Boost() throws Exception {
         assertEquals(2000, BoostTypes.TEN_YEARS_CELEBRATION.value);
         assertEquals(2, BoostTypes.TEN_YEARS_CELEBRATION.id);
-
     }
 
     @Test
@@ -30,4 +29,9 @@ public class BoostTypesTest {
         assertEquals(3, BoostTypes.WAITING_TIME.id);
     }
 
+    @Test
+    public void given_completedOnce_When_getValues_Then_ReturnsNegativeBoost() throws Exception {
+        assertEquals(-100, BoostTypes.COMPLETED_COUNT.value);
+        assertEquals(4, BoostTypes.COMPLETED_COUNT.id);
+    }
 }

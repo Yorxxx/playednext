@@ -239,4 +239,44 @@ public class GameRelationTest {
         // Assert
         assertEquals(2000, result.getWaitingStartedAt());
     }
+
+    @Test
+    public void given_neverCompletedItem_When_getCompletedCount_Then_ReturnsZero() throws Exception {
+
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+        RelationInterval interval = RelationInterval.create(1, RelationInterval.RelationType.PLAYING, 1000);
+        interval.setEndAt(2000);
+        RelationInterval interval2 = RelationInterval.create(1, RelationInterval.RelationType.PENDING, 2000);
+        result.getStatuses().add(interval);
+        result.getStatuses().add(interval2);
+
+        // Assert
+        assertEquals(0, result.getCompletedCount());
+    }
+
+    @Test
+    public void given_completedItemsTwice_When_getCompletedCount_Then_ReturnsTwo() throws Exception {
+
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+        RelationInterval interval = RelationInterval.create(1, RelationInterval.RelationType.PLAYING, 1000);
+        interval.setEndAt(2000);
+        RelationInterval interval2 = RelationInterval.create(2, RelationInterval.RelationType.PENDING, 2000);
+        interval2.setEndAt(3000);
+        RelationInterval interval3 = RelationInterval.create(3, RelationInterval.RelationType.DONE, 3000);
+        interval3.setEndAt(4000);
+        RelationInterval interval4 = RelationInterval.create(4, RelationInterval.RelationType.PENDING, 4000);
+        interval4.setEndAt(5000);
+        RelationInterval interval5 = RelationInterval.create(5, RelationInterval.RelationType.DONE, 5000);
+        interval5.setEndAt(6000);
+        result.getStatuses().add(interval);
+        result.getStatuses().add(interval2);
+        result.getStatuses().add(interval3);
+        result.getStatuses().add(interval4);
+        result.getStatuses().add(interval5);
+
+        // Assert
+        assertEquals(2, result.getCompletedCount());
+    }
 }

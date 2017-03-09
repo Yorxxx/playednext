@@ -112,6 +112,21 @@ public abstract class GameRelation implements IBoostable {
         return 0;
     }
 
+    /**
+     * Returns the number of times the item has been completed
+     *
+     * @return the number of times
+     */
+    @Override
+    public int getCompletedCount() {
+        int count = 0;
+        for (RelationInterval statuse : statuses) {
+            if (statuse.type() == RelationInterval.RelationType.DONE)
+                count++;
+        }
+        return count;
+    }
+
     public List<BoostItem> getBoosts() {
         return boosts;
     }

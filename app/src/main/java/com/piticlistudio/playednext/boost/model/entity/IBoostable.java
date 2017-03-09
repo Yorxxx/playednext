@@ -34,4 +34,10 @@ public interface IBoostable {
      * @return the timestamp
      */
     long getWaitingStartedAt();
+
+    /**
+     * Returns the number of times the item has been completed
+     * @return the number of times
+     */
+    int getCompletedCount();
 }

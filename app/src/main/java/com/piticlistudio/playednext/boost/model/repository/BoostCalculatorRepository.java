@@ -41,6 +41,10 @@ public class BoostCalculatorRepository implements IBoostCalculatorRepository {
                             result.add(BoostItem.create(BoostTypes.TEN_YEARS_CELEBRATION.value, BoostTypes.TEN_YEARS_CELEBRATION.id));
                         if (item.getWaitingStartedAt() > 0)
                             result.add(BoostItem.create(getNumberOfDaysWaiting(item), BoostTypes.WAITING_TIME.id));
+                        long completedCount = item.getCompletedCount();
+                        if (completedCount > 0) {
+                            result.add(BoostItem.create(completedCount*BoostTypes.COMPLETED_COUNT.value, BoostTypes.COMPLETED_COUNT.id));
+                        }
                         return result;
                     }
                 });

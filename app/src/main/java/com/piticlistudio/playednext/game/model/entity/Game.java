@@ -102,4 +102,14 @@ public abstract class Game implements IBoostable {
     public long getWaitingStartedAt() {
         return 0;
     }
+
+    /**
+     * Returns the number of times the item has been completed
+     *
+     * @return the number of times
+     */
+    @Override
+    public int getCompletedCount() {
+        return 0;
+    }
 }

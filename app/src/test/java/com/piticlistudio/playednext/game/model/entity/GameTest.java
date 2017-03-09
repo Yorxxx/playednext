@@ -98,4 +98,10 @@ public class GameTest extends BaseTest {
         Game game = GameFactory.provide(10, "title");
         assertEquals(0, game.getWaitingStartedAt());
     }
+
+    @Test
+    public void given_any_When_getCompletedCount_Then_ReturnsZero() throws Exception {
+        Game game = GameFactory.provide(10, "title");
+        assertEquals(0, game.getCompletedCount());
+    }
 }

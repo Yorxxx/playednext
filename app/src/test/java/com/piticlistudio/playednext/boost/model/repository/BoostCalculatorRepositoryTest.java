@@ -5,7 +5,6 @@ import android.app.AlarmManager;
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.boost.model.entity.BoostItem;
 import com.piticlistudio.playednext.boost.model.entity.BoostTypes;
-import com.piticlistudio.playednext.boost.model.entity.BoostTypesTest;
 import com.piticlistudio.playednext.boost.model.entity.IBoostable;
 
 import org.junit.Test;
@@ -142,7 +141,6 @@ public class BoostCalculatorRepositoryTest extends BaseTest {
 
         // Assert
         assertFalse(result);
-
     }
 
     @Test
@@ -231,6 +229,49 @@ public class BoostCalculatorRepositoryTest extends BaseTest {
                     BoostItem boost = data.get(0);
                     assertEquals(BoostTypes.WAITING_TIME.id, boost.type());
                     assertEquals(100, boost.value());
+                }));
+    }
+
+    @Test
+    public void given_itemNeverCompleted_When_Load_Then_ReturnsEmptyList() throws Exception {
+
+        IBoostable item = mock(IBoostable.class);
+        when(item.isBoostEnabled()).thenReturn(true);
+        when(item.getCompletedCount()).thenReturn(0);
+
+        // Act
+        TestObserver<List<BoostItem>> result = repository.load(item).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertValueCount(1)
+                .assertComplete()
+                .assertValue(check(data -> {
+                    assertTrue(data.isEmpty());
+                }));
+    }
+
+    @Test
+    public void given_itemCompletedFiveTimes_When_Load_Then_ReturnsListWithBoostItemMultipliedPerFive() throws Exception {
+
+        IBoostable item = mock(IBoostable.class);
+        when(item.isBoostEnabled()).thenReturn(true);
+        when(item.getCompletedCount()).thenReturn(5);
+
+        // Act
+        TestObserver<List<BoostItem>> result = repository.load(item).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertValueCount(1)
+                .assertComplete()
+                .assertValue(check(data -> {
+                    assertFalse(data.isEmpty());
+                    BoostItem boost = data.get(0);
+                    assertEquals(BoostTypes.COMPLETED_COUNT.id, boost.type());
+                    assertEquals(BoostTypes.COMPLETED_COUNT.value*5, boost.value());
                 }));
     }
 }
