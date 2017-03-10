@@ -1,14 +1,78 @@
 package com.piticlistudio.playednext.platform.ui;
 
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
 
 import com.piticlistudio.playednext.platform.model.entity.Platform;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+
 /**
+ * Class that handles all the UI information (colors, acronyms...) for platforms
  * Created by jorge.garcia on 21/02/2017.
  */
 
 public class PlatformUIUtils {
+
+    private HashMap<String, Integer> colorsMap = new HashMap<>();
+    private HashMap<String, String> acronymsMap = new HashMap<>();
+
+    public PlatformUIUtils() {
+    }
+
+    public void parse(InputStream sourceStream) throws IOException {
+        String parsedData = loadJSON(sourceStream);
+
+        try {
+            JSONObject values = new JSONObject(parsedData);
+            Iterator<?> keys = values.keys();
+
+            while(keys.hasNext()) {
+                String key = (String)keys.next();
+                JSONObject value = values.getJSONObject(key);
+                String color = value.getString("color");
+                String acronym = value.getString("acronym");
+                colorsMap.put(key.toUpperCase(), Color.parseColor(color));
+                acronymsMap.put(key.toUpperCase(), acronym);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getAcronym(String name) {
+        if (acronymsMap.containsKey(name.toUpperCase()))
+            return acronymsMap.get(name.toUpperCase()).toUpperCase();
+        if (name.split("\\s+").length == 1)
+            return name;
+
+        if (name.length() <= 8)
+            return name;
+        String[] values = name.split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        if (values.length == 2) {
+            sb.append(values[0].charAt(0));
+            if (!values[0].equals("Nintendo"))
+                sb.append(" ");
+            sb.append(values[1]);
+            return sb.toString();
+        }
+        return name;
+    }
+
+    @ColorInt
+    public int getColor(String name) {
+
+        if (colorsMap.containsKey(name.toUpperCase()))
+            return colorsMap.get(name.toUpperCase());
+        return Color.WHITE;
+    }
 
     /**
      * Returns the color associated to the platform.
@@ -104,5 +168,16 @@ public class PlatformUIUtils {
         else if (name.equalsIgnoreCase("Super Nintendo (SNES)"))
             return Color.parseColor("#DAE0F0");
         return Color.parseColor("#47fe79");
+    }
+
+    private String loadJSON(InputStream is) throws IOException {
+        String json = null;
+        int size = is.available();
+        byte[] buffer = new byte[size];
+        is.read(buffer);
+        is.close();
+        json = new String(buffer, "UTF-8");
+
+        return json;
     }
 }

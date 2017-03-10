@@ -18,8 +18,8 @@
         <LinearLayout
             android:id="@+id/overlay"
             android:layout_width="match_parent"
-            android:background="@color/cardview_light_background"
             android:layout_height="match_parent"
+            android:background="#FF0000"
             android:orientation="horizontal"
             android:visibility="visible">
 
@@ -45,23 +45,36 @@
 
                     <com.piticlistudio.playednext.ui.widget.CustomTextView
                         android:id="@+id/title"
-                        style="@style/GameRelationList.Cell.Title"
+                        style="@style/GameRelationList.Cell.Title.Todo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/material_list_text_first_position_margin_start"
-                        android:maxLines="2"
-                        android:text="@string/lorem"/>
+                        android:maxLines="1"
+                        android:text="@string/lorem"
+                        android:textColor="@android:color/white"/>
 
                     <com.piticlistudio.playednext.ui.widget.CustomTextView
                         android:id="@+id/subtitle"
-                        style="@style/GameRelationList.Cell.Subtitle"
+                        style="@style/GameRelationList.Cell.Subtitle.Todo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/material_list_text_first_position_margin_start"
                         android:layout_marginTop="@dimen/gamerelation_list_subtitle_margin_top"
-                        android:maxLines="2"
-                        android:text="@string/lorem"/>
+                        android:maxLines="1"
+                        android:text="@string/lorem"
+                        android:textColor="#ffdede"/>
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/boost"
+                    style="@style/GameRelationList.Cell.Subtitle.Todo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawableTop="@drawable/gamerelation_list_waiting_boost_image"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"/>
 
             </LinearLayout>
 

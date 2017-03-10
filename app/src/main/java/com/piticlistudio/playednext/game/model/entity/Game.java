@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
+import com.piticlistudio.playednext.boost.model.entity.IBoostable;
 import com.piticlistudio.playednext.collection.model.entity.Collection;
 import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
@@ -19,7 +20,7 @@ import java.util.List;
  * Created by jorge.garcia on 10/02/2017.
  */
 @AutoValue
-public abstract class Game {
+public abstract class Game implements IBoostable {
 
     public String summary;
     public String storyline;
@@ -50,5 +51,65 @@ public abstract class Game {
         if (cover != null && cover.isPresent())
             return cover.get().getThumbUrl();
         return null;
+    }
+
+    /**
+     * Returns if the current entity has the boost enabled
+     *
+     * @return true if is enabled. False otherwise
+     */
+    @Override
+    public boolean isBoostEnabled() {
+        return true;
+    }
+
+    /**
+     * Returns the last release
+     *
+     * @return the last release
+     */
+    @Override
+    public long getLastRelease() {
+        long max = 0;
+        for (GameRelease release : releases) {
+            if (release.releaseDate().date() > max)
+                max = release.releaseDate().date();
+        }
+        return max;
+    }
+
+    /**
+     * Returns the first release
+     *
+     * @return the first release
+     */
+    @Override
+    public long getFirstRelease() {
+        long min = Long.MAX_VALUE;
+        for (GameRelease release : releases) {
+            if (release.releaseDate().date() < min)
+                min = release.releaseDate().date();
+        }
+        return min;
+    }
+
+    /**
+     * Returns since when is the item being on the todo list
+     *
+     * @return the timestamp
+     */
+    @Override
+    public long getWaitingStartedAt() {
+        return 0;
+    }
+
+    /**
+     * Returns the number of times the item has been completed
+     *
+     * @return the number of times
+     */
+    @Override
+    public int getCompletedCount() {
+        return 0;
     }
 }

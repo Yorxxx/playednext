@@ -17,6 +17,8 @@ import com.piticlistudio.playednext.game.model.GamedataModule;
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
 
+import java.io.IOException;
+
 import io.realm.DynamicRealm;
 import io.realm.FieldAttribute;
 import io.realm.Realm;
@@ -31,6 +33,7 @@ public class AndroidApplication extends Application {
     public AppComponent appComponent;
     public GamedataComponent gamedataComponent;
     public GameComponent gameComponent;
+
 
     RealmMigration migration = new RealmMigration() {
         @Override
@@ -118,6 +121,12 @@ public class AndroidApplication extends Application {
 
         gameComponent = gamedataComponent.plus(new AppModule(this), new GameModule(), new CollectionModule(), new CompanyModule(), new
                 GenreModule(), new PlatformModule());
+
+        try {
+            appComponent.platformUtils().parse(getApplicationContext().getAssets().open("platformsui.json"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @VisibleForTesting
