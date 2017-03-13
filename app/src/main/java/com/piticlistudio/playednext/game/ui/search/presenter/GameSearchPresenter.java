@@ -24,7 +24,7 @@ public class GameSearchPresenter extends MvpPresenter<GameSearchContract.View> i
 
     private final GameSearchContract.Interactor interactor;
     private PublishSubject<SearchQuery> searchSubject = PublishSubject.create();
-    private Disposable searchDisposable;
+    Disposable searchDisposable;
 
     @Inject
     GameSearchPresenter(GameSearchContract.Interactor interactor) {
@@ -67,20 +67,20 @@ public class GameSearchPresenter extends MvpPresenter<GameSearchContract.View> i
      */
     @Override
     public void search(String query, int offset, int limit) {
-        if (isViewAvailable() && getView() != null) {
+        if (getView() != null) {
             getView().showLoading();
             searchSubject.onNext(new SearchQuery(query, offset, limit));
         }
     }
 
-    private void showError(Throwable error) {
-        if (isViewAvailable() && getView() != null) {
+    void showError(Throwable error) {
+        if (getView() != null) {
             getView().showError(error);
         }
     }
 
-    private void showData(List<Game> data) {
-        if (isViewAvailable() && getView() != null) {
+    void showData(List<Game> data) {
+        if (getView() != null) {
             getView().setData(data);
             getView().showContent();
         }

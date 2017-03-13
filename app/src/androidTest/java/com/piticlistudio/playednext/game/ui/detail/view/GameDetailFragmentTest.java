@@ -21,17 +21,13 @@ import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.mockito.stubbing.Answer;
 
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -40,9 +36,11 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.not;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -69,6 +67,9 @@ public class GameDetailFragmentTest {
     @Mock
     GameDetailContract.Interactor interactor;
 
+    @Mock
+    GameDetailContract.Presenter presenter;
+
     private Intent getLaunchIntent() {
         Context targetContext = InstrumentationRegistry.getInstrumentation()
                 .getTargetContext();
@@ -77,60 +78,134 @@ public class GameDetailFragmentTest {
         return result;
     }
 
-    @Test
-    public void showData() throws Exception {
+    private GameDetailFragment getFragment() {
+        return activityTestRule.getActivity().currentFragment;
+    }
 
-        // Arrange
-        Game game = GameFactory.provide(GAMEID, "Game title");
-        doReturn(Observable.just(game).delay(3, TimeUnit.SECONDS)).when(interactor).load(GAMEID);
+    @Before
+    public void setUp() throws Exception {
         activityTestRule.launchActivity(getLaunchIntent());
-
-        onView(withId(R.id.loading)).check(matches(CustomMatchers.withAlpha(1)));
-        onView(withId(R.id.error)).check(matches(not(isDisplayed())));
-
-        Thread.sleep(5000);
-
-        onView(withId(R.id.backdropTitle)).check(matches(withText(game.title())));
-        onView(withId(R.id.platformslist)).check(new RecyclerViewItemCountAssertion(game.platforms.size()));
-        onView(withId(R.id.loading)).check(matches(CustomMatchers.withAlpha(0)));
-        onView(withId(R.id.gamerelation_switch_box)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void showError() throws Exception {
+    public void given_createdView_When_ActivityCreated_Then_AttachesViewToPresenter() throws Exception {
 
-        // Arrange
-        Throwable error = new Throwable("bla");
-        Game data = GameFactory.provide(GAMEID, "gameTitle");
-        doAnswer(new Answer() {
+        // Assert
+        verify(presenter).attachView(activityTestRule.getActivity().currentFragment);
+    }
 
-            private int count = 0;
+    @Test
+    public void given_createdViewWithArgs_When_ActivityCreated_Then_RequestsPresenter() throws Exception {
 
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                if (count == 0) {
-                    count++;
-                    return Observable.error(error).delay(3, TimeUnit.SECONDS);
-                }
-                else {
-                    count++;
-                    return Observable.just(data).delay(5, TimeUnit.SECONDS);
-                }
-            }
-        }).when(interactor).load(GAMEID);
-        activityTestRule.launchActivity(getLaunchIntent());
+        verify(presenter).loadData(GAMEID);
+    }
 
-        Thread.sleep(5000);
+    @Test
+    public void given_idleStatus_When_ActivityCreated_Then_LoadingAndErrorAreHidden() throws Exception {
+
+        onView(withId(R.id.loading)).check(matches(CustomMatchers.isNotVisible()));
+        onView(withId(R.id.error)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.platformslist)).check(new RecyclerViewItemCountAssertion(0));
+    }
+
+    @Test
+    public void given_showLoading_When_Idle_Then_ShowsLoading() throws Throwable {
+
+        activityTestRule.runOnUiThread(() -> getFragment().showLoading());
+
+        // Assert
+        onView(withId(R.id.loading)).check(matches(CustomMatchers.withAlpha(1)));
+        onView(withId(R.id.error)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void given_showError_When_Loading_Then_ShowsError() throws Throwable {
+
+        final Exception error = new Exception("bla");
+        activityTestRule.runOnUiThread(() -> getFragment().showError(new Exception("bla")));
 
         onView(withId(R.id.error)).check(matches(CustomMatchers.withAlpha(1)));
-        onView(withText("bla")).check(matches(isDisplayed()));
-        onView(withId(R.id.retry)).check(matches(isDisplayed()));
+        onView(withId(R.id.loading)).check(matches(CustomMatchers.isNotVisible()));
+        onView(withId(R.id.errorMsg)).check(matches(withText(error.getLocalizedMessage())));
+        onView(withId(R.id.retry)).check(matches(CustomMatchers.withAlpha(1)));
+        onView(withId(R.id.retryLoading)).check(matches(CustomMatchers.isNotVisible()));
+    }
+
+    @Test
+    public void given_retry_When_error_Then_RetriesRequest() throws Throwable {
+
+        // Arrange
+        final Exception error = new Exception("bla");
+        activityTestRule.runOnUiThread(() -> getFragment().showError(error));
+        onView(withId(R.id.error)).check(matches(CustomMatchers.withAlpha(1)));
+
+        // Act
+        onView(withId(R.id.retry)).perform(click());
+
+        // Assert
+        verify(presenter, times(2)).loadData(GAMEID);
+        onView(withId(R.id.retry)).check(matches(CustomMatchers.isNotVisible()));
+    }
+
+    @Test
+    public void given_showLoading_When_Retrying_Then_ShowsLoading() throws Throwable {
+
+        // Arrange
+        final Exception error = new Exception("bla");
+        activityTestRule.runOnUiThread(() -> getFragment().showError(error));
+        onView(withId(R.id.error)).check(matches(CustomMatchers.withAlpha(1)));
 
         onView(withId(R.id.retry)).perform(click());
-        onView(withId(R.id.loading)).check(matches(CustomMatchers.withAlpha(1)));
 
-        Thread.sleep(7000);
+        // Act
+        activityTestRule.runOnUiThread(() -> getFragment().showLoading());
 
-//        onView(withId(R.id.error)).check(matches(CustomMatchers.isNotVisible()));
+        // Assert
+        onView(withId(R.id.error)).check(matches(CustomMatchers.withAlpha(1)));
+        onView(withId(R.id.loading)).check(matches(CustomMatchers.isNotVisible()));
+        onView(withId(R.id.errorMsg)).check(matches(withText(error.getLocalizedMessage())));
+        onView(withId(R.id.retry)).check(matches(CustomMatchers.isNotVisible()));
+        onView(withId(R.id.retryLoading)).check(matches(CustomMatchers.withAlpha(1)));
+    }
+
+    @Test
+    public void given_setData_When_setData_Then_SetsData() throws Throwable {
+
+        Game game = GameFactory.provide(GAMEID, "Game title");
+        assertNotNull(game.storyline);
+        assertTrue(game.developers.size() > 0);
+
+        activityTestRule.runOnUiThread(() -> getFragment().setData(game));
+
+        // Assert
+        onView(withId(R.id.toolbar)).check(matches(withText("Game title")));
+        onView(withId(R.id.backdropTitle)).check(matches(withText("Game title")));
+        onView(withId(R.id.platformslist)).check(new RecyclerViewItemCountAssertion(game.platforms.size()));
+        onView(withId(R.id.gamerelation_switch_box)).check(matches(isDisplayed()));
+        onView(withId(R.id.listview)).check(new RecyclerViewItemCountAssertion(2)); // Should display storyline and info rows
+    }
+
+    @Test
+    public void given_loadingStatus_When_showContent_Then_HidesLoading() throws Throwable {
+
+        activityTestRule.runOnUiThread(() -> getFragment().showLoading());
+        onView(withId(R.id.loading)).check(matches(isDisplayed()));
+
+        activityTestRule.runOnUiThread(() -> getFragment().showContent());
+        onView(withId(R.id.loading)).check(matches(CustomMatchers.isNotVisible()));
+    }
+
+    @Test
+    public void given_errorStatus_When_ShowContent_Then_HidesError() throws Throwable {
+
+        Throwable error = new Exception("bla");
+        activityTestRule.runOnUiThread(() -> getFragment().showError(error));
+        onView(withId(R.id.error)).check(matches(CustomMatchers.withAlpha(1)));
+
+        // Act
+        activityTestRule.runOnUiThread(() -> getFragment().showContent());
+
+        // Assert
+        onView(withId(R.id.error)).check(matches(CustomMatchers.isNotVisible()));
     }
 }

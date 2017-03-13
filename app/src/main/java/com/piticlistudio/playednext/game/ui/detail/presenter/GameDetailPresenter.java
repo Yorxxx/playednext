@@ -19,7 +19,7 @@ public class GameDetailPresenter extends MvpPresenter<GameDetailContract.View> i
         .View> {
 
     private final GameDetailContract.Interactor interactor;
-    private Disposable gameLoadDisposable;
+    Disposable gameLoadDisposable;
 
     @Inject
     public GameDetailPresenter(GameDetailContract.Interactor interactor) {
@@ -34,9 +34,10 @@ public class GameDetailPresenter extends MvpPresenter<GameDetailContract.View> i
     @Override
     public void detachView(boolean retainInstance) {
         super.detachView(retainInstance);
-        if (gameLoadDisposable != null && !gameLoadDisposable.isDisposed()) {
+        if (gameLoadDisposable != null) {
             gameLoadDisposable.dispose();
         }
+        gameLoadDisposable = null;
     }
 
     /**
@@ -45,9 +46,9 @@ public class GameDetailPresenter extends MvpPresenter<GameDetailContract.View> i
      * @param gameId the id of the game to load
      */
     public void loadData(int gameId) {
-        if (isViewAvailable() && getView() != null) {
+        if (getView() != null) {
             getView().showLoading();
-            if (gameLoadDisposable != null && !gameLoadDisposable.isDisposed()) {
+            if (gameLoadDisposable != null) {
                 gameLoadDisposable.dispose();
             }
             gameLoadDisposable = interactor.load(gameId)
@@ -58,15 +59,15 @@ public class GameDetailPresenter extends MvpPresenter<GameDetailContract.View> i
     }
 
 
-    private void showData(Game data) {
-        if (isViewAvailable() && getView() != null) {
+    void showData(Game data) {
+        if (getView() != null) {
             getView().setData(data);
             getView().showContent();
         }
     }
 
-    private void showError(Throwable error) {
-        if (isViewAvailable() && getView() != null) {
+    void showError(Throwable error) {
+        if (getView() != null) {
             getView().showError(error);
         }
     }

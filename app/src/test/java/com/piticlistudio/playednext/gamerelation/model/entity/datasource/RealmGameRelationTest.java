@@ -27,23 +27,34 @@ public class RealmGameRelationTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(10, relation.getId());
+
+        relation.setId(50);
+
+        assertEquals(50, relation.getId());
     }
 
     @Test
     public void getGame() throws Exception {
+
+        relation.setGame(game);
+
         assertNotNull(relation.getGame());
         assertEquals(game, relation.getGame());
     }
 
     @Test
     public void getCreatedAt() throws Exception {
-        assertEquals(100, relation.getCreatedAt());
+        relation.setCreatedAt(200);
+
+        assertEquals(200, relation.getCreatedAt());
     }
 
     @Test
     public void getUpdatedAt() throws Exception {
-        assertEquals(200, relation.getUpdatedAt());
+
+        relation.setUpdatedAt(400);
+
+        assertEquals(400, relation.getUpdatedAt());
     }
 
     @Test

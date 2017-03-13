@@ -50,6 +50,14 @@ android {
             java.srcDir sharedTestDir
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
 }
 
 dependencies {

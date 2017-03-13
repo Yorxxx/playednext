@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.company.model.CompanyModule;
 import com.piticlistudio.playednext.di.module.AppModule;
 import com.piticlistudio.playednext.game.model.repository.GameRepository;
+import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
 import com.piticlistudio.playednext.game.ui.detail.view.adapter.GameDetailAdapter;
 import com.piticlistudio.playednext.game.ui.search.presenter.GameSearchPresenter;
@@ -20,7 +21,7 @@ public interface GameComponent {
 
     GameRepository repository();
 
-    GameDetailPresenter detailPresenter();
+    GameDetailContract.Presenter detailPresenter();
 
     GameDetailAdapter detailAdapter();
 

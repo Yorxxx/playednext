@@ -112,6 +112,19 @@ public class IGDBGameTest {
     }
 
     @Test
+    public void given_nullDevelopers_When_getDevelopers_Then_ReturnsEmptyList() throws Exception {
+
+        data.developers = null;
+
+        // Act
+        List<NetworkEntityIdRelation<ICompanyData>> result = data.getDevelopers();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void getDevelopers() throws Exception {
         List<Integer> developers = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -133,6 +146,18 @@ public class IGDBGameTest {
     }
 
     @Test
+    public void given_nullPublishers_When_GetPublishers_Then_ReturnsEmptyList() throws Exception {
+        data.publishers = null;
+
+        // Act
+        List<NetworkEntityIdRelation<ICompanyData>> result = data.getPublishers();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void getPublishers() throws Exception {
         List<Integer> publishers = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -151,6 +176,19 @@ public class IGDBGameTest {
             assertNotNull(result.get(i).data);
             assertFalse(result.get(i).data.isPresent());
         }
+    }
+
+    @Test
+    public void given_nullGenres_When_GetGenres_Then_ReturnsEmptyList() throws Exception {
+
+        data.genres = null;
+
+        // Act
+        List<NetworkEntityIdRelation<IGenreData>> result = data.getGenres();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -176,6 +214,32 @@ public class IGDBGameTest {
     }
 
     @Test
+    public void given_nullReleaseDates_When_getReleases_Then_ReturnsEmptyList() throws Exception {
+
+        data.release_dates = null;
+
+        // Act
+        List<IGameReleaseDateData> result = data.getReleases();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void given_nullReleaseDates_When_getPlatforms_Then_ReturnsEmptyList() throws Exception {
+
+        data.release_dates = null;
+
+        // Act
+        List<NetworkEntityIdRelation<IPlatformData>> result = data.getPlatforms();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void getReleaseDates() throws Exception {
         List<IGDBGameRelease> dates = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -193,6 +257,32 @@ public class IGDBGameTest {
         assertEquals(dates.size(), result.size());
         for (int i = 0; i < result.size(); i++) {
             assertEquals(dates.get(i), result.get(i));
+        }
+    }
+
+    @Test
+    public void given_duplicatedReleaseDatePlatforms_When_getPlatforms_Then_RemovesDuplicatedEntities() throws Exception {
+
+        List<IGDBGameRelease> dates = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            dates.add(IGDBGameRelease.create(i, (i+1)*1000, "human_"+i));
+        }
+        dates.add(IGDBGameRelease.create(0, 3000, "human3000"));
+        dates.add(IGDBGameRelease.create(2, 3000, "human3000"));
+        data.release_dates = dates;
+
+        // Act
+        List<NetworkEntityIdRelation<IPlatformData>> result = data.getPlatforms();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        List<Integer> checkedPlatformIds = new ArrayList<>();
+        for (int i = 0; i < result.size(); i++) {
+            assertFalse(result.get(i).data.isPresent());
+            assertEquals(dates.get(i).getPlatform().id, result.get(i).id);
+            assertFalse(checkedPlatformIds.contains(result.get(i).id));
+            checkedPlatformIds.add(result.get(i).id);
         }
     }
 

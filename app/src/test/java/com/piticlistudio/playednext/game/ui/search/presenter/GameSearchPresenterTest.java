@@ -19,12 +19,15 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -57,7 +60,34 @@ public class GameSearchPresenterTest extends BaseTest {
     }
 
     @Test
-    public void search() throws Exception {
+    public void given_detachesView_When_Any_Then_DisposesSearch() throws Exception {
+
+        presenter.detachView(false);
+
+        // Assert
+        assertTrue(presenter.searchDisposable.isDisposed());
+    }
+
+    @Test
+    public void given_viewNotAttached_When_Search_Then_DoesNotInteract() throws Exception {
+
+        presenter.detachView(false);
+
+        List<Game> data = new ArrayList<>();
+        data.add(Game.create(1, "title1"));
+        data.add(Game.create(2, "title2"));
+        when(interactor.search(anyString(), anyInt(), anyInt())).thenReturn(Observable.just(data).delay(2, TimeUnit.SECONDS));
+
+        // Act
+        presenter.search("query", 0, 15);
+
+        // Assert
+        verifyZeroInteractions(view);
+        verifyZeroInteractions(interactor);
+    }
+
+    @Test
+    public void given_searchSuccess_When_Search_Then_SearchesData() throws Exception {
 
         List<Game> data = new ArrayList<>();
         data.add(Game.create(1, "title1"));
@@ -72,11 +102,59 @@ public class GameSearchPresenterTest extends BaseTest {
         // Assert
         verify(view).showLoading();
         verify(interactor).search("query", 0, 15);
+        verify(view).setData(data);
+        verify(view).showContent();
     }
 
     @Test
-    public void searchIsDebounced() throws Exception {
+    public void given_searchError_When_Search_Then_ShowsError() throws Exception {
 
+        Throwable error = new Exception("bla");
+        doReturn(Observable.error(error).delay(2, TimeUnit.SECONDS)).when(interactor).search(anyString(), anyInt(), anyInt());
+
+        // Act
+        presenter.search("query", 0, 15);
+        testSchedulerRule.getTestScheduler().advanceTimeBy(3, TimeUnit.SECONDS);
+
+        // Assert
+        verify(view).showLoading();
+        verify(interactor).search("query", 0, 15);
+        verify(view, never()).setData(any());
+        verify(view, never()).showContent();
+        verify(view).showError(error);
+    }
+
+    @Test
+    public void given_showData_When_ViewIsNull_Then_DoesNotInteractWithTheView() throws Exception {
+
+        List<Game> data = new ArrayList<>();
+        data.add(Game.create(1, "title1"));
+        data.add(Game.create(2, "title2"));
+        presenter.detachView(false);
+
+        // Act
+        presenter.showData(data);
+
+        // Assert
+        verifyZeroInteractions(view);
+    }
+
+    @Test
+    public void given_showError_When_ViewIsNull_Then_DoesNotInteractWithTheView() throws Exception {
+
+        Throwable error = new Exception("bla");
+
+        presenter.detachView(false);
+
+        // Act
+        presenter.showError(error);
+
+        // Assert
+        verifyZeroInteractions(view);
+    }
+
+    @Test
+    public void given_consecutiveSearches_When_Search_Then_DebounceUntilLast() throws Exception {
         List<Game> data = new ArrayList<>();
         data.add(Game.create(1, "title1"));
         data.add(Game.create(2, "title2"));
@@ -104,5 +182,6 @@ public class GameSearchPresenterTest extends BaseTest {
 
         // Assert
         verify(interactor).search("full que", 0, 15);
+
     }
 }
