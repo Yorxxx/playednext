@@ -12,7 +12,7 @@ import java.lang.ref.WeakReference;
 
 public class MvpPresenter<V extends MvpView> implements IMvpPresenter<V> {
 
-    private WeakReference<V> view;
+    WeakReference<V> view;
 
     /**
      * Attachs the view
@@ -43,13 +43,5 @@ public class MvpPresenter<V extends MvpView> implements IMvpPresenter<V> {
             return view.get();
         }
         return null;
-    }
-
-    /**
-     * Returns if view is available.
-     * @return true if is not null and attached. False otherwise
-     */
-    public boolean isViewAvailable() {
-        return getView() != null;
     }
 }

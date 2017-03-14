@@ -137,4 +137,15 @@ public class GameRelationTest {
         assertNotNull(current);
         assertFalse(current.isPresent());
     }
+
+    @Test
+    public void Given_nullStatuses_When_getStatuses_Then_ReturnsEmptyList() throws Exception {
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+        result.setStatuses(null);
+
+        // Assert
+        assertNotNull(result.getStatuses());
+        assertTrue(result.getStatuses().isEmpty());
+    }
 }

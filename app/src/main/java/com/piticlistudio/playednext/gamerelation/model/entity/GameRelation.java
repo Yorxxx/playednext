@@ -1,21 +1,12 @@
 package com.piticlistudio.playednext.gamerelation.model.entity;
 
-import android.content.Context;
-import android.os.Build;
-
 import com.fernandocejas.arrow.optional.Optional;
 import com.google.auto.value.AutoValue;
-import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Entity defining a relation with a game
