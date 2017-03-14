@@ -35,11 +35,6 @@ public class PlatformUIUtilsTest {
     }
 
     @Test
-    public void given_Linux_When_getAcronym_Then_ReturnsLNX() throws Exception {
-        assertEquals("LNX", utils.getAcronym("Linux"));
-    }
-
-    @Test
     public void given_Nintendo64_when_getAcronym_Then_ReturnsN64() throws Exception {
         assertEquals("N64", utils.getAcronym("Nintendo 64"));
     }
@@ -247,5 +242,115 @@ public class PlatformUIUtilsTest {
     @Test
     public void Given_ZXSpectrum_When_getColor_Then_Returns_Black() throws Exception {
         assertEquals(Color.BLACK, utils.getColor("ZX Spectrum"));
+    }
+
+    @Test
+    public void Given_MSX_When_getAcronym_Then_ReturnsMSX() throws Exception {
+        assertEquals("MSX", utils.getAcronym("MSX"));
+    }
+
+    @Test
+    public void Given_MSX_When_getColor_Then_ReturnsBlack() throws Exception {
+        assertEquals(Color.BLACK, utils.getColor("MSX"));
+    }
+
+    @Test
+    public void Given_SegaMegadrive_When_getAcronym_Then_ReturnsMD() throws Exception {
+        assertEquals("MD", utils.getAcronym("Sega Mega Drive/Genesis"));
+    }
+
+    @Test
+    public void Given_SegaMegadrive_When_getColor_Then_ReturnsAppropiateColor() throws Exception {
+        assertEquals(Color.parseColor("#2B2728"), utils.getColor("Sega Mega Drive/Genesis"));
+    }
+
+    @Test
+    public void Given_Sega32X_When_getAcronym_Then_Returns32X() throws Exception {
+        assertEquals("32X", utils.getAcronym("Sega 32X"));
+    }
+
+    @Test
+    public void Given_Sega32X_When_getColor_Then_ReturnsAppropiateColor() throws Exception {
+        assertEquals(Color.parseColor("#2B2728"), utils.getColor("Sega 32X"));
+    }
+
+    @Test
+    public void Given_SegaSaturn_When_getAcronym_Then_ReturnsSAT() throws Exception {
+        assertEquals("SAT", utils.getAcronym("Sega Saturn"));
+    }
+
+    @Test
+    public void Given_SegaSaturn_When_getColor_Then_ReturnsAppropiateColor() throws Exception {
+        assertEquals(Color.parseColor("#797979"), utils.getColor("Sega Saturn"));
+    }
+
+    @Test
+    public void Given_GameBoy_When_getAcronym_Then_ReturnsGB() throws Exception {
+        assertEquals("GB", utils.getAcronym("Game Boy"));
+    }
+
+    @Test
+    public void Given_GameBoy_When_getColor_Then_ReturnsLightGray() throws Exception {
+        assertEquals(Color.parseColor("#76818C"), utils.getColor("Game Boy"));
+    }
+
+    @Test
+    public void Given_Android_When_getAcronym_Then_ReturnsAnd() throws Exception {
+        assertEquals("AND", utils.getAcronym("Android"));
+    }
+
+    @Test
+    public void Given_Android_When_getColor_Then_ReturnsGreen() throws Exception {
+        assertEquals(Color.parseColor("#4CAF50"), utils.getColor("Android"));
+    }
+
+    @Test
+    public void Given_Gamegear_When_getAcronym_Then_ReturnsGG() throws Exception {
+        assertEquals("GG", utils.getAcronym("Sega Game Gear"));
+    }
+
+    @Test
+    public void Given_Gamegear_When_getColor_Then_ReturnsBlack() throws Exception {
+        assertEquals(Color.parseColor("#2B2728"), utils.getColor("Sega Game Gear"));
+    }
+
+    @Test
+    public void Given_XboxLiveArcade_When_getAcronym_Then_ReturnsXBLA() throws Exception {
+        assertEquals("XBLA", utils.getAcronym("Xbox Live Arcade"));
+    }
+
+    @Test
+    public void Given_XboxLiveArcade_When_getColor_Then_ReturnsXboxColor() throws Exception {
+        assertEquals(Color.parseColor("#90C048"), utils.getColor("Xbox Live Arcade"));
+    }
+
+    @Test
+    public void Given_Nintendo3DS_When_getAcronym_Then_Returns3DS() throws Exception {
+        assertEquals("3DS", utils.getAcronym("Nintendo 3DS"));
+    }
+
+    @Test
+    public void Given_Nintendo3DS_When_getColor_Then_Returns3DSColor() throws Exception {
+        assertEquals(Color.parseColor("#d5000c"), utils.getColor("Nintendo 3DS"));
+    }
+
+    @Test
+    public void Given_PlayStationPortable_When_getAcronym_Then_ReturnsPSP() throws Exception {
+        assertEquals("PSP", utils.getAcronym("PlayStation Portable"));
+    }
+
+    @Test
+    public void Given_PlayStationPortable_When_getColor_Then_ReturnsPSPColor() throws Exception {
+        assertEquals(Color.parseColor("#373944"), utils.getColor("PlayStation Portable"));
+    }
+
+    @Test
+    public void Given_iOS_When_getAcronym_Then_ReturnsIos() throws Exception {
+        assertEquals("IOS", utils.getAcronym("iOS"));
+    }
+
+    @Test
+    public void Given_iOS_When_getColor_Then_ReturnsWhite() throws Exception {
+        assertEquals(Color.WHITE, utils.getColor("iOS"));
     }
 }

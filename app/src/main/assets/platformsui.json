@@ -86,5 +86,49 @@
   "ZX Spectrum": {
     "color": "#000000",
     "acronym": "ZXS"
+  },
+  "MSX": {
+    "color": "#000000",
+    "acronym": "MSX"
+  },
+  "Sega Mega Drive/Genesis": {
+    "color": "#2B2728",
+    "acronym": "MD"
+  },
+  "Sega 32X": {
+    "color": "#2B2728",
+    "acronym": "32X"
+  },
+  "Sega Saturn": {
+    "color": "#797979",
+    "acronym": "SAT"
+  },
+  "Game Boy": {
+    "color": "#76818C",
+    "acronym": "GB"
+  },
+  "Android": {
+    "color": "#4CAF50",
+    "acronym": "AND"
+  },
+  "Sega Game Gear": {
+    "color": "#2B2728",
+    "acronym": "GG"
+  },
+  "Xbox Live Arcade": {
+    "color": "#90C048",
+    "acronym": "XBLA"
+  },
+  "Nintendo 3DS": {
+    "color": "#d5000c",
+    "acronym": "3DS"
+  },
+  "PlayStation Portable": {
+    "color": "#373944",
+    "acronym": "PSP"
+  },
+  "iOS": {
+    "color": "#ffffff",
+    "acronym": "IOS"
   }
 }
