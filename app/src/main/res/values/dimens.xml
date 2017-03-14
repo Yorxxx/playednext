@@ -28,4 +28,5 @@
     <dimen name="gamerelation_list_waiting_cover_size">40dp</dimen>
     <dimen name="gamerelation_list_inner_padding">4dp</dimen>
     <dimen name="gamerelation_list_swipe_items_margin">10dp</dimen>
+
 </resources>
