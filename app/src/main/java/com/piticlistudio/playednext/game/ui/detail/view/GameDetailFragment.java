@@ -199,6 +199,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     @Override
     public void onDetach() {
         super.onDetach();
+        presenter.detachView(false);
         mCallbacks = sDummyCallbacks;
         if (screenshotViewerDisposable != null)
             screenshotViewerDisposable.dispose();
@@ -253,7 +254,6 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
                     .repeat()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(imageData -> {
-                        Log.d(TAG, "Setting screenshot image");
                         getAppComponent().picasso().load(imageData.getFullUrl()).into(backdrop);
                     });
         }

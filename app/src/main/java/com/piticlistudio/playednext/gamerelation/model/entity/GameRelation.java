@@ -48,6 +48,8 @@ public abstract class GameRelation {
     }
 
     public List<RelationInterval> getStatuses() {
+        if (statuses == null)
+            statuses = new ArrayList<>();
         return statuses;
     }
 

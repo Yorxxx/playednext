@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Single;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class RealmRelationIntervalRepositoryImpl extends BaseRealmRepository<RealmRelationInterval> implements
         IRelationIntervalRepositoryDatasource<RealmRelationInterval> {
@@ -26,11 +27,14 @@ public class RealmRelationIntervalRepositoryImpl extends BaseRealmRepository<Rea
     public int getAutoincrementId() {
         if (primaryKeyValue == null) {
             int nextId = 0;
-            Number currentMax = Realm.getDefaultInstance().where(RealmRelationInterval.class).max("id");
+            final RealmConfiguration realmConfig = Realm.getDefaultInstance().getConfiguration();
+            Realm realm = Realm.getInstance(realmConfig);
+            Number currentMax = realm.where(RealmRelationInterval.class).max("id");
             if (currentMax != null) {
                 nextId = currentMax.intValue() + 1;
             }
             primaryKeyValue = new AtomicInteger(nextId);
+            realm.close();
         }
         return primaryKeyValue.getAndIncrement();
     }

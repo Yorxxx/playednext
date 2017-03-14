@@ -282,6 +282,9 @@ public class GameRelationListPresenterTest extends BaseTest {
         // Act
         presenter.save(data, RelationInterval.RelationType.PLAYING);
 
+        // Advance time
+        testSchedulerRule.getTestScheduler().advanceTimeBy(1, TimeUnit.SECONDS);
+
         // Assert
         verifyZeroInteractions(view);
         assertEquals(2, data.getStatuses().size());

@@ -29,6 +29,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -149,6 +150,81 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         verify(view).showError(error);
         verify(interactor).load(10);
         verify(interactor).create(10);
+    }
+
+    @Test
+    public void Given_LoadIsCalledMultipleTimesWithSameId_When_LoadData_Then_OnlyRequestsOnce() throws Exception {
+        presenter.attachView(view);
+
+        Game game = Game.create(10, "title");
+        GameRelation data = GameRelation.create(game, System.currentTimeMillis());
+        doReturn(Observable.just(data)).when(interactor).create(10);
+        Throwable error = new Exception("bla");
+        doReturn(Observable.error(error)).when(interactor).load(10);
+
+        // Act
+        for (int i = 0; i < 5; i++) {
+            presenter.loadData(10);
+        }
+
+        testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
+
+        // Assert
+        verify(interactor, times(1)).load(10);
+        verify(interactor, times(1)).create(10);
+        verify(view, times(5)).showLoading();
+        verify(view, times(1)).setData(data);
+        verify(view, times(1)).showContent();
+        verify(view, never()).showError(any(Throwable.class));
+    }
+
+    @Test
+    public void Given_LoadIsCalledMultipleTimesWithDifferentId_When_LoadData_Then_ShowsOnlyLast() throws Exception {
+
+        presenter.attachView(view);
+
+        Game game = Game.create(10, "title");
+        GameRelation data = GameRelation.create(game, 0);
+        GameRelation data2 = GameRelation.create(game, 1);
+        GameRelation data3 = GameRelation.create(game, 2);
+        GameRelation data4 = GameRelation.create(game, 3);
+        GameRelation data5 = GameRelation.create(game, 4);
+        doAnswer(invocation -> {
+            int argument = (Integer)invocation.getArguments()[0];
+            switch (argument) {
+                case 0:
+                    return Observable.just(data);
+                case 1:
+                    return Observable.just(data2);
+                case 2:
+                    return Observable.just(data3);
+                case 3:
+                    return Observable.just(data4);
+                default:
+                    return Observable.just(data5);
+            }
+        }).when(interactor).create(anyInt());
+        Throwable error = new Exception("bla");
+        doReturn(Observable.error(error)).when(interactor).load(anyInt());
+
+        // Act
+        for (int i = 0; i < 5; i++) {
+            presenter.loadData(i);
+        }
+
+        testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
+
+        // Assert
+        verify(interactor, times(1)).load(4);
+        verify(interactor, times(1)).create(4);
+        verify(view, times(5)).showLoading();
+        verify(view, never()).setData(data);
+        verify(view, never()).setData(data2);
+        verify(view, never()).setData(data3);
+        verify(view, never()).setData(data4);
+        verify(view).setData(data5);
+        verify(view, times(1)).showContent();
+        verify(view, never()).showError(any(Throwable.class));
     }
 
     @Test
