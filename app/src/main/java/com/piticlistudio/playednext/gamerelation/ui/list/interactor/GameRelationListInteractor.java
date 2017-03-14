@@ -1,7 +1,6 @@
 package com.piticlistudio.playednext.gamerelation.ui.list.interactor;
 
 
-import com.piticlistudio.playednext.boost.model.repository.BoostCalculatorRepository;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.model.repository.IGameRelationRepository;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListContract;
@@ -23,13 +22,11 @@ public class GameRelationListInteractor implements GameRelationListContract.Inte
 
     private final IGameRelationRepository repository;
     private final RelationIntervalRepository intervalRepository;
-    private final BoostCalculatorRepository boostCalculator;
 
     @Inject
-    public GameRelationListInteractor(IGameRelationRepository repository, RelationIntervalRepository intervalRepository, BoostCalculatorRepository boostCalculator) {
+    public GameRelationListInteractor(IGameRelationRepository repository, RelationIntervalRepository intervalRepository) {
         this.repository = repository;
         this.intervalRepository = intervalRepository;
-        this.boostCalculator = boostCalculator;
     }
 
     /**
@@ -92,11 +89,6 @@ public class GameRelationListInteractor implements GameRelationListContract.Inte
                 .flatMap(gameRelations -> Observable.fromIterable(gameRelations)
                         .filter(gameRelation -> gameRelation.getCurrent().isPresent())
                         .filter(gameRelation -> gameRelation.getCurrent().get().type() == type)
-                        .flatMap(gameRelation -> boostCalculator.load(gameRelation)
-                                .map(boostItems -> {
-                                    gameRelation.setBoosts(boostItems);
-                                    return gameRelation;
-                                }))
                         .toSortedList(this::compareRelations).toObservable());
     }
 
@@ -123,22 +115,10 @@ public class GameRelationListInteractor implements GameRelationListContract.Inte
         if (interval1.type() != interval2.type())
             return 0;
 
-        switch (interval1.type()) {
-            case DONE:
-            case PLAYING:
-                if (interval1.startAt() > interval2.startAt())
-                    return 1;
-                if (interval1.startAt() < interval2.startAt())
-                    return -1;
-                return 0;
-            default:
-                long boostValue1 = gr1.getBoostValue();
-                long boostValue2 = gr2.getBoostValue();
-                if (boostValue1 < boostValue2)
-                    return 1;
-                if (boostValue1 > boostValue2)
-                    return -1;
-                return 0;
-        }
+        if (interval1.startAt() > interval2.startAt())
+            return 1;
+        if (interval1.startAt() < interval2.startAt())
+            return -1;
+        return 0;
     }
 }

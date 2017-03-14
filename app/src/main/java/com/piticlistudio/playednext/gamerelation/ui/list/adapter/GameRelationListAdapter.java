@@ -298,9 +298,7 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
             for (int i = 0; i < newItems.size(); i++) {
                 EpoxyModel viewModel = initModel(newItems.get(i));
                 if (viewModel != null) {
-                    ((WaitingItemModel_) viewModel)
-                            .backgroundColor(backgroundColorForTodoItemAtIndex(i, newItems.size()))
-                            .boostValue(newItems.get(i).getBoostValue());
+                    ((WaitingItemModel_) viewModel).backgroundColor(backgroundColorForTodoItemAtIndex(i, newItems.size()));
                     addModel(viewModel);
                 }
             }
@@ -320,7 +318,6 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
                             if (listener != null)
                                 listener.onGameRelationClicked(item);
                         });
-                        model.boostValue(item.getBoostValue());
                     }
                     notifyModelChanged(model);
                     index++;
@@ -394,8 +391,7 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
                         .clickListener(view -> {
                             if (listener != null)
                                 listener.onGameRelationClicked(item);
-                        })
-                        .boostValue(item.getBoostValue());
+                        });
         }
         return null;
     }

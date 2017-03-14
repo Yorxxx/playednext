@@ -1,7 +1,6 @@
 package com.piticlistudio.playednext.gamerelation;
 
 
-import com.piticlistudio.playednext.boost.model.repository.BoostCalculatorRepository;
 import com.piticlistudio.playednext.game.model.entity.GameMapper;
 import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelationMapper;
@@ -53,8 +52,7 @@ public class GameRelationModule {
 
     @Provides
     protected GameRelationListContract.Interactor provideListInteractor(IGameRelationRepository relationRepository,
-                                                                        RelationIntervalRepository intervalRepository,
-                                                                        BoostCalculatorRepository boostCalculatorRepository) {
-        return new GameRelationListInteractor(relationRepository, intervalRepository, boostCalculatorRepository);
+                                                                      RelationIntervalRepository intervalRepository) {
+        return new GameRelationListInteractor(relationRepository, intervalRepository);
     }
 }

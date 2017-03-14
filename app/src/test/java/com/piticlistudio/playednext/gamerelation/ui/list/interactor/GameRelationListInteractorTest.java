@@ -3,16 +3,14 @@ package com.piticlistudio.playednext.gamerelation.ui.list.interactor;
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.GameFactory;
-import com.piticlistudio.playednext.boost.model.entity.BoostItem;
-import com.piticlistudio.playednext.boost.model.entity.BoostTypes;
-import com.piticlistudio.playednext.boost.model.entity.BoostTypesTest;
-import com.piticlistudio.playednext.boost.model.repository.BoostCalculatorRepository;
+import com.piticlistudio.playednext.TestSchedulerRule;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.model.repository.IGameRelationRepository;
 import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 import com.piticlistudio.playednext.relationinterval.model.repository.RelationIntervalRepository;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -26,7 +24,6 @@ import io.reactivex.observers.TestObserver;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -50,9 +47,6 @@ public class GameRelationListInteractorTest extends BaseTest {
 
     @Mock
     RelationIntervalRepository intervalRepository;
-
-    @Mock
-    BoostCalculatorRepository boostRepository;
 
     @Test
     public void given_EmptyRepository_When_LoadCompletedItems_Then_EmitsEmptyList() throws Exception {
@@ -150,8 +144,6 @@ public class GameRelationListInteractorTest extends BaseTest {
 
         doReturn(Observable.just(data)).when(relationRepository).loadAll();
 
-        doReturn(Observable.just(new ArrayList<>())).when(boostRepository).load(any());
-
         // Act
         TestObserver<List<GameRelation>> result = interactor.loadCompletedItems().test();
         result.awaitTerminalEvent();
@@ -219,8 +211,6 @@ public class GameRelationListInteractorTest extends BaseTest {
 
         doReturn(Observable.just(data)).when(relationRepository).loadAll();
 
-        doReturn(Observable.just(new ArrayList<>())).when(boostRepository).load(any());
-
         // Act
         TestObserver<List<GameRelation>> result = interactor.loadCurrentItems().test();
         result.awaitTerminalEvent();
@@ -275,8 +265,6 @@ public class GameRelationListInteractorTest extends BaseTest {
         data.add(noneRelation);
 
         doReturn(Observable.just(data)).when(relationRepository).loadAll();
-
-        doReturn(Observable.just(new ArrayList<>())).when(boostRepository).load(any());
 
         // Act
         TestObserver<List<GameRelation>> result = interactor.loadWaitingItems().test();
@@ -339,8 +327,6 @@ public class GameRelationListInteractorTest extends BaseTest {
                 .take(3)
                 .map(aLong -> data))
                 .when(relationRepository).loadAll();
-        doReturn(Observable.just(new ArrayList<>())).when(boostRepository).load(any());
-
 
         // Act
         TestObserver<List<GameRelation>> result = interactor.loadCurrentItems().test();
@@ -406,6 +392,7 @@ public class GameRelationListInteractorTest extends BaseTest {
         GameRelation gr2 = mock(GameRelation.class);
         when(gr1.getCurrent()).thenReturn(Optional.absent());
         when(gr2.getCurrent()).thenReturn(Optional.absent());
+//        when(gr2.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.PENDING, 100)));
 
         // Act
         int result = interactor.compareRelations(gr1, gr2);
@@ -460,12 +447,12 @@ public class GameRelationListInteractorTest extends BaseTest {
     }
 
     @Test
-    public void given_notBoostableRelationSecondRelationIsLater_When_Compare_Then_ReturnsFirst() throws Exception {
+    public void given_secondRelationIsLater_When_Compare_Then_ReturnsFirst() throws Exception {
 
         GameRelation gr1 = mock(GameRelation.class);
         GameRelation gr2 = mock(GameRelation.class);
-        when(gr1.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.DONE, 100)));
-        when(gr2.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.DONE, 200)));
+        when(gr1.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.PENDING, 100)));
+        when(gr2.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.PENDING, 200)));
 
         // Act
         int result = interactor.compareRelations(gr1, gr2);
@@ -475,12 +462,12 @@ public class GameRelationListInteractorTest extends BaseTest {
     }
 
     @Test
-    public void given_notBoostableRelationsfirstIsLater_When_Compare_Then_ReturnsSecond() throws Exception {
+    public void given_firstRelationIsLater_When_Compare_Then_ReturnsSecond() throws Exception {
 
         GameRelation gr1 = mock(GameRelation.class);
         GameRelation gr2 = mock(GameRelation.class);
-        when(gr1.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.DONE, 1000)));
-        when(gr2.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.DONE, 200)));
+        when(gr1.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.PENDING, 1000)));
+        when(gr2.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.PENDING, 200)));
 
         // Act
         int result = interactor.compareRelations(gr1, gr2);
@@ -490,66 +477,12 @@ public class GameRelationListInteractorTest extends BaseTest {
     }
 
     @Test
-    public void given_notBoostableRelationsAtSameTime_When_Compare_Then_ReturnsEquals() throws Exception {
-
-        GameRelation gr1 = mock(GameRelation.class);
-        GameRelation gr2 = mock(GameRelation.class);
-        when(gr1.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.DONE, 1000)));
-        when(gr2.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.DONE, 1000)));
-
-        // Act
-        int result = interactor.compareRelations(gr1, gr2);
-
-        // Assert
-        assertEquals(0, result);
-    }
-
-    @Test
-    public void given_boostableRelationsfirstIsHigher_When_Compare_Then_ReturnsFirst() throws Exception {
+    public void given_sameTimeRelation_When_Compare_Then_ReturnsEquals() throws Exception {
 
         GameRelation gr1 = mock(GameRelation.class);
         GameRelation gr2 = mock(GameRelation.class);
         when(gr1.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.PENDING, 1000)));
         when(gr2.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.PENDING, 1000)));
-        when(gr1.getBoostValue()).thenReturn(10000L);
-        when(gr2.getBoostValue()).thenReturn(2000L);
-
-        // Act
-        int result = interactor.compareRelations(gr1, gr2);
-
-        // Assert
-        assertEquals(-1, result);
-    }
-
-    @Test
-    public void given_boostableRelationssecondIsHigher_When_Compare_Then_ReturnsSecond() throws Exception {
-
-        GameRelation gr1 = mock(GameRelation.class);
-        GameRelation gr2 = mock(GameRelation.class);
-        when(gr1.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.PENDING, 1000)));
-        when(gr2.getCurrent()).thenReturn(Optional.of(RelationInterval.create(10, RelationInterval.RelationType.PENDING, 1000)));
-        when(gr1.getBoostValue()).thenReturn(10000L);
-        when(gr2.getBoostValue()).thenReturn(200000L);
-
-        // Act
-        int result = interactor.compareRelations(gr1, gr2);
-
-        // Assert
-        assertEquals(1, result);
-    }
-
-    @Test
-    public void given_boostableRelationsEqualsBoost_When_Compare_Then_ReturnsEquals() throws Exception {
-
-        Game game = GameFactory.provide(10, "title");
-        GameRelation gr1 = GameRelation.create(game, System.currentTimeMillis());
-        GameRelation gr2 = GameRelation.create(game, System.currentTimeMillis());
-        gr1.getStatuses().add(RelationInterval.create(0, RelationInterval.RelationType.PENDING, 1000));
-        gr2.getStatuses().add(RelationInterval.create(0, RelationInterval.RelationType.PENDING, 1000));
-        List<BoostItem> boosts = new ArrayList<>();
-        boosts.add(BoostItem.create(10000L, BoostTypes.WAITING_TIME.id));
-        gr1.setBoosts(boosts);
-        gr2.setBoosts(boosts);
 
         // Act
         int result = interactor.compareRelations(gr1, gr2);
