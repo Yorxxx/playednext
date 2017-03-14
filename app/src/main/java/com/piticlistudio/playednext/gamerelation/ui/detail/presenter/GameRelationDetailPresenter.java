@@ -11,8 +11,8 @@ import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * Presenter implementation
@@ -26,6 +26,7 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
     Disposable loadDisposable;
     Disposable saveDisposable;
     private PublishSubject<UpdateRelationEntity> saveSubject = PublishSubject.create();
+    private Subject<Integer> loadSubject = PublishSubject.create();
 
     @Inject
     GameRelationDetailPresenter(GameRelationDetailContract.Interactor interactor) {
@@ -40,12 +41,13 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
     @Override
     public void attachView(GameRelationDetailContract.View view) {
         super.attachView(view);
-        saveDisposable = saveSubject.debounce(1000, TimeUnit.MILLISECONDS)
+        saveDisposable = saveSubject.debounce(250, TimeUnit.MILLISECONDS)
                 .map(value -> {
                     GameRelation data = value.getData();
                     RelationInterval.RelationType type = value.getType();
-                    if (data.getCurrent().isPresent()) {
-                        data.getCurrent().get().setEndAt(System.currentTimeMillis());
+                    for (RelationInterval interval : data.getStatuses()) {
+                        if (interval.getEndAt() == 0)
+                            interval.setEndAt(System.currentTimeMillis());
                     }
                     if (value.isActive()) {
                         data.getStatuses().add(interactor.create(type));
@@ -54,6 +56,15 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
                     return data;
                 })
                 .flatMap(interactor::save)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::showData, this::showError);
+
+        loadDisposable = loadSubject.debounce(250, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
+                .flatMap(integer -> interactor.load(integer)
+                        .onErrorResumeNext(throwable -> {
+                            return interactor.create(integer);
+                        }))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::showData, this::showError);
     }
@@ -82,13 +93,7 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
     public void loadData(int id) {
         if (getView() != null) {
             getView().showLoading();
-            loadDisposable = interactor.load(id)
-                    .onErrorResumeNext(throwable -> {
-                        return interactor.create(id);
-                    })
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::showData, this::showError);
+            loadSubject.onNext(id);
         }
     }
 
