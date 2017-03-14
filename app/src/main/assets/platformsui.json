@@ -46,5 +46,45 @@
   "Commodore C64/128": {
     "color": "#6C8995",
     "acronym": "C64"
+  },
+  "Amiga": {
+    "color": "#d3d3d3",
+    "acronym": "AMIGA"
+  },
+  "Nintendo Entertainment System (NES)": {
+    "color": "#D8D8D8",
+    "acronym": "NES"
+  },
+  "Super Nintendo Entertainment System (SNES)": {
+    "color": "#DAE0F0",
+    "acronym": "SNES"
+  },
+  "Nintendo DS": {
+    "color": "#3085B0",
+    "acronym": "NDS"
+  },
+  "Nintendo GameCube": {
+    "color": "#6509cb",
+    "acronym": "NGC"
+  },
+  "Game Boy Color": {
+    "color": "#ffcc00",
+    "acronym": "GBC"
+  },
+  "Dreamcast": {
+    "color": "#FF6A00",
+    "acronym": "DC"
+  },
+  "Game Boy Advance": {
+    "color": "#682c9e",
+    "acronym": "GBA"
+  },
+  "Amstrad CPC": {
+    "color": "#dbdbdb",
+    "acronym": "ACPC"
+  },
+  "ZX Spectrum": {
+    "color": "#000000",
+    "acronym": "ZXS"
   }
 }

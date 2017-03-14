@@ -148,4 +148,104 @@ public class PlatformUIUtilsTest {
     public void given_Commodore64_When_getColor_Then_ReturnsGray() throws Exception {
         assertEquals(Color.parseColor("#6C8995"), utils.getColor("Commodore C64/128"));
     }
+
+    @Test
+    public void Given_Amiga_When_getAcronym_Then_ReturnsAmiga() throws Exception {
+        assertEquals("AMIGA", utils.getAcronym("Amiga"));
+    }
+
+    @Test
+    public void Given_Amiga_When_getColor_Then_ReturnsGray() throws Exception {
+        assertEquals(Color.parseColor("#d3d3d3"), utils.getColor("Amiga"));
+    }
+
+    @Test
+    public void Given_NintendoEntertainmentSystem_When_getAcronym_Then_ReturnsNES() throws Exception {
+        assertEquals("NES", utils.getAcronym("Nintendo Entertainment System (NES)"));
+    }
+
+    @Test
+    public void Given_NintendoEntertainmentSystem_When_getColor_Then_ReturnsGray() throws Exception {
+        assertEquals(Color.parseColor("#D8D8D8"), utils.getColor("Nintendo Entertainment System (NES)"));
+    }
+
+    @Test
+    public void Given_SuperNintendoEntertainmentSystem_When_getAcronym_Then_ReturnsSNES() throws Exception {
+        assertEquals("SNES", utils.getAcronym("Super Nintendo Entertainment System (SNES)"));
+    }
+
+    @Test
+    public void Given_SuperNintendoEntertainmentSystem_When_getColor_Then_ReturnsGray() throws Exception {
+        assertEquals(Color.parseColor("#DAE0F0"), utils.getColor("Super Nintendo Entertainment System (SNES)"));
+    }
+
+    @Test
+    public void Given_NintendoDS_When_getAcronym_Then_ReturnsNDS() throws Exception {
+        assertEquals("NDS", utils.getAcronym("Nintendo DS"));
+    }
+
+    @Test
+    public void Given_NintendoDS_When_getColor_Then_ReturnsAppropiateColor() throws Exception {
+        assertEquals(Color.parseColor("#3085B0"), utils.getColor("Nintendo DS"));
+    }
+
+    @Test
+    public void Given_GameCube_When_getAcronym_Then_ReturnsNGC() throws Exception {
+        assertEquals("NGC", utils.getAcronym("Nintendo GameCube"));
+    }
+
+    @Test
+    public void Given_GameCube_When_getColor_Then_ReturnsPurple() throws Exception {
+        assertEquals(Color.parseColor("#6509cb"), utils.getColor("Nintendo GameCube"));
+    }
+
+    @Test
+    public void Given_GameboyColor_When_getAcronym_Then_ReturnsGBC() throws Exception {
+        assertEquals("GBC", utils.getAcronym("Game Boy Color"));
+    }
+
+    @Test
+    public void Given_GameboyColor_When_getColor_Then_ReturnsYellow() throws Exception {
+        assertEquals(Color.parseColor("#ffcc00"), utils.getColor("Game Boy Color"));
+    }
+
+    @Test
+    public void Given_Dreamcast_When_getAcronym_Then_ReturnsDC() throws Exception {
+        assertEquals("DC", utils.getAcronym("Dreamcast"));
+    }
+
+    @Test
+    public void Given_Dreamcast_when_getColor_Then_ReturnsOrange() throws Exception {
+        assertEquals(Color.parseColor("#FF6A00"), utils.getColor("Dreamcast"));
+    }
+
+    @Test
+    public void Given_GameboyAdvance_When_getAcronym_Then_ReturnsGBA() throws Exception {
+        assertEquals("GBA", utils.getAcronym("Game Boy Advance"));
+    }
+
+    @Test
+    public void Given_GameboyAdvance_When_getColor_Then_ReturnsPurple() throws Exception {
+        assertEquals(Color.parseColor("#682c9e"), utils.getColor("Game Boy Advance"));
+    }
+
+    @Test
+    public void Given_AmstradCPC_When_getAcronym_Then_ReturnsACPC() throws Exception {
+        assertEquals("ACPC", utils.getAcronym("Amstrad CPC"));
+    }
+
+    @Test
+    public void Given_AmstradCPC_When_getColor_Then_ReturnsGray() throws Exception {
+        assertEquals(Color.parseColor("#dbdbdb"), utils.getColor("Amstrad CPC"));
+    }
+
+    @Test
+    public void Given_ZXSpectrum_When_getAcronym_Then_ReturnsZXS() throws Exception {
+        assertEquals("ZXS", utils.getAcronym("ZX Spectrum"));
+    }
+
+    @Test
+    public void Given_ZXSpectrum_When_getColor_Then_Returns_Black() throws Exception {
+        assertEquals(Color.BLACK, utils.getColor("ZX Spectrum"));
+    }
 }
