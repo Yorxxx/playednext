@@ -88,7 +88,7 @@ public class RealmGameRelationRepositoryImpl extends BaseRealmRepository<RealmGa
                     }
                 };
 
-                RealmResults<RealmGameRelation> results = observableRealm.where(RealmGameRelation.class).findAllAsync();
+                RealmResults<RealmGameRelation> results = observableRealm.where(RealmGameRelation.class).findAll();
                 resultsRefs.get().acquireReference(results);
                 results.addChangeListener(listener);
 

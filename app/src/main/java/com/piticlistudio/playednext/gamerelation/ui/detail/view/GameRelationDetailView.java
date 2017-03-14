@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.gamerelation.ui.detail.view;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -26,6 +27,8 @@ import butterknife.OnClick;
 
 
 public class GameRelationDetailView extends BaseLinearLayout implements GameRelationDetailContract.View {
+
+    private static final String TAG = "GameRelationDetailView";
 
     @BindView(R.id.switchesContainer)
     LinearLayout switchesContainer;
@@ -112,7 +115,7 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
         } else {
             doneBtn.setIconEnabled(false);
             waitingBtn.setIconEnabled(false);
-            waitingBtn.setIconEnabled(false);
+            playingBtn.setIconEnabled(false);
         }
     }
 
@@ -133,7 +136,7 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
      */
     @Override
     public void showLoading() {
-        switchesContainer.setEnabled(false);
+        switchesContainer.setAlpha(0);
     }
 
     /**
@@ -141,7 +144,7 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
      */
     @Override
     public void showContent() {
-        switchesContainer.setEnabled(true);
+        switchesContainer.animate().alpha(1).setDuration(300).start();
     }
 
     /**
@@ -151,13 +154,14 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
      */
     @Override
     public void showError(Throwable error) {
+        Log.e(TAG, "Error: " + error.getLocalizedMessage());
         switchesContainer.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.waitingSwitchBtn)
     public void setRelationAsWaiting() {
         presenter.save(this.data, RelationInterval.RelationType.PENDING, !waitingBtn.isIconEnabled());
-        waitingBtn.switchState(!waitingBtn.isIconEnabled());
+        waitingBtn.switchState(true);
         playingBtn.setIconEnabled(false, true);
         doneBtn.setIconEnabled(false, true);
     }
@@ -165,7 +169,7 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
     @OnClick(R.id.playingSwitchBtn)
     public void setRelationAsPlaying() {
         presenter.save(this.data, RelationInterval.RelationType.PLAYING, !playingBtn.isIconEnabled());
-        playingBtn.switchState(!playingBtn.isIconEnabled());
+        playingBtn.switchState(true);
         doneBtn.setIconEnabled(false, true);
         waitingBtn.setIconEnabled(false, true);
     }
@@ -173,7 +177,7 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
     @OnClick(R.id.doneSwitchBtn)
     public void setRelationAsCompleted() {
         presenter.save(this.data, RelationInterval.RelationType.DONE, !doneBtn.isIconEnabled());
-        doneBtn.switchState(!doneBtn.isIconEnabled());
+        doneBtn.switchState(true);
         waitingBtn.setIconEnabled(false, true);
         playingBtn.setIconEnabled(false, true);
     }

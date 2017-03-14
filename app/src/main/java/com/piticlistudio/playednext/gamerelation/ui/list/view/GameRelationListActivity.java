@@ -115,6 +115,8 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
      */
     @Override
     public void setData(List<GameRelation> completed, List<GameRelation> current, List<GameRelation> waiting) {
+        Log.d(TAG, "setData() called with: completed = [" + completed.size() + "], current = [" + current.size() + "], waiting = [" +
+                waiting.size() + "]");
         adapter.setData(completed, current, waiting);
     }
 
@@ -233,6 +235,6 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
      */
     @Override
     public void onGameRelationChanged(GameRelation relation, RelationInterval.RelationType currentType, RelationInterval.RelationType newType) {
-        Log.d(TAG, "onGameRelationChanged() called with: relation = [" + relation + "], currentType = [" + currentType + "], newType = [" + newType + "]");
+        presenter.save(relation, newType);
     }
 }
