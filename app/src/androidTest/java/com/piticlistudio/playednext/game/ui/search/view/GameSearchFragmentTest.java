@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.game.ui.search.view;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.EditText;
 
@@ -40,6 +41,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
@@ -395,6 +397,31 @@ public class GameSearchFragmentTest {
         onView(withId(android.support.design.R.id.snackbar_action)).perform(click());
 
         // Assert
-        verify(presenter).search("", maxItems+1, maxItems);
+        verify(presenter).search("", maxItems + 1, maxItems);
+    }
+
+    @Test
+    public void Given_FilledList_When_ClickOnItem_Then_LaunchesDetailView() throws Throwable {
+
+// Arrange
+        int maxItems = getFragment().loadLimit;
+
+        Espresso.closeSoftKeyboard();
+
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < maxItems; i++) {
+            data.add(GameFactory.provide(10, "title_"+i));
+        }
+        activityTestRule.runOnUiThread(() -> {
+            getFragment().setData(data);
+            getFragment().showContent();
+        });
+
+        // ACt
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItem(hasDescendant(withText("title_5")), click()));
+
+        // Assert
+        onView(withId(R.id.searchlist)).check(doesNotExist());
+        onView(withId(R.id.backdrop)).check(matches(CustomMatchers.isVisibleToUser(true)));
     }
 }
