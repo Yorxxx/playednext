@@ -16,10 +16,10 @@ import io.reactivex.Observable;
 
 public class GameDetailInteractor implements GameDetailContract.Interactor {
 
-    private final GameRepository repository;
+    private final IGameRepository repository;
 
     @Inject
-    public GameDetailInteractor(GameRepository repository) {
+    public GameDetailInteractor(IGameRepository repository) {
         this.repository = repository;
     }
 

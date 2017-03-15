@@ -5,28 +5,21 @@ import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.CustomMatchers;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.RecyclerViewItemCountAssertion;
-import com.piticlistudio.playednext.collection.CollectionModule;
-import com.piticlistudio.playednext.company.model.CompanyModule;
-import com.piticlistudio.playednext.di.module.AppModule;
 import com.piticlistudio.playednext.game.GameComponent;
-import com.piticlistudio.playednext.game.GameModule;
-import com.piticlistudio.playednext.game.model.GamedataComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.game.ui.detail.GameDetailComponent;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
-import com.piticlistudio.playednext.genre.GenreModule;
-import com.piticlistudio.playednext.platform.PlatformModule;
+import com.piticlistudio.playednext.game.ui.detail.GameDetailModule;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -50,7 +43,6 @@ import static org.mockito.Mockito.verify;
  * Test cases for GameDetailFragment
  * Created by jorge.garcia on 22/02/2017.
  */
-@RunWith(AndroidJUnit4.class)
 @LargeTest
 public class GameDetailFragmentTest {
 
@@ -59,20 +51,20 @@ public class GameDetailFragmentTest {
     public MockitoRule rule = MockitoJUnit.rule();
 
     @Rule
-    public DaggerMockRule<GamedataComponent> componentDaggerMockRule = new DaggerMockRule<>(GamedataComponent.class)
-            .set(component -> {
-                AndroidApplication app = (AndroidApplication) InstrumentationRegistry.getInstrumentation().getTargetContext()
-                        .getApplicationContext();
-                GameComponent gameComponent = component.plus(new AppModule(app), new GameModule(), new CollectionModule(), new
-                        CompanyModule(), new GenreModule(), new PlatformModule());
-                app.setGameComponent(gameComponent);
-            });
+    public DaggerMockRule<GameDetailComponent> componentRule = new DaggerMockRule<>(GameDetailComponent.class, new GameDetailModule())
+            .addComponentDependency(GameComponent.class)
+            .set(component -> getApp().setGameDetailComponent(component));
 
     @Rule
     public ActivityTestRule<GameDetailActivity> activityTestRule = new ActivityTestRule<>(GameDetailActivity.class, false, false);
 
     @Mock
-    GameDetailContract.Presenter presenter;
+    public GameDetailContract.Presenter presenter;
+
+    private AndroidApplication getApp() {
+        return (AndroidApplication) InstrumentationRegistry.getInstrumentation()
+                .getTargetContext().getApplicationContext();
+    }
 
     private Intent getLaunchIntent() {
         Context targetContext = InstrumentationRegistry.getInstrumentation()
