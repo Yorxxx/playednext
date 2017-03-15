@@ -6,6 +6,7 @@ import com.piticlistudio.playednext.game.ui.detail.interactor.GameDetailInteract
 import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
 import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
 import com.piticlistudio.playednext.game.ui.search.interactor.GameSearchInteractor;
+import com.piticlistudio.playednext.game.ui.search.presenter.GameSearchPresenter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,6 +26,11 @@ public class GameModule {
     @Provides
     public GameSearchContract.Interactor provideSearchInteractor(GameRepository repository) {
         return new GameSearchInteractor(repository);
+    }
+
+    @Provides
+    public GameSearchContract.Presenter provideSearchPresenter(GameSearchContract.Interactor interactor) {
+        return new GameSearchPresenter(interactor);
     }
 
     @Provides

@@ -24,7 +24,6 @@ import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.ui.detail.view.GameDetailActivity;
 import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
-import com.piticlistudio.playednext.game.ui.search.presenter.GameSearchPresenter;
 import com.piticlistudio.playednext.game.ui.search.view.adapter.GameSearchAdapter;
 import com.piticlistudio.playednext.ui.recyclerview.SpacesItemDecoration;
 
@@ -66,11 +65,11 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
     TextView errorMessage;
     @BindView(R.id.emptystateview)
     ViewGroup emptyStateView;
-    private int loadLimit = MAX_LOAD_ITEMS;
+    int loadLimit = MAX_LOAD_ITEMS;
     private Unbinder unbinder;
 
     private GameSearchAdapter adapter;
-    private GameSearchPresenter presenter;
+    private GameSearchContract.Presenter presenter;
     private IGameSearchFragmentListener listener;
     private boolean isLoadingMore = false;
     private boolean canLoadMore = false;
@@ -162,7 +161,9 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        if (unbinder != null)
+            unbinder.unbind();
+        unbinder = null;
         presenter.detachView(false);
     }
 
@@ -225,12 +226,8 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
     @Override
     public void showContent() {
         progress.setVisibility(View.GONE);
-        if (initialstateview.getAlpha() > 0) {
-            initialstateview.animate().alpha(0).setDuration(300).start();
-        }
-        if (errorLayout.getAlpha() > 0) {
-            errorLayout.animate().alpha(0).setDuration(300).start();
-        }
+        initialstateview.animate().alpha(0).setDuration(300).start();
+        errorLayout.animate().alpha(0).setDuration(300).start();
     }
 
     /**
@@ -278,11 +275,8 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
             errorMessage.setText(error.getLocalizedMessage());
             errorLayout.animate().alpha(1).setDuration(300).start();
         }
-        if (initialstateview.getAlpha() > 0) {
-            initialstateview.animate().alpha(0).setDuration(300).start();
-        }
-        if (emptyStateView.getAlpha() != 0)
-            emptyStateView.animate().alpha(0).setDuration(300).start();
+        initialstateview.animate().alpha(0).setDuration(300).start();
+        emptyStateView.animate().alpha(0).setDuration(300).start();
         isLoadingMore = false;
         canLoadMore = false;
     }

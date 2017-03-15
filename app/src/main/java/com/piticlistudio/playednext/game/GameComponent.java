@@ -8,6 +8,7 @@ import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
 import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
 import com.piticlistudio.playednext.game.ui.detail.view.adapter.GameDetailAdapter;
+import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
 import com.piticlistudio.playednext.game.ui.search.presenter.GameSearchPresenter;
 import com.piticlistudio.playednext.game.ui.search.view.adapter.GameSearchAdapter;
 import com.piticlistudio.playednext.genre.GenreModule;
@@ -25,7 +26,7 @@ public interface GameComponent {
 
     GameDetailAdapter detailAdapter();
 
-    GameSearchPresenter searchPresenter();
+    GameSearchContract.Presenter searchPresenter();
 
     GameSearchAdapter searchAdapter();
 }
