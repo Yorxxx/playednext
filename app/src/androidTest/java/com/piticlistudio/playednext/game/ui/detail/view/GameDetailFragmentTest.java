@@ -3,7 +3,9 @@ package com.piticlistudio.playednext.game.ui.detail.view;
 import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.CustomMatchers;
@@ -24,6 +26,7 @@ import com.piticlistudio.playednext.platform.PlatformModule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -47,11 +50,14 @@ import static org.mockito.Mockito.verify;
  * Test cases for GameDetailFragment
  * Created by jorge.garcia on 22/02/2017.
  */
+@RunWith(AndroidJUnit4.class)
+@LargeTest
 public class GameDetailFragmentTest {
 
     private final static int GAMEID = 100;
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
+
     @Rule
     public DaggerMockRule<GamedataComponent> componentDaggerMockRule = new DaggerMockRule<>(GamedataComponent.class)
             .set(component -> {
@@ -61,11 +67,9 @@ public class GameDetailFragmentTest {
                         CompanyModule(), new GenreModule(), new PlatformModule());
                 app.setGameComponent(gameComponent);
             });
+
     @Rule
     public ActivityTestRule<GameDetailActivity> activityTestRule = new ActivityTestRule<>(GameDetailActivity.class, false, false);
-
-    @Mock
-    GameDetailContract.Interactor interactor;
 
     @Mock
     GameDetailContract.Presenter presenter;
@@ -178,7 +182,7 @@ public class GameDetailFragmentTest {
         activityTestRule.runOnUiThread(() -> getFragment().setData(game));
 
         // Assert
-        onView(withId(R.id.toolbar)).check(matches(withText("Game title")));
+//        onView(withId(R.id.toolbar)).check(matches(withText("Game title")));
         onView(withId(R.id.backdropTitle)).check(matches(withText("Game title")));
         onView(withId(R.id.platformslist)).check(new RecyclerViewItemCountAssertion(game.platforms.size()));
         onView(withId(R.id.gamerelation_switch_box)).check(matches(isDisplayed()));
