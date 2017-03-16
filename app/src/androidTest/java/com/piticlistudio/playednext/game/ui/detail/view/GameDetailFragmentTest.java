@@ -33,6 +33,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.times;
@@ -203,5 +204,16 @@ public class GameDetailFragmentTest {
 
         // Assert
         onView(withId(R.id.error)).check(matches(CustomMatchers.isNotVisible()));
+    }
+
+    @Test
+    public void Given_Empty_When_onDetach_Then_ClearsResources() throws Throwable {
+
+        getFragment().onDetach();
+
+        // Assert
+        verify(presenter).detachView(false);
+        assertNull(getFragment().screenshotViewerDisposable);
+        assertNull(getFragment().component);
     }
 }

@@ -99,11 +99,11 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     private Unbinder unbinder;
 
     private PlatformLabelGridAdapter platformAdapter;
-    private Disposable screenshotViewerDisposable;
+    public Disposable screenshotViewerDisposable;
     private PublishSubject<View> doubleClickSubject = PublishSubject.create();
     private Callbacks mCallbacks = sDummyCallbacks;
     private int requestedGameId = 0;
-    private GameDetailComponent component;
+    public GameDetailComponent component;
 
     public static GameDetailFragment newInstance(int gameId) {
         GameDetailFragment fragment = new GameDetailFragment();
@@ -227,6 +227,8 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
         mCallbacks = sDummyCallbacks;
         if (screenshotViewerDisposable != null)
             screenshotViewerDisposable.dispose();
+        screenshotViewerDisposable = null;
+        relationDetailLayout.onDestroy();
     }
 
     @Override

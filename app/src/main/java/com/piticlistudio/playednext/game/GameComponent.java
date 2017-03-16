@@ -3,30 +3,24 @@ package com.piticlistudio.playednext.game;
 
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.company.model.CompanyModule;
-import com.piticlistudio.playednext.di.module.AppModule;
-import com.piticlistudio.playednext.game.model.repository.GameRepository;
-import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
-import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
-import com.piticlistudio.playednext.game.ui.detail.view.adapter.GameDetailAdapter;
-import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
-import com.piticlistudio.playednext.game.ui.search.presenter.GameSearchPresenter;
-import com.piticlistudio.playednext.game.ui.search.view.adapter.GameSearchAdapter;
+import com.piticlistudio.playednext.di.module.IGDBModule;
+import com.piticlistudio.playednext.game.model.repository.IGameRepository;
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
 
-import dagger.Subcomponent;
+import dagger.Component;
 
-@Subcomponent(modules = {AppModule.class, GameModule.class, CollectionModule.class, CompanyModule.class, GenreModule.class, PlatformModule
+@Component(modules = {IGDBModule.class, GameModule.class, CollectionModule.class, CompanyModule.class, GenreModule.class, PlatformModule
         .class})
 public interface GameComponent {
 
-    GameRepository repository();
+    IGameRepository repository();
 
-    GameDetailContract.Presenter detailPresenter();
-
-    GameDetailAdapter detailAdapter();
-
-    GameSearchContract.Presenter searchPresenter();
-
-    GameSearchAdapter searchAdapter();
+//    GameDetailContract.Presenter detailPresenter();
+//
+//    GameDetailAdapter detailAdapter();
+//
+//    GameSearchContract.Presenter searchPresenter();
+//
+//    GameSearchAdapter searchAdapter();
 }

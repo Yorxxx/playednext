@@ -13,8 +13,13 @@ import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailComponent;
 import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
+import com.piticlistudio.playednext.gamerelation.DaggerGameRelationComponent;
+import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
+import com.piticlistudio.playednext.gamerelation.GameRelationModule;
+import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
+import com.piticlistudio.playednext.relationinterval.RelationIntervalModule;
 
 import java.io.IOException;
 
@@ -33,6 +38,8 @@ public class AndroidApplication extends Application {
     public GameComponent gameComponent;
     private GameDetailComponent detailComponent;
     private GameSearchComponent searchComponent;
+    public GameRelationComponent relationComponent;
+    private GameRelationDetailComponent relationDetailComponent;
 
     RealmMigration migration = new RealmMigration() {
         @Override
@@ -120,6 +127,12 @@ public class AndroidApplication extends Application {
                 .collectionModule(new CollectionModule())
                 .build();
 
+        relationComponent = DaggerGameRelationComponent.builder()
+                .gameComponent(gameComponent)
+                .gameRelationModule(new GameRelationModule())
+                .relationIntervalModule(new RelationIntervalModule())
+                .build();
+
         try {
             appComponent.platformUtils().parse(getApplicationContext().getAssets().open("platformsui.json"));
         } catch (IOException e) {
@@ -143,6 +156,8 @@ public class AndroidApplication extends Application {
         return this.searchComponent;
     }
 
+    public GameRelationDetailComponent getRelationDetailComponent() { return this.relationDetailComponent; }
+
     @VisibleForTesting
     public void setGameComponent(GameComponent component) {
         this.gameComponent = component;
@@ -156,5 +171,10 @@ public class AndroidApplication extends Application {
     @VisibleForTesting
     public void setGameSearchComponent(GameSearchComponent component) {
         this.searchComponent = component;
+    }
+
+    @VisibleForTesting
+    public void setRelationDetailComponent(GameRelationDetailComponent relationDetailComponent) {
+        this.relationDetailComponent = relationDetailComponent;
     }
 }

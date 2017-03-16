@@ -10,16 +10,17 @@ import android.widget.LinearLayout;
 import com.github.zagum.switchicon.SwitchIconView;
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
-import com.piticlistudio.playednext.di.component.AppComponent;
-import com.piticlistudio.playednext.game.GameComponent;
-import com.piticlistudio.playednext.gamerelation.DaggerGameRelationComponent;
+import com.piticlistudio.playednext.game.ui.detail.GameDetailModule;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
-import com.piticlistudio.playednext.gamerelation.GameRelationModule;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
+import com.piticlistudio.playednext.gamerelation.ui.detail.DaggerGameRelationDetailComponent;
+import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
-import com.piticlistudio.playednext.gamerelation.ui.detail.presenter.GameRelationDetailPresenter;
+import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailModule;
 import com.piticlistudio.playednext.mvp.ui.BaseLinearLayout;
 import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,8 +39,10 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
     SwitchIconView playingBtn;
     @BindView(R.id.waitingSwitchBtn)
     SwitchIconView waitingBtn;
-    private GameRelationDetailPresenter presenter;
+    @Inject
+    public GameRelationDetailContract.Presenter presenter;
     private GameRelation data;
+    private GameRelationDetailComponent component;
 
     public GameRelationDetailView(Context context) {
         super(context);
@@ -59,30 +62,32 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
             init();
     }
 
-    protected GameComponent getGameComponent() {
+    protected GameRelationComponent getRelationComponent() {
         Activity activity = getActivity();
         if (activity != null) {
-            return ((AndroidApplication) activity.getApplication()).getGameComponent();
+            return ((AndroidApplication) activity.getApplication()).relationComponent;
         }
         return null;
     }
 
-    protected AppComponent getAppComponent() {
+    protected GameRelationDetailComponent getComponent() {
         Activity activity = getActivity();
         if (activity != null) {
-            return ((AndroidApplication) activity.getApplication()).getApplicationComponent();
+            component = ((AndroidApplication) activity.getApplication()).getRelationDetailComponent();
         }
-        return null;
+        if (component == null) {
+            component = DaggerGameRelationDetailComponent.builder()
+                    .gameRelationComponent(getRelationComponent())
+                    .gameRelationDetailModule(new GameRelationDetailModule())
+                    .build();
+        }
+        return component;
     }
 
     private void init() {
-        GameRelationComponent component = DaggerGameRelationComponent.builder()
-                .appComponent(getAppComponent())
-                .gameComponent(getGameComponent())
-                .gameRelationModule(new GameRelationModule())
-                .build();
-
-        presenter = component.detailPresenter();
+        if (getComponent() != null) {
+            getComponent().inject(this);
+        }
         presenter.attachView(this);
     }
 
@@ -90,6 +95,11 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this);
+    }
+
+    public void onDestroy() {
+        presenter.detachView(false);
+        component = null;
     }
 
     /**

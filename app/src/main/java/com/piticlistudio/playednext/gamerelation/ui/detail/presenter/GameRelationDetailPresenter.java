@@ -29,7 +29,7 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
     private Subject<Integer> loadSubject = PublishSubject.create();
 
     @Inject
-    GameRelationDetailPresenter(GameRelationDetailContract.Interactor interactor) {
+    public GameRelationDetailPresenter(GameRelationDetailContract.Interactor interactor) {
         this.interactor = interactor;
     }
 
