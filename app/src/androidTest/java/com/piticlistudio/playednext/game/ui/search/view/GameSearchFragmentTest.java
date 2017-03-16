@@ -13,16 +13,15 @@ import com.piticlistudio.playednext.EmptyActivity;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.RecyclerViewItemCountAssertion;
-import com.piticlistudio.playednext.collection.CollectionModule;
-import com.piticlistudio.playednext.company.model.CompanyModule;
+import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.di.module.AppModule;
 import com.piticlistudio.playednext.game.GameComponent;
-import com.piticlistudio.playednext.game.GameModule;
-import com.piticlistudio.playednext.game.model.GamedataComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.game.ui.detail.GameDetailComponent;
+import com.piticlistudio.playednext.game.ui.detail.GameDetailModule;
+import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
 import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
-import com.piticlistudio.playednext.genre.GenreModule;
-import com.piticlistudio.playednext.platform.PlatformModule;
+import com.piticlistudio.playednext.game.ui.search.GameSearchModule;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -59,18 +58,13 @@ import static org.mockito.Mockito.verify;
  */
 public class GameSearchFragmentTest {
 
-
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
     @Rule
-    public DaggerMockRule<GamedataComponent> componentDaggerMockRule = new DaggerMockRule<>(GamedataComponent.class)
-            .set(component -> {
-                AndroidApplication app = (AndroidApplication) InstrumentationRegistry.getInstrumentation().getTargetContext()
-                        .getApplicationContext();
-                GameComponent gameComponent = component.plus(new AppModule(app), new GameModule(), new CollectionModule(), new
-                        CompanyModule(), new GenreModule(), new PlatformModule());
-                app.setGameComponent(gameComponent);
-            });
+    public DaggerMockRule<GameSearchComponent> componentRule = new DaggerMockRule<>(GameSearchComponent.class, new GameSearchModule())
+            .addComponentDependency(GameComponent.class)
+            .addComponentDependency(AppComponent.class, new AppModule(getApp()))
+            .set(component -> getApp().setGameSearchComponent(component));
     @Rule
     public ActivityTestRule<EmptyActivity> activityTestRule = new ActivityTestRule<>(EmptyActivity.class, false, false);
     @Mock
@@ -78,6 +72,11 @@ public class GameSearchFragmentTest {
 
     private GameSearchFragment getFragment() {
         return activityTestRule.getActivity().currentFragment;
+    }
+
+    private AndroidApplication getApp() {
+        return (AndroidApplication) InstrumentationRegistry.getInstrumentation()
+                .getTargetContext().getApplicationContext();
     }
 
     @Before
@@ -410,7 +409,7 @@ public class GameSearchFragmentTest {
 
         List<Game> data = new ArrayList<>();
         for (int i = 0; i < maxItems; i++) {
-            data.add(GameFactory.provide(10, "title_"+i));
+            data.add(GameFactory.provide(10, "title_" + i));
         }
         activityTestRule.runOnUiThread(() -> {
             getFragment().setData(data);
