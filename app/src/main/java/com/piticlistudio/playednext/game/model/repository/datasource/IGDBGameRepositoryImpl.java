@@ -1,8 +1,8 @@
 package com.piticlistudio.playednext.game.model.repository.datasource;
 
-import com.piticlistudio.playednext.game.model.GamedataModule;
-import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
+import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
+import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 
 import java.util.List;
 
@@ -19,10 +19,10 @@ import io.reactivex.functions.Function;
 
 public class IGDBGameRepositoryImpl implements IGamedatasourceRepository {
 
-    private final GamedataModule.NetService service;
+    private final GameModule.NetService service;
 
     @Inject
-    public IGDBGameRepositoryImpl(GamedataModule.NetService service) {
+    public IGDBGameRepositoryImpl(GameModule.NetService service) {
         this.service = service;
     }
 

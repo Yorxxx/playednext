@@ -1,29 +1,28 @@
 package com.piticlistudio.playednext.gamerelation;
 
-import com.piticlistudio.playednext.di.PerActivity;
-import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
-import com.piticlistudio.playednext.gamerelation.model.entity.GameRelationMapper;
-import com.piticlistudio.playednext.gamerelation.model.repository.GameRelationRepository;
-import com.piticlistudio.playednext.gamerelation.ui.detail.presenter.GameRelationDetailPresenter;
-import com.piticlistudio.playednext.gamerelation.ui.list.adapter.GameRelationListAdapter;
-import com.piticlistudio.playednext.gamerelation.ui.list.presenter.GameRelationListPresenter;
+import com.piticlistudio.playednext.game.model.repository.IGameRepository;
+import com.piticlistudio.playednext.gamerelation.model.repository.IGameRelationRepository;
 import com.piticlistudio.playednext.relationinterval.RelationIntervalModule;
+import com.piticlistudio.playednext.relationinterval.model.repository.RelationIntervalRepository;
 
 import dagger.Component;
 
-@PerActivity
-@Component(dependencies = {GameComponent.class, AppComponent.class},
+@Component(dependencies = {GameComponent.class},
         modules = {GameRelationModule.class, RelationIntervalModule.class})
 public interface GameRelationComponent {
 
-    GameRelationDetailPresenter detailPresenter();
+    IGameRelationRepository repository();
+    IGameRepository gameRepository();
+    RelationIntervalRepository intervalRepository();
 
-    GameRelationMapper mapper();
-
-    GameRelationRepository repository();
-
-    GameRelationListPresenter listPresenter();
-
-    GameRelationListAdapter listAdapter();
+//    GameRelationDetailPresenter detailPresenter();
+//
+//    GameRelationMapper mapper();
+//
+//    GameRelationRepository repository();
+//
+//    GameRelationListPresenter listPresenter();
+//
+//    GameRelationListAdapter listAdapter();
 }

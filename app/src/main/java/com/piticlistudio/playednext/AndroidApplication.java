@@ -8,14 +8,19 @@ import com.piticlistudio.playednext.company.model.CompanyModule;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.di.component.DaggerAppComponent;
 import com.piticlistudio.playednext.di.module.AppModule;
-import com.piticlistudio.playednext.di.module.IGDBModule;
+import com.piticlistudio.playednext.game.DaggerGameComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
-import com.piticlistudio.playednext.game.model.DaggerGamedataComponent;
-import com.piticlistudio.playednext.game.model.GamedataComponent;
-import com.piticlistudio.playednext.game.model.GamedataModule;
+import com.piticlistudio.playednext.game.ui.detail.GameDetailComponent;
+import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
+import com.piticlistudio.playednext.gamerelation.DaggerGameRelationComponent;
+import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
+import com.piticlistudio.playednext.gamerelation.GameRelationModule;
+import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
+import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListComponent;
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
+import com.piticlistudio.playednext.relationinterval.RelationIntervalModule;
 
 import java.io.IOException;
 
@@ -31,9 +36,12 @@ public class AndroidApplication extends Application {
 
     private static final String TAG = "AndroidApplication";
     public AppComponent appComponent;
-    public GamedataComponent gamedataComponent;
     public GameComponent gameComponent;
-
+    private GameDetailComponent detailComponent;
+    private GameSearchComponent searchComponent;
+    public GameRelationComponent relationComponent;
+    private GameRelationDetailComponent relationDetailComponent;
+    private GameRelationListComponent relationListComponent;
 
     RealmMigration migration = new RealmMigration() {
         @Override
@@ -113,14 +121,19 @@ public class AndroidApplication extends Application {
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
-
-        gamedataComponent = DaggerGamedataComponent.builder()
-                .gamedataModule(new GamedataModule())
-                .iGDBModule(new IGDBModule())
+        gameComponent = DaggerGameComponent.builder()
+                .platformModule(new PlatformModule())
+                .genreModule(new GenreModule())
+                .companyModule(new CompanyModule())
+                .gameModule(new GameModule())
+                .collectionModule(new CollectionModule())
                 .build();
 
-        gameComponent = gamedataComponent.plus(new AppModule(this), new GameModule(), new CollectionModule(), new CompanyModule(), new
-                GenreModule(), new PlatformModule());
+        relationComponent = DaggerGameRelationComponent.builder()
+                .gameComponent(gameComponent)
+                .gameRelationModule(new GameRelationModule())
+                .relationIntervalModule(new RelationIntervalModule())
+                .build();
 
         try {
             appComponent.platformUtils().parse(getApplicationContext().getAssets().open("platformsui.json"));
@@ -129,14 +142,45 @@ public class AndroidApplication extends Application {
         }
     }
 
+    public AppComponent getApplicationComponent() {
+        return this.appComponent;
+    }
+
+    public GameComponent getGameComponent() {
+        return this.gameComponent;
+    }
+
+    public GameDetailComponent getGameDetailComponent() {
+        return this.detailComponent;
+    }
+
+    public GameSearchComponent getSearchComponent() {
+        return this.searchComponent;
+    }
+
+    public GameRelationDetailComponent getRelationDetailComponent() { return this.relationDetailComponent; }
+
+    public GameRelationListComponent getRelationListComponent() {
+        return relationListComponent;
+    }
+
     @VisibleForTesting
     public void setGameComponent(GameComponent component) {
         this.gameComponent = component;
     }
 
-    public AppComponent getApplicationComponent() {
-        return this.appComponent;
+    @VisibleForTesting
+    public void setGameDetailComponent(GameDetailComponent component) {
+        this.detailComponent = component;
     }
 
-    public GameComponent getGameComponent() { return this.gameComponent; }
+    @VisibleForTesting
+    public void setGameSearchComponent(GameSearchComponent component) {
+        this.searchComponent = component;
+    }
+
+    @VisibleForTesting
+    public void setRelationDetailComponent(GameRelationDetailComponent relationDetailComponent) {
+        this.relationDetailComponent = relationDetailComponent;
+    }
 }

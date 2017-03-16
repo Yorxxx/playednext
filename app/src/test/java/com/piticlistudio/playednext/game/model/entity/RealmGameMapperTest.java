@@ -4,12 +4,9 @@ import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.collection.model.entity.Collection;
 import com.piticlistudio.playednext.collection.model.entity.RealmCollectionMapper;
-import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
 import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.company.model.entity.RealmCompanyMapper;
 import com.piticlistudio.playednext.game.model.BaseGameTest;
-import com.piticlistudio.playednext.game.model.GamedataComponent;
-import com.piticlistudio.playednext.game.model.GamedataModule;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
 import com.piticlistudio.playednext.gamerelease.model.entity.RealmGameReleaseMapper;
@@ -18,12 +15,9 @@ import com.piticlistudio.playednext.genre.model.entity.RealmGenreMapper;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.model.entity.RealmImageDataMapper;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
-import com.piticlistudio.playednext.platform.model.entity.PlatformMapper;
 import com.piticlistudio.playednext.platform.model.entity.RealmPlatformMapper;
-import com.piticlistudio.playednext.releasedate.model.entity.RealmReleaseDateMapper;
 import com.piticlistudio.playednext.releasedate.model.entity.ReleaseDate;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,12 +25,10 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.cosenonjaviste.daggermock.DaggerMockRule;
-import it.cosenonjaviste.daggermock.InjectFromComponent;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

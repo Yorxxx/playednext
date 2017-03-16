@@ -23,12 +23,12 @@ public class RelationIntervalModule {
     }
 
     @Provides
-    RealmRelationIntervalRepositoryImpl provideRealmRepository() {
+    public RealmRelationIntervalRepositoryImpl provideRealmRepository() {
         return new RealmRelationIntervalRepositoryImpl();
     }
 
     @Provides
-    RelationIntervalRepository provideRepository(RealmRelationIntervalRepositoryImpl realmImpl) {
+    public RelationIntervalRepository provideRepository(RealmRelationIntervalRepositoryImpl realmImpl) {
         return new RelationIntervalRepository(realmImpl);
     }
 }

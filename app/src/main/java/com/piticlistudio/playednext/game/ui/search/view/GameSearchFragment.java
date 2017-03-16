@@ -20,15 +20,20 @@ import android.widget.TextView;
 
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
+import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.ui.detail.view.GameDetailActivity;
+import com.piticlistudio.playednext.game.ui.search.DaggerGameSearchComponent;
+import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
 import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
-import com.piticlistudio.playednext.game.ui.search.presenter.GameSearchPresenter;
+import com.piticlistudio.playednext.game.ui.search.GameSearchModule;
 import com.piticlistudio.playednext.game.ui.search.view.adapter.GameSearchAdapter;
 import com.piticlistudio.playednext.ui.recyclerview.SpacesItemDecoration;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +53,10 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
     private static final int LOADMORE_THRESHOLD = 3;
     // The max amount of items to load on every request
     private static final int MAX_LOAD_ITEMS = 15;
+    @Inject
+    public GameSearchAdapter adapter;
+    @Inject
+    public GameSearchContract.Presenter presenter;
     @BindView(R.id.initialstateview)
     LinearLayout initialstateview;
     @BindView(R.id.searchview)
@@ -66,14 +75,12 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
     TextView errorMessage;
     @BindView(R.id.emptystateview)
     ViewGroup emptyStateView;
-    private int loadLimit = MAX_LOAD_ITEMS;
+    int loadLimit = MAX_LOAD_ITEMS;
     private Unbinder unbinder;
-
-    private GameSearchAdapter adapter;
-    private GameSearchPresenter presenter;
     private IGameSearchFragmentListener listener;
     private boolean isLoadingMore = false;
     private boolean canLoadMore = false;
+    private GameSearchComponent component;
 
     @Nullable
     @Override
@@ -83,16 +90,42 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
         return v;
     }
 
+
+    private GameComponent getGameComponent() {
+        return ((AndroidApplication) getActivity().getApplication()).gameComponent;
+    }
+
+    private AppComponent getAppComponent() {
+        return ((AndroidApplication) getActivity().getApplication()).appComponent;
+    }
+
+    /**
+     * Returns the component for this view
+     *
+     * @return the component
+     */
+    private GameSearchComponent getComponent() {
+        component = ((AndroidApplication) getActivity().getApplication()).getSearchComponent();
+        if (component == null) {
+            component = DaggerGameSearchComponent.builder()
+                    .appComponent(getAppComponent())
+                    .gameComponent(getGameComponent())
+                    .gameSearchModule(new GameSearchModule())
+                    .build();
+        }
+        return component;
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        presenter = getGameComponent().searchPresenter();
+        getComponent().inject(this);
         presenter.attachView(this);
 
         // Set up the adapter
         int spanScount = getSpanCount();
-        adapter = getGameComponent().searchAdapter();
+//        adapter = getGameComponent().searchAdapter();
         adapter.setSpanCount(spanScount);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), spanScount);
         gridLayoutManager.setSpanSizeLookup(adapter.getSpanSizeLookup());
@@ -162,13 +195,13 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        if (unbinder != null)
+            unbinder.unbind();
+        unbinder = null;
         presenter.detachView(false);
+        component = null;
     }
 
-    private GameComponent getGameComponent() {
-        return ((AndroidApplication) getActivity().getApplication()).gameComponent;
-    }
 
     private int getSpanCount() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -225,12 +258,8 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
     @Override
     public void showContent() {
         progress.setVisibility(View.GONE);
-        if (initialstateview.getAlpha() > 0) {
-            initialstateview.animate().alpha(0).setDuration(300).start();
-        }
-        if (errorLayout.getAlpha() > 0) {
-            errorLayout.animate().alpha(0).setDuration(300).start();
-        }
+        initialstateview.animate().alpha(0).setDuration(300).start();
+        errorLayout.animate().alpha(0).setDuration(300).start();
     }
 
     /**
@@ -278,11 +307,8 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
             errorMessage.setText(error.getLocalizedMessage());
             errorLayout.animate().alpha(1).setDuration(300).start();
         }
-        if (initialstateview.getAlpha() > 0) {
-            initialstateview.animate().alpha(0).setDuration(300).start();
-        }
-        if (emptyStateView.getAlpha() != 0)
-            emptyStateView.animate().alpha(0).setDuration(300).start();
+        initialstateview.animate().alpha(0).setDuration(300).start();
+        emptyStateView.animate().alpha(0).setDuration(300).start();
         isLoadingMore = false;
         canLoadMore = false;
     }

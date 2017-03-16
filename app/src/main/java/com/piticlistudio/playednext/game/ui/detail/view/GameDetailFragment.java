@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,11 @@ import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.game.ui.detail.DaggerGameDetailComponent;
+import com.piticlistudio.playednext.game.ui.detail.GameDetailComponent;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
+import com.piticlistudio.playednext.game.ui.detail.GameDetailModule;
+import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
 import com.piticlistudio.playednext.game.ui.detail.view.adapter.GameDetailAdapter;
 import com.piticlistudio.playednext.gamerelation.ui.detail.view.GameRelationDetailView;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
@@ -37,6 +40,8 @@ import com.piticlistudio.playednext.platform.ui.grid.adapter.PlatformLabelGridAd
 import com.piticlistudio.playednext.utils.UIUtils;
 
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +63,10 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     private final static String ARG_GAMEID = "gameId";
     private static Callbacks sDummyCallbacks = data -> {
     };
+    @Inject
+    public GameDetailContract.Presenter presenter;
+    @Inject
+    public GameDetailAdapter adapter;
     @BindView(R.id.listview)
     RecyclerView listview;
     @BindView(R.id.backdrop)
@@ -86,16 +95,15 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     View loadingRetry;
     @BindView(R.id.gamerelation_switch_box)
     GameRelationDetailView relationDetailLayout;
-
     private boolean isRetrying;
     private Unbinder unbinder;
-    private GameDetailAdapter adapter;
+
     private PlatformLabelGridAdapter platformAdapter;
-    private Disposable screenshotViewerDisposable;
-    private GameDetailContract.Presenter presenter;
+    public Disposable screenshotViewerDisposable;
     private PublishSubject<View> doubleClickSubject = PublishSubject.create();
     private Callbacks mCallbacks = sDummyCallbacks;
     private int requestedGameId = 0;
+    public GameDetailComponent component;
 
     public static GameDetailFragment newInstance(int gameId) {
         GameDetailFragment fragment = new GameDetailFragment();
@@ -111,6 +119,22 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
 
     private AppComponent getAppComponent() {
         return ((AndroidApplication) getActivity().getApplication()).appComponent;
+    }
+
+    /**
+     * Returns the component for this view
+     *
+     * @return the component
+     */
+    private GameDetailComponent getComponent() {
+        component = ((AndroidApplication)getActivity().getApplication()).getGameDetailComponent();
+        if (component == null) {
+            component = DaggerGameDetailComponent.builder()
+                    .gameComponent(getGameComponent())
+                    .gameDetailModule(new GameDetailModule())
+                    .build();
+        }
+        return component;
     }
 
     @Nullable
@@ -150,10 +174,9 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
 
         backdrop.getLayoutParams().height = UIUtils.getScreenHeight(getContext());
 
-        presenter = getGameComponent().detailPresenter();
+        getComponent().inject(this);
         presenter.attachView(this);
 
-        adapter = getGameComponent().detailAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         listview.setLayoutManager(layoutManager);
         listview.setAdapter(adapter);
@@ -199,14 +222,18 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     @Override
     public void onDetach() {
         super.onDetach();
+        presenter.detachView(false);
+        this.component = null;
         mCallbacks = sDummyCallbacks;
         if (screenshotViewerDisposable != null)
             screenshotViewerDisposable.dispose();
+        screenshotViewerDisposable = null;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        relationDetailLayout.onDestroy();
         unbinder.unbind();
     }
 
@@ -253,7 +280,6 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
                     .repeat()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(imageData -> {
-                        Log.d(TAG, "Setting screenshot image");
                         getAppComponent().picasso().load(imageData.getFullUrl()).into(backdrop);
                     });
         }

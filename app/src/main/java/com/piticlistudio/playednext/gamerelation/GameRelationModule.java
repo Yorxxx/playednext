@@ -26,7 +26,6 @@ import dagger.Provides;
 public class GameRelationModule {
 
     @Provides
-    @Inject
     protected GameRelationMapper relationDataMapper(GameMapper gameDataMapper, RelationIntervalMapper intervalMapper) {
         return new GameRelationMapper(gameDataMapper, intervalMapper);
     }
@@ -41,18 +40,5 @@ public class GameRelationModule {
                                                         GameRelationMapper relationDataMapper,
                                                         RealmGameRelationMapper realmMapper) {
         return new GameRelationRepository(realmImpl, relationDataMapper, realmMapper);
-    }
-
-    @Provides
-    protected GameRelationDetailContract.Interactor provideDetailInteractor(IGameRelationRepository relationRepository,
-                                                                            GameRepository gameRepository,
-                                                                            RelationIntervalRepository intervalRepository) {
-        return new GameRelationDetailInteractor(relationRepository, gameRepository, intervalRepository);
-    }
-
-    @Provides
-    protected GameRelationListContract.Interactor provideListInteractor(IGameRelationRepository relationRepository,
-                                                                      RelationIntervalRepository intervalRepository) {
-        return new GameRelationListInteractor(relationRepository, intervalRepository);
     }
 }

@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.game.model.repository.datasource;
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.TestSchedulerRule;
-import com.piticlistudio.playednext.game.model.GamedataModule;
+import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 
@@ -18,7 +18,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.TestObserver;
 
 import static org.junit.Assert.assertEquals;
@@ -36,14 +35,30 @@ public class IGDBGameRepositoryImplTest extends BaseTest {
     public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
 
     @Mock
-    GamedataModule.NetService service;
+    GameModule.NetService service;
 
     @InjectMocks
     private IGDBGameRepositoryImpl repository;
 
 
     @Test
-    public void load() throws Exception {
+    public void Given_EmptyList_When_Load_Then_ThrowsError() throws Exception {
+
+        List<IGDBGame> responseList = new ArrayList<>();
+        when(service.load(anyInt(), anyString())).thenReturn(Observable.just(responseList).delay(1, TimeUnit.SECONDS));
+
+        // Act
+        TestObserver<IGameDatasource> result = repository.load(1).test();
+        testSchedulerRule.getTestScheduler().advanceTimeBy(2, TimeUnit.SECONDS);
+
+        // Assert
+        result.assertNotComplete()
+                .assertNoValues()
+                .assertError(Throwable.class);
+    }
+
+    @Test
+    public void Given_MultipleValues_When_load_Then_ReturnsFirst() throws Exception {
 
         IGDBGame response1 = GameFactory.provideNetGame(1, "1");
         IGDBGame response2 = GameFactory.provideNetGame(2, "2");
@@ -64,7 +79,7 @@ public class IGDBGameRepositoryImplTest extends BaseTest {
     }
 
     @Test
-    public void load_onErrorRetry() throws Exception {
+    public void Given_Error_When_Load_Then_RetriesRequest() throws Exception {
 
         IGDBGame response1 = GameFactory.provideNetGame(1, "1");
         IGDBGame response2 = GameFactory.provideNetGame(2, "2");
@@ -99,7 +114,7 @@ public class IGDBGameRepositoryImplTest extends BaseTest {
     }
 
     @Test
-    public void search() throws Exception {
+    public void Given_Error_When_Search_Then_Retries() throws Exception {
 
         IGDBGame response1 = GameFactory.provideNetGame(1, "1");
         IGDBGame response2 = GameFactory.provideNetGame(2, "2");
@@ -131,16 +146,11 @@ public class IGDBGameRepositoryImplTest extends BaseTest {
         result.assertNoErrors()
                 .assertComplete()
                 .assertValueCount(1)
-                .assertValue(check(new Consumer<List<IGameDatasource>>() {
-                    @Override
-                    public void accept(List<IGameDatasource> iGameDatasources) throws Exception {
-                        assertEquals(responseList, iGameDatasources);
-                    }
-                }));
+                .assertValue(check(iGameDatasources -> assertEquals(responseList, iGameDatasources)));
     }
 
     @Test
-    public void search_retry() throws Exception {
+    public void Given_Success_When_Search_Then_ReturnsSearchResult() throws Exception {
 
         IGDBGame response1 = GameFactory.provideNetGame(1, "1");
         IGDBGame response2 = GameFactory.provideNetGame(2, "2");
@@ -163,7 +173,7 @@ public class IGDBGameRepositoryImplTest extends BaseTest {
     }
 
     @Test
-    public void save() throws Exception {
+    public void Given_nothing_When_Save_Then_EmitsError() throws Exception {
 
         IGDBGame data = GameFactory.provideNetGame(1, "name");
 

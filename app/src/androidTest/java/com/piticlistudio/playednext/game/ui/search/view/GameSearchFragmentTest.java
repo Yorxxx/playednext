@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.game.ui.search.view;
 
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
@@ -13,53 +13,42 @@ import com.piticlistudio.playednext.EmptyActivity;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.RecyclerViewItemCountAssertion;
-import com.piticlistudio.playednext.collection.CollectionModule;
-import com.piticlistudio.playednext.company.model.CompanyModule;
+import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.di.module.AppModule;
 import com.piticlistudio.playednext.game.GameComponent;
-import com.piticlistudio.playednext.game.GameModule;
-import com.piticlistudio.playednext.game.model.GamedataComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
-import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
+import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
 import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
-import com.piticlistudio.playednext.genre.GenreModule;
-import com.piticlistudio.playednext.platform.PlatformModule;
+import com.piticlistudio.playednext.game.ui.search.GameSearchModule;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
-import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 /**
  * Test cases for GameSearchFragment
@@ -67,278 +56,369 @@ import static org.mockito.Mockito.verifyZeroInteractions;
  */
 public class GameSearchFragmentTest {
 
-
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
     @Rule
-    public DaggerMockRule<GamedataComponent> componentDaggerMockRule = new DaggerMockRule<>(GamedataComponent.class)
-            .set(component -> {
-                AndroidApplication app = (AndroidApplication) InstrumentationRegistry.getInstrumentation().getTargetContext()
-                        .getApplicationContext();
-                GameComponent gameComponent = component.plus(new AppModule(app), new GameModule(), new CollectionModule(), new
-                        CompanyModule(), new GenreModule(), new PlatformModule());
-                app.setGameComponent(gameComponent);
-            });
+    public DaggerMockRule<GameSearchComponent> componentRule = new DaggerMockRule<>(GameSearchComponent.class, new GameSearchModule())
+            .addComponentDependency(GameComponent.class)
+            .addComponentDependency(AppComponent.class, new AppModule(getApp()))
+            .set(component -> getApp().setGameSearchComponent(component));
     @Rule
     public ActivityTestRule<EmptyActivity> activityTestRule = new ActivityTestRule<>(EmptyActivity.class, false, false);
-
     @Mock
-    GameSearchContract.Interactor interactor;
+    GameSearchContract.Presenter presenter;
 
-    @Mock
-    GameDetailContract.Interactor detailInteractor;
+    private GameSearchFragment getFragment() {
+        return activityTestRule.getActivity().currentFragment;
+    }
+
+    private AndroidApplication getApp() {
+        return (AndroidApplication) InstrumentationRegistry.getInstrumentation()
+                .getTargetContext().getApplicationContext();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        activityTestRule.launchActivity(null);
+    }
 
     @Test
-    public void given_NoPreviousData_When_NoSearch_Then_showsInitialViews() throws Exception {
+    public void Given_Launched_When_Attaches_Then_AttachesPresenter() throws Exception {
+        verify(presenter).attachView(getFragment());
+    }
 
-        activityTestRule.launchActivity(null);
+    @Test
+    public void Given_Launched_When_onDestroyView_Then_DetachesPresenter() throws Exception {
+        // Act
+        getFragment().onDestroyView();
+
+        // Assert
+        verify(presenter).detachView(false);
+    }
+
+    @Test
+    public void Given_Idle_When_ActivityCreated_Then_ShowsInitialView() throws Exception {
 
         onView(withId(R.id.progress)).check(matches(not(isDisplayed())));
         onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(0));
         onView(withId(R.id.initialstateview)).check(matches(isDisplayed()));
-        onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.withAlpha(1)));
+        onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
         onView(withText(R.string.game_search_emptyview_title)).check(matches(isDisplayed()));
-        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isNotVisible()));
-        verifyZeroInteractions(interactor);
+        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(false)));
+        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
+        onView(withId(R.id.searchview)).check(matches(isDisplayed()));
+        onView(withId(R.id.searchview)).check(matches(CustomMatchers.isSearchIconified(false)));
     }
 
     @Test
-    public void given_HasMoreDataToLoad_When_SearchTerms_Then_LoadsMoreItems() throws Exception {
-
-        // Ensure that keyboard is hidden
-        /// adb shell settings put secure show_ime_with_hard_keyboard 0
-
-        activityTestRule.launchActivity(null);
-
-        // Arrange
-        doAnswer(invocation -> {
-            String query = (String) invocation.getArguments()[0];
-            int offset = (int) invocation.getArguments()[1];
-            int limit = (int) invocation.getArguments()[2];
-
-            List<Game> data = new ArrayList<>();
-            for (int i = offset; i < offset + limit; i++) {
-                data.add(GameFactory.provide(i, query + i));
-            }
-            return Observable.just(data).delay(2, TimeUnit.SECONDS);
-        }).when(interactor).search(anyString(), anyInt(), anyInt());
+    public void Given_SearchInput_When_InputsText_Then_RequestsPresenter() throws Exception {
 
         onView(withId(R.id.searchview)).perform(click());
+        onView(isAssignableFrom(EditText.class)).perform(typeText("mario"));
 
-        onView(isAssignableFrom(EditText.class)).perform(typeText("mario"), pressImeActionButton());
-
-        onView(withId(R.id.progress)).check(matches(isDisplayed()));
-
-        Thread.sleep(3000); // Wait to fill data
-
-        verify(interactor).search("mario", 0, 15);
-        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(16)); //+1 for the loading more
-        onView(withId(R.id.progress)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isNotVisible()));
-
-        // Scroll to bottom to load more items
-        onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
-        onView(withId(R.id.loadmore_progress)).check(matches(isDisplayed()));
-        Thread.sleep(3000);
-
-        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(31)); //+1 for the loading more
-        verify(interactor).search("mario", 16, 15);
-        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isNotVisible()));
+        verify(presenter).search("m", 0, getFragment().loadLimit);
+        verify(presenter).search("ma", 0, getFragment().loadLimit);
+        verify(presenter).search("mar", 0, getFragment().loadLimit);
+        verify(presenter).search("mari", 0, getFragment().loadLimit);
+        verify(presenter).search("mario", 0, getFragment().loadLimit);
     }
 
     @Test
-    public void given_HasNoMoreDataToLoad_When_SearchTerms_Then_DoesNotRequestMoreItems() throws Exception {
+    public void Given_Idle_When_PressCloseButton_Then_NotifiesListener() throws Exception {
 
-        // Ensure that keyboard is hidden
-        /// adb shell settings put secure show_ime_with_hard_keyboard 0
-        activityTestRule.launchActivity(null);
+        GameSearchFragment.IGameSearchFragmentListener listener = mock(GameSearchFragment.IGameSearchFragmentListener.class);
 
-        // Arrange
-        doAnswer(invocation -> {
-            String query = (String) invocation.getArguments()[0];
-            int offset = (int) invocation.getArguments()[1];
-            int limit = (int) invocation.getArguments()[2];
+        getFragment().setListener(listener);
 
-            List<Game> data = new ArrayList<>();
-            for (int i = offset; i < limit / 2; i++) {
-                data.add(GameFactory.provide(i, query + i));
-            }
-            return Observable.just(data).delay(2, TimeUnit.SECONDS);
-        }).when(interactor).search(anyString(), anyInt(), anyInt());
+        // Act
+        onView(withId(R.id.closeBtn)).perform(click());
 
-        onView(withId(R.id.searchview)).perform(click());
+        // Assert
+        verify(listener).onCloseSearchClicked(any());
+    }
 
-        onView(isAssignableFrom(EditText.class)).perform(typeText("mario"), pressImeActionButton());
+    @Test
+    public void Given_Idle_When_ShowLoading_Then_ShowsLoading() throws Throwable {
 
-        onView(withId(R.id.progress)).check(matches(isDisplayed()));
+        activityTestRule.runOnUiThread(() -> getFragment().showLoading());
 
-        Thread.sleep(3000);
+        onView(withId(R.id.progress)).check(matches(CustomMatchers.isVisibleToUser(true)));
+    }
 
-        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(7));
-        onView(withId(R.id.progress)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isNotVisible()));
+    @Test
+    public void Given_InitialViewState_When_ShowContent_Then_HidesInitialView() throws Throwable {
 
-        // Scroll to bottom to load more items
-        onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
+        onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
+
+        activityTestRule.runOnUiThread(() -> getFragment().showContent());
+
+        // Assert
+        onView(withId(R.id.progress)).check(matches(CustomMatchers.isVisibleToUser(false)));
+        onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
+    }
+
+    @Test
+    public void Given_ErrorViewState_When_ShowContent_Then_HidesErrorView() throws Throwable {
+
+        activityTestRule.runOnUiThread(() -> getFragment().showError(new Exception("bla")));
+
+        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(true)));
+
+        activityTestRule.runOnUiThread(() -> getFragment().showContent());
+
+        // Assert
+        onView(withId(R.id.progress)).check(matches(CustomMatchers.isVisibleToUser(false)));
+        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(false)));
+    }
+
+    @Test
+    public void Given_EmptyList_When_SetData_Then_ShowsData() throws Throwable {
+
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            data.add(GameFactory.provide(10, "title"));
+        }
+
+        // Act
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
+
+        // Assert
+        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(10));
         onView(withId(R.id.loadmore_progress)).check(doesNotExist());
-
-        Thread.sleep(3000);
-
-        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(7)); //+1 for the loading more
-        verify(interactor).search("mario", 0, 15);
-        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isNotVisible()));
+        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
     }
 
     @Test
-    public void given_RequestError_when_SearchTerms_Then_ShowErrorView() throws Exception {
+    public void Given_EmptyList_When_SetEmptyData_Then_ShowsEmptyStateView() throws Throwable {
 
-        activityTestRule.launchActivity(null);
+        List<Game> data = new ArrayList<>();
 
-        // Arrange
-        final Throwable error = new Exception("Could not connect");
-        doAnswer(invocation -> Observable.error(error).delay(3, TimeUnit.SECONDS)).when(interactor).search(anyString(), anyInt(), anyInt());
+        // Act
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
 
-        onView(withId(R.id.searchview)).perform(click());
-
-        onView(isAssignableFrom(EditText.class)).perform(typeText("mario"), pressImeActionButton());
-
-        onView(withId(R.id.progress)).check(matches(isDisplayed()));
-
-        Thread.sleep(3000);
-
-        verify(interactor).search("mario", 0, 15);
+        // Assert
         onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(0));
-        onView(withId(R.id.progress)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.withAlpha(1)));
-        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isNotVisible()));
+        onView(withId(R.id.loadmore_progress)).check(doesNotExist());
+        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
     }
 
     @Test
-    public void given_RequestError_when_LoadingMore_Then_ShowErrorAndPreviousData() throws Exception {
+    public void Given_settingMaxItems_When_SetData_Then_ShowDataAndLoadMoreRow() throws Throwable {
 
-        activityTestRule.launchActivity(null);
+        Espresso.closeSoftKeyboard();
+        int maxItems = getFragment().loadLimit;
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < maxItems; i++) {
+            data.add(GameFactory.provide(10, "title"));
+        }
 
-        // Arrange
-        final Throwable error = new Exception("Could not connect");
-        doAnswer(new Answer() {
+        // Act
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
 
-            private int callCount = 0;
+        // Assert
+        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
+        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(maxItems + 1)); // Plus load more item
+    }
 
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                if (callCount == 1) {
-                    return Observable.error(error).delay(3, TimeUnit.SECONDS);
-                }
-                callCount++;
-                String query = (String) invocation.getArguments()[0];
-                int offset = (int) invocation.getArguments()[1];
-                int limit = (int) invocation.getArguments()[2];
+    @Test
+    public void Given_MaxLoadedList_When_SwipingDown_Then_RequestsMoreData() throws Throwable {
 
-                List<Game> data = new ArrayList<>();
-                for (int i = offset; i < offset + limit; i++) {
-                    data.add(GameFactory.provide(i, query + i));
-                }
-                return Observable.just(data).delay(2, TimeUnit.SECONDS);
-            }
-        }).when(interactor).search(anyString(), anyInt(), anyInt());
+        int maxItems = getFragment().loadLimit;
 
-        onView(withId(R.id.searchview)).perform(click());
+        Espresso.closeSoftKeyboard();
 
-        onView(isAssignableFrom(EditText.class)).perform(typeText("mario"), pressImeActionButton());
-
-        onView(withId(R.id.progress)).check(matches(isDisplayed()));
-
-        Thread.sleep(3000);
-
-        verify(interactor).search("mario", 0, 15);
-        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(16));
-        onView(withId(R.id.progress)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isNotVisible()));
-
-        // Scroll to bottom to load more items
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < maxItems; i++) {
+            data.add(GameFactory.provide(10, "title"));
+        }
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
         onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
-        onView(withId(R.id.loadmore_progress)).check(doesNotExist());
 
-        Thread.sleep(3000);
-
-        verify(interactor).search("mario", 16, 15);
-        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(15)); // When fails while loading more, remove that cell
-        // from the adapter
-        // TODO cannot check snackbar
-        //onView(allOf(withId(android.support.design.R.id.snackbar_text), withParent(withId(android.R.id.content)))).check(matches
-//                (isDisplayed()));
-//        onView(withId(android.support.design.R.id.snackbar_action)).check(matches(isDisplayed()));
-//        onView(withId(android.support.design.R.id.snackbar_action)).check(matches(withText(R.string.game_search_error_retry_button)));
-//        onView(withId(android.support.design.R.id.snackbar_action)).perform(click());
+        // Assert
 //        onView(withId(R.id.loadmore_progress)).check(matches(isDisplayed()));
-//        onView(withId(R.id.progress)).check(matches(isDisplayed()));
-//
-//        Thread.sleep(3000);
-//
-//        verify(interactor).search("mario", 16, 15);
-//        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(31));
+        verify(presenter).search("", maxItems + 1, maxItems);
     }
 
     @Test
-    public void given_searchHasNoResults_When_searchingName_Then_showEmptyView() throws Exception {
+    public void Given_NotFilledList_When_SwipingDown_Then_DoesNotRequestMoreData() throws Throwable {
 
-        activityTestRule.launchActivity(null);
+        int maxItems = getFragment().loadLimit;
+
+        Espresso.closeSoftKeyboard();
+
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < maxItems / 2; i++) {
+            data.add(GameFactory.provide(10, "title"));
+        }
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
+        onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
+
+        // Assert
+        verify(presenter, never()).search("", maxItems + 1, maxItems);
+    }
+
+    @Test
+    public void Given_FilledList_When_SetData_Then_AppendsData() throws Throwable {
 
         // Arrange
-        doAnswer(invocation -> {
-            List<Game> data = new ArrayList<>();
-            return Observable.just(data).delay(2, TimeUnit.SECONDS);
-        }).when(interactor).search(anyString(), anyInt(), anyInt());
+        int maxItems = getFragment().loadLimit;
 
-        onView(withId(R.id.searchview)).perform(click());
+        Espresso.closeSoftKeyboard();
 
-        onView(isAssignableFrom(EditText.class)).perform(typeText("mario"), pressImeActionButton());
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < maxItems; i++) {
+            data.add(GameFactory.provide(10, "title"));
+        }
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
+        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(maxItems + 1));
+        onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
 
-        onView(withId(R.id.progress)).check(matches(isDisplayed()));
 
-        Thread.sleep(3000);
+        // Act
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
 
-        verify(interactor).search("mario", 0, 15);
-        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(0));
-        onView(withId(R.id.progress)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isNotVisible()));
-        onView(withId(R.id.emptystateview)).check(matches(not(CustomMatchers.isNotVisible())));
+        // Assert
+        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(maxItems * 2));
     }
 
     @Test
-    public void given_searchResults_When_TappingOnItem_Then_LaunchesDetail() throws Exception {
+    public void Given_InitialViewState_When_ShowError_Then_ShowsErrorAndHideInitialView() throws Throwable {
 
-        activityTestRule.launchActivity(null);
+        onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
 
-        doAnswer(invocation -> {
-            String query = (String) invocation.getArguments()[0];
-            int offset = (int) invocation.getArguments()[1];
-            int limit = (int) invocation.getArguments()[2];
+        // Act
+        Throwable error = new Exception("bla");
+        activityTestRule.runOnUiThread(() -> getFragment().showError(error));
 
-            List<Game> data = new ArrayList<>();
-            for (int i = offset; i < offset + limit; i++) {
-                data.add(GameFactory.provide(i, query + i));
-            }
-            return Observable.just(data).delay(2, TimeUnit.SECONDS);
-        }).when(interactor).search(anyString(), anyInt(), anyInt());
+        // Assert
+        onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
+        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(true)));
+        onView(withText("bla")).check(matches(isDisplayed()));
+    }
 
-        doAnswer(invocation -> Observable.just(GameFactory.provide(10, "title"))).when(detailInteractor).load(anyInt());
+    @Test
+    public void Given_EmptyViewState_When_ShowError_Then_ShowsErrorAndHidesEmptyView() throws Throwable {
 
+        // Arrange
+        List<Game> data = new ArrayList<>();
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
+        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
 
-        ViewInteraction searchAutoComplete3 = onView(allOf(withId(R.id.search_src_text), withParent(allOf(withId(R.id.search_plate), withParent(withId(R.id.search_edit_frame)))), isDisplayed()));
-        searchAutoComplete3.perform(replaceText("mario"), closeSoftKeyboard());
+        // Act
+        Throwable error = new Exception("bla");
+        activityTestRule.runOnUiThread(() -> getFragment().showError(error));
 
-        Thread.sleep(3000); // TODO Idling resources
+        // Assert
+        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
+        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(true)));
+        onView(withText("bla")).check(matches(isDisplayed()));
+    }
 
-        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+    @Test
+    public void Given_IdleList_When_ShowError_Then_ShowsError() throws Throwable {
 
-        onView(withId(R.id.backdrop)).check(matches(not(doesNotExist())));
+        // Arrange
+        int maxItems = getFragment().loadLimit;
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < maxItems / 2; i++) {
+            data.add(GameFactory.provide(10, "title"));
+        }
+        activityTestRule.runOnUiThread(() -> {
+            getFragment().setData(data);
+            getFragment().showContent();
+        });
+        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(maxItems / 2));
+        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(false)));
+
+        // Act
+        Throwable error = new Exception("bla");
+        activityTestRule.runOnUiThread(() -> getFragment().showError(error));
+
+        // Assert
+        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(true)));
+        onView(withText("bla")).check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void Given_LoadingMoreItems_When_ShowError_Then_ShowsSnackbarError() throws Throwable {
+
+        int maxItems = getFragment().loadLimit;
+
+        Espresso.closeSoftKeyboard();
+
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < maxItems; i++) {
+            data.add(GameFactory.provide(10, "title"));
+        }
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
+        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(maxItems + 1));
+        onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
+
+        // Act
+        Throwable error = new Exception("bla");
+        activityTestRule.runOnUiThread(() -> getFragment().showError(error));
+
+        // Assert
+        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(false)));
+        onView(withId(R.id.searchlist)).check(matches(isDisplayingAtLeast(100)));
+//        onView(allOf(withId(android.support.design.R.id.snackbar_text), withParent(withId(R.id.content)))).check(matches(isDisplayed()));
+        onView(withText("bla")).check(matches(CustomMatchers.isVisibleToUser(true)));
+        onView(withId(android.support.design.R.id.snackbar_action)).check(matches(isDisplayed()));
+        onView(withId(android.support.design.R.id.snackbar_action)).check(matches(withText(R.string.game_search_error_retry_button)));
+        onView(withId(android.support.design.R.id.snackbar_action)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void Given_LoadingMoreErrorIsDisplayed_When_ClickOnRetry_Then_RetriesRequest() throws Throwable {
+
+        // Arrange
+        int maxItems = getFragment().loadLimit;
+
+        Espresso.closeSoftKeyboard();
+
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < maxItems; i++) {
+            data.add(GameFactory.provide(10, "title"));
+        }
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
+        onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
+
+        Throwable error = new Exception("bla");
+        activityTestRule.runOnUiThread(() -> getFragment().showError(error));
+
+        // Act
+        onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(false)));
+        onView(withId(R.id.searchlist)).check(matches(isDisplayingAtLeast(100)));
+        onView(withId(android.support.design.R.id.snackbar_action)).check(matches(isDisplayed()));
+        onView(withId(android.support.design.R.id.snackbar_action)).perform(click());
+
+        // Assert
+        verify(presenter).search("", maxItems + 1, maxItems);
+    }
+
+    @Test
+    public void Given_FilledList_When_ClickOnItem_Then_LaunchesDetailView() throws Throwable {
+
+// Arrange
+        int maxItems = getFragment().loadLimit;
+
+        Espresso.closeSoftKeyboard();
+
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < maxItems; i++) {
+            data.add(GameFactory.provide(10, "title_" + i));
+        }
+        activityTestRule.runOnUiThread(() -> {
+            getFragment().setData(data);
+            getFragment().showContent();
+        });
+
+        // ACt
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItem(hasDescendant(withText("title_5")), click()));
+
+        // Assert
+        onView(withId(R.id.searchlist)).check(doesNotExist());
+        onView(withId(R.id.backdrop)).check(matches(CustomMatchers.isVisibleToUser(true)));
     }
 }

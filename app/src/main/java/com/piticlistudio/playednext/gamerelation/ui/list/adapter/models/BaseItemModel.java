@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModelWithHolder;
+import com.piticlistudio.playednext.R;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -42,5 +43,6 @@ public abstract class BaseItemModel<T extends BaseItemHolder> extends EpoxyModel
         holder.itemView.setOnClickListener(clickListener);
         holder.rightSwipeMessage.setText(rightSwipeMessage);
         holder.leftSwipeMessage.setText(leftSwipeMessage);
+        holder.itemView.findViewById(R.id.overlay).setTranslationX(0);
     }
 }
