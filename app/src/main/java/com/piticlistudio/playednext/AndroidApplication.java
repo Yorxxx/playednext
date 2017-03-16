@@ -17,6 +17,7 @@ import com.piticlistudio.playednext.gamerelation.DaggerGameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.GameRelationModule;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
+import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListComponent;
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
 import com.piticlistudio.playednext.relationinterval.RelationIntervalModule;
@@ -40,6 +41,7 @@ public class AndroidApplication extends Application {
     private GameSearchComponent searchComponent;
     public GameRelationComponent relationComponent;
     private GameRelationDetailComponent relationDetailComponent;
+    private GameRelationListComponent relationListComponent;
 
     RealmMigration migration = new RealmMigration() {
         @Override
@@ -157,6 +159,10 @@ public class AndroidApplication extends Application {
     }
 
     public GameRelationDetailComponent getRelationDetailComponent() { return this.relationDetailComponent; }
+
+    public GameRelationListComponent getRelationListComponent() {
+        return relationListComponent;
+    }
 
     @VisibleForTesting
     public void setGameComponent(GameComponent component) {

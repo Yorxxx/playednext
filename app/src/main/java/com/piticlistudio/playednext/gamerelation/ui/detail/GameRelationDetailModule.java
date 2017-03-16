@@ -1,6 +1,5 @@
 package com.piticlistudio.playednext.gamerelation.ui.detail;
 
-import com.piticlistudio.playednext.game.model.repository.GameRepository;
 import com.piticlistudio.playednext.game.model.repository.IGameRepository;
 import com.piticlistudio.playednext.gamerelation.model.repository.IGameRelationRepository;
 import com.piticlistudio.playednext.gamerelation.ui.detail.interactor.GameRelationDetailInteractor;

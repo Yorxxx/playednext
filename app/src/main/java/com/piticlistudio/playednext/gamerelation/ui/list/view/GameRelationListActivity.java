@@ -1,6 +1,5 @@
 package com.piticlistudio.playednext.gamerelation.ui.list.view;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -18,20 +17,22 @@ import android.view.View;
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.di.component.AppComponent;
-import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.ui.detail.view.GameDetailActivity;
 import com.piticlistudio.playednext.game.ui.search.view.GameSearchFragment;
-import com.piticlistudio.playednext.gamerelation.DaggerGameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
-import com.piticlistudio.playednext.gamerelation.GameRelationModule;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
+import com.piticlistudio.playednext.gamerelation.ui.list.DaggerGameRelationListComponent;
+import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListComponent;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListContract;
+import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListModule;
 import com.piticlistudio.playednext.gamerelation.ui.list.adapter.GameRelationListAdapter;
 import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 import com.piticlistudio.playednext.ui.recyclerview.SwipeTouchHelper;
 import com.piticlistudio.playednext.ui.widget.RevealBackgroundView;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,17 +54,31 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     Unbinder unbinder;
     @BindView(R.id.reveal)
     RevealBackgroundView reveal;
-    private GameRelationComponent component;
-    private GameRelationListContract.Presenter presenter;
+    @Inject
+    public GameRelationListContract.Presenter presenter;
     private GameSearchFragment searchView;
-    private GameRelationListAdapter adapter;
+    @Inject
+    public GameRelationListAdapter adapter;
+    private GameRelationListComponent component;
 
-    protected GameComponent getGameComponent() {
-        return ((AndroidApplication) getApplication()).getGameComponent();
+    protected GameRelationComponent getRelationComponent() {
+        return ((AndroidApplication) getApplication()).relationComponent;
     }
 
     protected AppComponent getAppComponent() {
-        return ((AndroidApplication) getApplication()).getApplicationComponent();
+        return ((AndroidApplication) getApplication()).appComponent;
+    }
+
+    protected GameRelationListComponent getComponent() {
+        component = ((AndroidApplication)getApplication()).getRelationListComponent();
+        if (component == null) {
+            component = DaggerGameRelationListComponent.builder()
+                    .appComponent(getAppComponent())
+                    .gameRelationComponent(getRelationComponent())
+                    .gameRelationListModule(new GameRelationListModule())
+                    .build();
+        }
+        return component;
     }
 
     @Override
@@ -72,15 +87,10 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
         setContentView(R.layout.gamerelation_list_activity);
         unbinder = ButterKnife.bind(this);
 
-        component = DaggerGameRelationComponent.builder()
-                .appComponent(getAppComponent())
-                .gameComponent(getGameComponent())
-                .gameRelationModule(new GameRelationModule())
-                .build();
-        presenter = component.listPresenter();
+        getComponent().inject(this);
         presenter.attachView(this);
 
-        adapter = component.listAdapter();
+//        adapter = component.listAdapter();
         listview.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
         listview.setLayoutManager(new LinearLayoutManager(getParent()));
         listview.setAdapter(adapter);
@@ -91,6 +101,13 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
         itemTouchHelper.attachToRecyclerView(listview);
 
         loadData();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.detachView(false);
+        component = null;
     }
 
     /**

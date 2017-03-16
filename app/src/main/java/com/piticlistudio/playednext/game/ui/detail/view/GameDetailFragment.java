@@ -228,12 +228,12 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
         if (screenshotViewerDisposable != null)
             screenshotViewerDisposable.dispose();
         screenshotViewerDisposable = null;
-        relationDetailLayout.onDestroy();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        relationDetailLayout.onDestroy();
         unbinder.unbind();
     }
 
