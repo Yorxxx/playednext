@@ -130,5 +130,41 @@
   "iOS": {
     "color": "#ffffff",
     "acronym": "IOS"
+  },
+  "Wii U": {
+    "color": "#1C9DFF",
+    "acronym": "WIIU"
+  },
+  "N-Gage": {
+    "color": "#a8a8a8",
+    "acronym": "NGAGE"
+  },
+  "Tapwave Zodiac": {
+    "color": "#939393",
+    "acronym": "ZOD"
+  },
+  "PlayStation Network": {
+    "color": "#192730",
+    "acronym": "PSN"
+  },
+  "PlayStation Vita": {
+    "color": "#003287",
+    "acronym": "VITA"
+  },
+  "Virtual Console (Nintendo)": {
+    "color": "#ff0000",
+    "acronym": "VC"
+  },
+  "PlayStation 4": {
+    "color": "#025bd9",
+    "acronym": "PS4"
+  },
+  "Xbox One": {
+    "color": "#3b7e14",
+    "acronym": "ONE"
+  },
+  "3DO Interactive Multiplayer": {
+    "color": "#424242",
+    "acronym": "3D0"
   }
 }

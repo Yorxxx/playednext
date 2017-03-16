@@ -353,4 +353,94 @@ public class PlatformUIUtilsTest {
     public void Given_iOS_When_getColor_Then_ReturnsWhite() throws Exception {
         assertEquals(Color.WHITE, utils.getColor("iOS"));
     }
+
+    @Test
+    public void Given_WiiU_When_getAcronym_Then_ReturnsWiiU() throws Exception {
+        assertEquals("WIIU", utils.getAcronym("Wii U"));
+    }
+
+    @Test
+    public void Given_WiiU_When_getColor_Then_ReturnsWiiUColor() throws Exception {
+        assertEquals(Color.parseColor("#1C9DFF"), utils.getColor("Wii U"));
+    }
+
+    @Test
+    public void Given_NGage_When_GetAcronym_Then_ReturnsNGAGE() throws Exception {
+        assertEquals("NGAGE", utils.getAcronym("N-Gage"));
+    }
+
+    @Test
+    public void Given_NGage_When_GetColor_Then_ReturnsNGageColor() throws Exception {
+        assertEquals(Color.parseColor("#a8a8a8"), utils.getColor("N-Gage"));
+    }
+
+    @Test
+    public void Given_TapwaveZodiac_When_GetAcronym_Then_ReturnsZod() throws Exception {
+        assertEquals("ZOD", utils.getAcronym("Tapwave Zodiac"));
+    }
+
+    @Test
+    public void Given_TapwaveZodiac_When_GetColor_Then_ReturnsColor() throws Exception {
+        assertEquals(Color.parseColor("#939393"), utils.getColor("Tapwave Zodiac"));
+    }
+
+    @Test
+    public void Given_PlayStationNetwork_When_GetAcronym_Then_ReturnsPSN() throws Exception {
+        assertEquals("PSN", utils.getAcronym("PlayStation Network"));
+    }
+
+    @Test
+    public void Given_PlayStationNetwork_When_GetColor_Then_ReturnsPSNColor() throws Exception {
+        assertEquals(Color.parseColor("#192730"), utils.getColor("PlayStation Network"));
+    }
+
+    @Test
+    public void Given_PlayStationVita_When_GetAcronym_Then_ReturnsVita() throws Exception {
+        assertEquals("VITA", utils.getAcronym("PlayStation Vita"));
+    }
+
+    @Test
+    public void Given_PlayStationVita_When_getColor_Then_ReturnsVitaColor() throws Exception {
+        assertEquals(Color.parseColor("#003287"), utils.getColor("PlayStation Vita"));
+    }
+
+    @Test
+    public void Given_VirtualConsole_When_GetAcronym_Then_ReturnsVC() throws Exception {
+        assertEquals("VC", utils.getAcronym("Virtual Console (Nintendo)"));
+    }
+
+    @Test
+    public void Given_VirtualConsole_When_GetColor_Then_ReturnsVCColor() throws Exception {
+        assertEquals(Color.RED, utils.getColor("Virtual Console (Nintendo)"));
+    }
+
+    @Test
+    public void Given_PlayStation4_When_getAcronym_Then_ReturnsPS4() throws Exception {
+        assertEquals("PS4", utils.getAcronym("PlayStation 4"));
+    }
+
+    @Test
+    public void Given_PlayStation4_When_GetColor_Then_ReturnsPS4Color() throws Exception {
+        assertEquals(Color.parseColor("#025bd9"), utils.getColor("PlayStation 4"));
+    }
+
+    @Test
+    public void Given_XboxOne_When_getAcronym_Then_ReturnsXboxOne() throws Exception {
+        assertEquals("ONE", utils.getAcronym("Xbox One"));
+    }
+
+    @Test
+    public void Given_XboxOne_When_getColor_Then_ReturnsOneColor() throws Exception {
+        assertEquals(Color.parseColor("#3b7e14"), utils.getColor("Xbox One"));
+    }
+
+    @Test
+    public void Given_3DOInteractiveMultiplayer_When_getAcronym_Then_Returns3D0() throws Exception {
+        assertEquals("3D0", utils.getAcronym("3DO Interactive Multiplayer"));
+    }
+
+    @Test
+    public void Given_3DOInteractiveMultiplayer_When_GetColor_Then_Returns3D0Color() throws Exception {
+        assertEquals(Color.parseColor("#424242"), utils.getColor("3DO Interactive Multiplayer"));
+    }
 }
