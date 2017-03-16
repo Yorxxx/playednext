@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.game.model.repository.datasource;
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.TestSchedulerRule;
-import com.piticlistudio.playednext.game.model.GamedataModule;
+import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 
@@ -18,7 +18,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.TestObserver;
 
 import static org.junit.Assert.assertEquals;
@@ -36,7 +35,7 @@ public class IGDBGameRepositoryImplTest extends BaseTest {
     public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
 
     @Mock
-    GamedataModule.NetService service;
+    GameModule.NetService service;
 
     @InjectMocks
     private IGDBGameRepositoryImpl repository;
