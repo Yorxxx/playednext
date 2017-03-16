@@ -3,40 +3,42 @@ package com.piticlistudio.playednext.game.model.repository;
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.TestSchedulerRule;
-import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.collection.model.entity.Collection;
+import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
 import com.piticlistudio.playednext.collection.model.repository.ICollectionRepository;
-import com.piticlistudio.playednext.company.model.CompanyModule;
 import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.company.model.repository.ICompanyRepository;
-import com.piticlistudio.playednext.di.module.AppModule;
-import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.model.BaseGameTest;
-import com.piticlistudio.playednext.game.model.GamedataComponent;
-import com.piticlistudio.playednext.game.model.GamedataModule;
 import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.game.model.entity.GameMapper;
+import com.piticlistudio.playednext.game.model.entity.RealmGameMapper;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
 import com.piticlistudio.playednext.gamerelease.model.entity.datasource.RealmGameRelease;
-import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
+import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.genre.model.repository.IGenreRepository;
 import com.piticlistudio.playednext.mvp.model.entity.NetworkEntityIdRelation;
-import com.piticlistudio.playednext.platform.PlatformModule;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
+import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
 import com.piticlistudio.playednext.platform.model.repository.IPlatformRepository;
+import com.piticlistudio.playednext.releasedate.model.entity.ReleaseDate;
+import com.piticlistudio.playednext.releasedate.model.entity.ReleaseDateMapper;
 import com.piticlistudio.playednext.releasedate.model.entity.datasource.RealmReleaseDate;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,6 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import io.realm.RealmList;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -55,6 +56,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -78,13 +80,16 @@ public class GameRepositoryTest extends BaseGameTest {
     IGenreRepository genreRepository;
     @Mock
     IPlatformRepository platformRepository;
+    @Mock
+    ReleaseDateMapper dateMapper;
+    @Mock
+    GameMapper mapper;
+    @Mock
+    RealmGameMapper realmGameMapper;
 
+    @InjectMocks
     private GameRepository repository;
-    @Rule
-    public DaggerMockRule<GamedataComponent> rule = new DaggerMockRule<>(GamedataComponent.class, new GamedataModule())
-            .set(component -> repository = component.plus(new AppModule(null), new GameModule(), new CollectionModule(), new CompanyModule
-                    (), new GenreModule(), new PlatformModule())
-                    .repository());
+
     private RealmGame localData = GameFactory.provideRealmGame(50, "title");
 
     @Before
@@ -93,28 +98,10 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void save() throws Exception {
+    public void Given_RealmMapError_When_Save_Then_EmitsError() throws Exception {
+
         Game data = GameFactory.provide(50, "name");
-        doAnswer(invocation -> Observable.just(invocation.getArguments()[0])).when(dataRepository).save(any());
-
-        // Act
-        TestObserver<Game> result = repository.save(data).test();
-        result.awaitTerminalEvent();
-
-        // Assert
-        result.assertNoErrors()
-                .assertComplete()
-                .assertValueCount(1)
-                .assertValue(check(value -> {
-                    assertEquals(data, value);
-                }));
-        verify(dataRepository).save(any(RealmGame.class));
-    }
-
-    @Test
-    public void save_mapInvalid() throws Exception {
-
-        Game data = null;
+        when(realmGameMapper.transform(data)).thenReturn(Optional.absent());
 
         // Act
         TestObserver<Game> result = repository.save(data).test();
@@ -128,57 +115,118 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void load() throws Exception {
+    public void Given_SaveError_When_Save_Then_EmitsError() throws Exception {
 
-        when(dataRepository.load(50)).thenReturn(Observable.just(localData));
-
-        // Act
-        TestObserver<Game> result = repository.load(50).test();
-        result.awaitTerminalEvent();
-
-        // Assert
-        result.assertNoErrors()
-                .assertComplete()
-                .assertValueCount(1)
-                .assertValue(check(game -> assertTrue(equalsGame(game, localData))));
-    }
-
-    @Test
-    public void load_notFound() throws Exception {
+        Game data = GameFactory.provide(50, "name");
+        RealmGame expectedData = GameFactory.provideRealmGame(50, "name");
+        when(realmGameMapper.transform(data)).thenReturn(Optional.of(expectedData));
 
         Throwable error = new Exception("bla");
-        when(dataRepository.load(50)).thenReturn(Observable.error(error));
+        doReturn(Observable.error(error)).when(dataRepository).save(expectedData);
 
         // Act
-        TestObserver<Game> result = repository.load(50).test();
-        result.awaitTerminalEvent();
-
-        // Assert
-        result.assertError(error)
-                .assertNoValues()
-                .assertNotComplete();
-    }
-
-    @Test
-    public void load_mapError() throws Exception {
-
-        when(dataRepository.load(50)).thenReturn(Observable.just(new RealmGame()));
-
-        // Act
-        TestObserver<Game> result = repository.load(50).test();
+        TestObserver<Game> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
         result.assertError(Throwable.class)
                 .assertNoValues()
                 .assertNotComplete();
+        verify(dataRepository).save(expectedData);
+        verify(realmGameMapper).transform(data);
     }
 
     @Test
-    public void load_requestsAggregatedData() throws Exception {
+    public void Given_MapError_When_Save_Then_EmitsError() throws Exception {
+
+        Game data = GameFactory.provide(50, "name");
+        RealmGame expectedData = GameFactory.provideRealmGame(50, "name");
+        when(realmGameMapper.transform(data)).thenReturn(Optional.of(expectedData));
+        when(mapper.transform(expectedData)).thenReturn(Optional.absent());
+
+        doAnswer(invocation -> Observable.just(invocation.getArguments()[0])).when(dataRepository).save(any());
+
+        // Act
+        TestObserver<Game> result = repository.save(data).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertError(Throwable.class)
+                .assertNoValues()
+                .assertNotComplete();
+        verify(dataRepository).save(expectedData);
+        verify(realmGameMapper).transform(data);
+        verify(mapper).transform(expectedData);
+    }
+
+    @Test
+    public void Given_Success_When_Save_Then_EmitsData() throws Exception {
+
+        Game data = GameFactory.provide(50, "name");
+        RealmGame expectedData = GameFactory.provideRealmGame(50, "name");
+        when(realmGameMapper.transform(data)).thenReturn(Optional.of(expectedData));
+        when(mapper.transform(expectedData)).thenReturn(Optional.of(data));
+
+        doAnswer(invocation -> Observable.just(invocation.getArguments()[0])).when(dataRepository).save(any());
+
+        // Act
+        TestObserver<Game> result = repository.save(data).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertValue(data)
+                .assertComplete()
+                .assertValueCount(1)
+                .assertNoErrors();
+        verify(dataRepository).save(expectedData);
+        verify(realmGameMapper).transform(data);
+        verify(mapper).transform(expectedData);
+    }
+
+    @Test
+    public void Given_RepositoryError_When_Load_Then_EmitsError() throws Exception {
+
+        Throwable error = new Exception("bla");
+        doReturn(Observable.error(error)).when(dataRepository).load(10);
+
+        // Act
+        TestObserver<Game> result = repository.load(10).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertError(Throwable.class)
+                .assertNoValues()
+                .assertNotComplete();
+        verify(dataRepository).load(10);
+        verifyZeroInteractions(mapper);
+    }
+
+    @Test
+    public void Given_MapError_When_Load_Then_EmitsError() throws Exception {
+
+        RealmGame data = GameFactory.provideRealmGame(10, "title");
+        doReturn(Observable.just(data)).when(dataRepository).load(10);
+
+        when(mapper.transform(data)).thenReturn(Optional.absent());
+
+        // Act
+        TestObserver<Game> result = repository.load(10).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertError(Throwable.class)
+                .assertNoValues()
+                .assertNotComplete();
+        verify(dataRepository).load(10);
+        verify(mapper).transform(data);
+    }
+
+    @Test
+    public void Given_AggregatedData_When_Load_Then_EmitsMultipleTimesWithAggregatedData() throws Exception {
 
         final int gameId = 50;
 
+        Game expected = GameFactory.provide(gameId, "title");
         IGameDatasource source = GameFactory.provideNetGame(gameId, "title");
         assertTrue(source.getCollection().isPresent());
         assertFalse(source.getCollection().get().data.isPresent());
@@ -204,6 +252,53 @@ public class GameRepositoryTest extends BaseGameTest {
             int id = (int) invocation.getArguments()[0];
             return Observable.just(Platform.create(id, "platform_" + id)).delay(20, TimeUnit.SECONDS);
         }).when(platformRepository).load(anyInt());
+
+        doReturn(Optional.of(ReleaseDate.create(10, "date"))).when(dateMapper).transform(any());
+
+        doAnswer(invocation -> {
+            IGameDatasource source1 = (IGameDatasource) invocation.getArguments()[0];
+            Game game = Game.create(gameId, "title");
+            if (source1.getCollection().isPresent() && source1.getCollection().get().data.isPresent()) {
+                ICollectionData data = source1.getCollection().get().data.get();
+                game.collection = Optional.of(Collection.create(data.getId(), data.getName()));
+            }
+            List<Company> developers = new ArrayList<>();
+            for (NetworkEntityIdRelation<ICompanyData> company : source1.getDevelopers()) {
+                if (company.data.isPresent()) {
+                    ICompanyData data = company.getData();
+                    developers.add(Company.create(data.getId(), data.getName()));
+                }
+            }
+            game.developers = developers;
+
+            List<Company> publishers = new ArrayList<>();
+            for (NetworkEntityIdRelation<ICompanyData> company : source1.getDevelopers()) {
+                if (company.data.isPresent()) {
+                    ICompanyData data = company.getData();
+                    publishers.add(Company.create(data.getId(), data.getName()));
+                }
+            }
+            game.publishers = publishers;
+
+            List<Genre> genres = new ArrayList<>();
+            for (NetworkEntityIdRelation<IGenreData> genre : source1.getGenres()) {
+                if (genre.data.isPresent()) {
+                    IGenreData data = genre.getData();
+                    genres.add(Genre.create(data.getId(), data.getName()));
+                }
+            }
+            game.genres = genres;
+
+            List<Platform> platforms = new ArrayList<>();
+            for (NetworkEntityIdRelation<IPlatformData> platform : source1.getPlatforms()) {
+                if (platform.data.isPresent()) {
+                    IPlatformData data = platform.getData();
+                    platforms.add(Platform.create(data.getId(), data.getName()));
+                }
+            }
+            game.platforms = platforms;
+            return Optional.of(game);
+        }).when(mapper).transform(source);
 
         // Act
         TestObserver<Game> result = repository.load(gameId).test();
@@ -278,43 +373,44 @@ public class GameRepositoryTest extends BaseGameTest {
                     assertEquals(source.getPlatforms().size(), game.platforms.size());
                     assertEquals(source.getReleases().size(), game.releases.size());
                 }));
-        verify(platformRepository, times(source.getPlatforms().size()+source.getReleases().size())).load(anyInt());
+        verify(platformRepository, times(source.getPlatforms().size() + source.getReleases().size())).load(anyInt());
     }
 
     @Test
-    public void search() throws Exception {
-        List<IGameDatasource> data = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            data.add(GameFactory.provideNetGame(i, "title" + i));
-        }
-        when(dataRepository.search(anyString(), anyInt(), anyInt())).thenReturn(Observable.just(data).delay(2, TimeUnit.SECONDS));
+    public void Given_SearchError_When_Search_Then_EmitsError() throws Exception {
+
+        Throwable error = new Exception("bla");
+        doReturn(Observable.error(error)).when(dataRepository).search(anyString(), anyInt(), anyInt());
 
         // Act
         TestObserver<List<Game>> result = repository.search("1", 0, 10).test();
         testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
 
         // Assert
-        result.assertNoErrors()
-                .assertComplete()
-                .assertValueCount(1)
-                .assertValue(check(games -> {
-                    assertEquals(data.size(), games.size());
-                }));
+        result.assertError(error)
+                .assertNoValues()
+                .assertNotComplete();
     }
 
     @Test
-    public void search_filtersOutInvalidMapping() throws Exception {
+    public void Given_MapError_When_Search_Then_FiltersOutInvalidMaps() throws Exception {
 
         List<IGameDatasource> data = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            data.add(GameFactory.provideNetGame(i, "title" + i));
-        }
+        IGameDatasource valid1 = GameFactory.provideNetGame(1, "title1");
+        data.add(valid1);
+        IGameDatasource valid2 = GameFactory.provideNetGame(2, "title2");
+        data.add(valid2);
         RealmGame invalid = new RealmGame();
         data.add(invalid);
         data.add(invalid);
         data.add(invalid);
         data.add(invalid);
+        Game expected1 = GameFactory.provide(1, "title1");
+        Game expected2 = GameFactory.provide(2, "title2");
         when(dataRepository.search(anyString(), anyInt(), anyInt())).thenReturn(Observable.just(data).delay(2, TimeUnit.SECONDS));
+        when(mapper.transform(invalid)).thenReturn(Optional.absent());
+        when(mapper.transform(valid1)).thenReturn(Optional.of(expected1));
+        when(mapper.transform(valid2)).thenReturn(Optional.of(expected2));
 
         // Act
         TestObserver<List<Game>> result = repository.search("1", 0, 10).test();
@@ -325,28 +421,48 @@ public class GameRepositoryTest extends BaseGameTest {
                 .assertComplete()
                 .assertValueCount(1)
                 .assertValue(check(games -> {
-                    assertEquals(20, games.size());
+                    assertEquals(2, games.size());
+                    assertTrue(games.contains(expected1));
+                    assertTrue(games.contains(expected2));
                 }));
     }
 
     @Test
-    public void search_error() throws Exception {
-
-        Throwable error = new Exception();
-        when(dataRepository.search(anyString(), anyInt(), anyInt())).thenReturn(Observable.error(error));
+    public void Given_Success_When_Search_Then_EmitsListWithAllData() throws Exception {
+        List<IGameDatasource> data = new ArrayList<>();
+        IGameDatasource valid1 = GameFactory.provideNetGame(1, "title1");
+        data.add(valid1);
+        IGameDatasource valid2 = GameFactory.provideNetGame(2, "title2");
+        data.add(valid2);
+        IGameDatasource valid3 = GameFactory.provideNetGame(3, "title3");
+        data.add(valid3);
+        Game expected1 = GameFactory.provide(1, "title1");
+        Game expected2 = GameFactory.provide(2, "title2");
+        Game expected3 = GameFactory.provide(3, "title3");
+        when(dataRepository.search(anyString(), anyInt(), anyInt())).thenReturn(Observable.just(data).delay(2, TimeUnit.SECONDS));
+        when(mapper.transform(valid1)).thenReturn(Optional.of(expected1));
+        when(mapper.transform(valid2)).thenReturn(Optional.of(expected2));
+        when(mapper.transform(valid3)).thenReturn(Optional.of(expected3));
 
         // Act
         TestObserver<List<Game>> result = repository.search("1", 0, 10).test();
-        result.awaitTerminalEvent();
+        testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
 
         // Assert
-        result.assertNoValues()
-                .assertNotComplete()
-                .assertError(Throwable.class);
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(1)
+                .assertValue(check(games -> {
+                    assertEquals(3, games.size());
+                    assertTrue(games.contains(expected1));
+                    assertTrue(games.contains(expected2));
+                    assertTrue(games.contains(expected3));
+                }));
+
     }
 
     @Test
-    public void loadCollection_noCollection() throws Exception {
+    public void Given_noCollection_When_loadCollection_Then_EmitsNothing() throws Exception {
 
         IGDBGame source = GameFactory.provideNetGame(10, "title");
         source.collection = -1;
@@ -364,7 +480,7 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadCollection_collectionAlreadyLoaded() throws Exception {
+    public void Given_CollectionAlreadyLoaded_When_loadCollection_Then_EmitsNothing() throws Exception {
 
         RealmGame source = GameFactory.provideRealmGame(10, "title");
         assertTrue(source.getCollection().isPresent());
@@ -386,7 +502,7 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadCollection_requestsCollection() throws Exception {
+    public void Given_CollectionAvailableToLoad_When_loadCollection_Then_EmitsCollection() throws Exception {
 
         IGDBGame source = GameFactory.provideNetGame(10, "title");
         assertTrue(source.getCollection().isPresent());
@@ -413,7 +529,29 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadMissingCompanies_empty() throws Exception {
+    public void Given_LoadError_When_LoadCollection_Then_EmitsError() throws Exception {
+
+        IGDBGame source = GameFactory.provideNetGame(10, "title");
+        assertTrue(source.getCollection().isPresent());
+        assertFalse(source.getCollection().get().data.isPresent());
+
+        Game to = Game.create(10, "title");
+
+        Throwable error = new Exception("bla");
+        when(collectionRepository.load(anyInt())).thenReturn(Observable.error(error));
+
+        // Act
+        TestObserver<Game> result = repository.loadCollection(source, to).test();
+        testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
+
+        // Assert
+        result.assertError(error)
+                .assertNoValues()
+                .assertNotComplete();
+    }
+
+    @Test
+    public void Given_emptyCompanies_When_LoadMissingCompanies_Then_EmitsNothing() throws Exception {
 
         // Act
         TestObserver<List<Company>> result = repository.loadMissingCompanies(new ArrayList<>(), new ArrayList<>()).test();
@@ -427,7 +565,7 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadMissingCompanies_allLoaded() throws Exception {
+    public void Given_LoadedCompanies_When_LoadMissingCompanies_Then_EmitsNothing() throws Exception {
 
         List<Company> loaded = new ArrayList<>();
         Company dev1 = Company.create(1, "name1");
@@ -451,7 +589,7 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadMissingCompanies_requestsMissing() throws Exception {
+    public void Given_NotLoadedCompanies_When_LoadMissingCompanies_Then_LoadsMissing() throws Exception {
 
         doAnswer(invocation -> {
             int id = (int) invocation.getArguments()[0];
@@ -488,81 +626,7 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadDevelopers_noDevelopers() throws Exception {
-
-        IGDBGame source = GameFactory.provideNetGame(10, "title");
-        source.developers.clear();
-        Game to = Game.create(10, "title");
-
-        // Act
-        TestObserver<Game> result = repository.loadDevelopers(source, to).test();
-        result.awaitTerminalEvent();
-
-        // Assert
-        result.assertNoErrors()
-                .assertComplete()
-                .assertNoValues();
-        verifyZeroInteractions(companyRepository);
-    }
-
-    @Test
-    public void loadDevelopers_developersAlreadyLoaded() throws Exception {
-
-        Game to = Game.create(10, "title");
-        List<Company> developers = new ArrayList<>();
-        Company dev1 = Company.create(1, "name1");
-        Company dev2 = Company.create(2, "name2");
-        developers.add(dev1);
-        developers.add(dev2);
-        to.developers = developers;
-
-        RealmGame source = GameFactory.provideRealmGame(10, "title");
-        RealmList<RealmCompany> realmCompanies = new RealmList<>();
-        realmCompanies.add(new RealmCompany(1, "name1"));
-        realmCompanies.add(new RealmCompany(2, "name2"));
-        source.setDevelopers(realmCompanies);
-
-        // Act
-        TestObserver<Game> result = repository.loadDevelopers(source, to).test();
-        result.awaitTerminalEvent();
-
-        // Assert
-        result.assertNoErrors()
-                .assertComplete()
-                .assertNoValues();
-        verifyZeroInteractions(companyRepository);
-    }
-
-    @Test
-    public void loadDevelopers_requestsDevelopers() throws Exception {
-
-        doAnswer(invocation -> {
-            int id = (int) invocation.getArguments()[0];
-            return Observable.just(Company.create(id, "company_" + id));
-        }).when(companyRepository).load(anyInt());
-
-        Game to = Game.create(10, "title");
-        to.developers = new ArrayList<>();
-
-        IGDBGame source = GameFactory.provideNetGame(10, "title");
-        assertTrue(source.getDevelopers().size() > 0);
-
-        // Act
-        TestObserver<Game> result = repository.loadDevelopers(source, to).test();
-        testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
-
-        // Assert
-        result.assertNoErrors()
-                .assertComplete()
-                .assertValueCount(1)
-                .assertValue(to);
-
-        assertEquals(to.developers.size(), source.getDevelopers().size());
-        verify(companyRepository, times(source.getDevelopers().size())).load(anyInt());
-    }
-
-    @Test
-    public void loadGenres_empty() throws Exception {
+    public void Given_NoGenres_When_LoadGenres_Then_EmitsNothing() throws Exception {
 
         IGDBGame from = GameFactory.provideNetGame(10, "title");
         from.genres.clear();
@@ -580,7 +644,7 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadGenres_genresAlreadyLoaded() throws Exception {
+    public void Given_GenresLoaded_When_LoadGenres_Then_EmitsNothing() throws Exception {
         Game to = Game.create(10, "title");
         List<Genre> genres = new ArrayList<>();
         Genre genre1 = Genre.create(1, "name1");
@@ -607,7 +671,7 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadGenre_requestsGenre() throws Exception {
+    public void Given_NotLoadedGenres_When_loadGenre_Then_RequestsGenre() throws Exception {
 
         doAnswer(invocation -> {
             int id = (int) invocation.getArguments()[0];
@@ -635,7 +699,7 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadPlatforms_noPlatforms() throws Exception {
+    public void Given_NoPlatforms_When_loadPlatforms_Then_EmitsNothing() throws Exception {
 
         IGDBGame from = GameFactory.provideNetGame(10, "title");
         from.release_dates.clear();
@@ -653,7 +717,7 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadPlatforms_platformsAlreadyLoaded() throws Exception {
+    public void Given_PlatformsLoaded_When_loadPlatforms_Then_EmitsNothing() throws Exception {
         Game to = Game.create(10, "title");
         List<Platform> platforms = new ArrayList<>();
         Platform platform1 = Platform.create(1, "name1");
@@ -680,7 +744,7 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadPlatforms_requestsPlatform() throws Exception {
+    public void Given_LoadablePlatforms_When_loadPlatforms_Then_RequestsPlatform() throws Exception {
 
         Game to = Game.create(10, "title");
         to.platforms = new ArrayList<>();
@@ -708,7 +772,7 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadReleases_noReleases() throws Exception {
+    public void Given_noReleases_When_loadReleases_Then_EmitsNothing() throws Exception {
 
         IGDBGame from = GameFactory.provideNetGame(10, "title");
         from.release_dates.clear();
@@ -726,11 +790,11 @@ public class GameRepositoryTest extends BaseGameTest {
     }
 
     @Test
-    public void loadReleases_requestsReleases() throws Exception {
+    public void Given_LoadableReleases_When_loadReleases_Then_requestsReleases() throws Exception {
 
         doAnswer(invocation -> {
-            int id = (int)invocation.getArguments()[0];
-            return Observable.just(Platform.create(id, "platform_"+id));
+            int id = (int) invocation.getArguments()[0];
+            return Observable.just(Platform.create(id, "platform_" + id));
         }).when(platformRepository).load(anyInt());
 
         Game to = Game.create(10, "title");
@@ -745,6 +809,9 @@ public class GameRepositoryTest extends BaseGameTest {
         realmReleases.add(new RealmGameRelease(realmPlatform1, realmDate1));
         realmReleases.add(new RealmGameRelease(realmPlatform2, realmDate2));
         source.setReleases(realmReleases);
+        when(dateMapper.transform(realmDate1)).thenReturn(Optional.of(ReleaseDate.create(1000, "human-date")));
+        when(dateMapper.transform(realmDate2)).thenReturn(Optional.of(ReleaseDate.create(1000, "human-date")));
+
 
         // Act
         TestObserver<Game> result = repository.loadReleases(source, to).test();
@@ -764,8 +831,8 @@ public class GameRepositoryTest extends BaseGameTest {
     public void given_releaseMapError_When_loadRelease_Then_RemovesInvalidReleaseFromList() throws Exception {
 
         doAnswer(invocation -> {
-            int id = (int)invocation.getArguments()[0];
-            return Observable.just(Platform.create(id, "platform_"+id));
+            int id = (int) invocation.getArguments()[0];
+            return Observable.just(Platform.create(id, "platform_" + id));
         }).when(platformRepository).load(anyInt());
 
         Game to = Game.create(10, "title");
@@ -780,6 +847,8 @@ public class GameRepositoryTest extends BaseGameTest {
         realmReleases.add(new RealmGameRelease(realmPlatform1, realmDate1));
         realmReleases.add(new RealmGameRelease(realmPlatform2, realmDate2));
         source.setReleases(realmReleases);
+        when(dateMapper.transform(realmDate1)).thenReturn(Optional.absent());
+        when(dateMapper.transform(realmDate2)).thenReturn(Optional.of(ReleaseDate.create(1000, "human-date")));
 
         // Act
         TestObserver<Game> result = repository.loadReleases(source, to).test();
