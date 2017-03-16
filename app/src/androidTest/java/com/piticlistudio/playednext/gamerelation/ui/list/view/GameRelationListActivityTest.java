@@ -1,23 +1,14 @@
 package com.piticlistudio.playednext.gamerelation.ui.list.view;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 
-import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.BaseAndroidTest;
-import com.piticlistudio.playednext.collection.CollectionModule;
-import com.piticlistudio.playednext.company.model.CompanyModule;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.di.module.AppModule;
 import com.piticlistudio.playednext.game.GameComponent;
-import com.piticlistudio.playednext.game.GameModule;
-import com.piticlistudio.playednext.game.model.GamedataComponent;
-import com.piticlistudio.playednext.game.ui.detail.view.GameDetailActivity;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.GameRelationModule;
 import com.piticlistudio.playednext.gamerelation.ui.list.presenter.GameRelationListPresenter;
-import com.piticlistudio.playednext.genre.GenreModule;
-import com.piticlistudio.playednext.platform.PlatformModule;
 
 import org.junit.Rule;
 import org.junit.Test;

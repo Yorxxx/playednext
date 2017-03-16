@@ -3,14 +3,14 @@ package com.piticlistudio.playednext.game.model.repository.datasource;
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.TestSchedulerRule;
-import com.piticlistudio.playednext.game.model.GamedataComponent;
-import com.piticlistudio.playednext.game.model.GamedataModule;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
@@ -33,9 +33,6 @@ import static org.mockito.Mockito.when;
 public class GamedataRepositoryTest extends BaseTest {
 
     @Rule
-    public DaggerMockRule<GamedataComponent> rule = new DaggerMockRule<>(GamedataComponent.class, new GamedataModule());
-
-    @Rule
     public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
 
     @Mock
@@ -46,15 +43,19 @@ public class GamedataRepositoryTest extends BaseTest {
     @Named("net")
     public IGamedatasourceRepository netImpl;
 
-    @InjectFromComponent
+    @InjectMocks
     private GamedataRepository repository;
 
     private RealmGame localData = GameFactory.provideRealmGame(10, "title");
     private IGDBGame remoteData = GameFactory.provideNetGame(10, "title");
 
+    @Before
+    public void setUp() throws Exception {
+        repository = new GamedataRepository(dbImpl, netImpl);
+    }
 
     @Test
-    public void load_locally() throws Exception {
+    public void Given_AvailableLocally_When_load_Then_EmitsLocalDataOnly() throws Exception {
 
         when(dbImpl.load(1)).thenReturn(Single.just(localData));
 
@@ -71,7 +72,7 @@ public class GamedataRepositoryTest extends BaseTest {
     }
 
     @Test
-    public void load_fromRemote() throws Exception {
+    public void Given_NotAvailableLocally_When_Load_Then_EmitsRemoteDataOnly() throws Exception {
 
         Throwable error = new Throwable();
         when(dbImpl.load(1)).thenReturn(Single.error(error));
@@ -91,7 +92,7 @@ public class GamedataRepositoryTest extends BaseTest {
     }
 
     @Test
-    public void load_error() throws Exception {
+    public void Given_LocalAndRemoteErrors_When_load_Then_EmitsError() throws Exception {
 
         Throwable error = new Throwable();
         when(dbImpl.load(1)).thenReturn(Single.error(error));
@@ -110,7 +111,7 @@ public class GamedataRepositoryTest extends BaseTest {
     }
 
     @Test
-    public void search() throws Exception {
+    public void Given_Query_When_Search_Then_EmitsRemoteData() throws Exception {
 
         List<IGameDatasource> data = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
@@ -131,7 +132,7 @@ public class GamedataRepositoryTest extends BaseTest {
     }
 
     @Test
-    public void search_error() throws Exception {
+    public void Given_SearchError_When_Search_Then_EmitsError() throws Exception {
 
         Throwable error = new Exception();
         when(netImpl.search(anyString(), anyInt(), anyInt())).thenReturn(Single.error(error));
@@ -148,7 +149,7 @@ public class GamedataRepositoryTest extends BaseTest {
     }
 
     @Test
-    public void save() throws Exception {
+    public void Given_data_When_Save_Then_SavesOnlyLocally() throws Exception {
 
         IGameDatasource data = GameFactory.provideRealmGame(50, "title");
         when(dbImpl.save(data)).thenReturn(Single.just(data));

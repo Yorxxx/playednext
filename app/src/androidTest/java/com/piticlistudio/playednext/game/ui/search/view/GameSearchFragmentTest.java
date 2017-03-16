@@ -17,8 +17,6 @@ import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.di.module.AppModule;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
-import com.piticlistudio.playednext.game.ui.detail.GameDetailComponent;
-import com.piticlistudio.playednext.game.ui.detail.GameDetailModule;
 import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
 import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
 import com.piticlistudio.playednext.game.ui.search.GameSearchModule;

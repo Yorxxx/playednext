@@ -12,6 +12,7 @@ import com.piticlistudio.playednext.game.DaggerGameComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.ui.detail.GameDetailComponent;
+import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
 
@@ -31,6 +32,7 @@ public class AndroidApplication extends Application {
     public AppComponent appComponent;
     public GameComponent gameComponent;
     private GameDetailComponent detailComponent;
+    private GameSearchComponent searchComponent;
 
     RealmMigration migration = new RealmMigration() {
         @Override
@@ -137,6 +139,10 @@ public class AndroidApplication extends Application {
         return this.detailComponent;
     }
 
+    public GameSearchComponent getSearchComponent() {
+        return this.searchComponent;
+    }
+
     @VisibleForTesting
     public void setGameComponent(GameComponent component) {
         this.gameComponent = component;
@@ -145,5 +151,10 @@ public class AndroidApplication extends Application {
     @VisibleForTesting
     public void setGameDetailComponent(GameDetailComponent component) {
         this.detailComponent = component;
+    }
+
+    @VisibleForTesting
+    public void setGameSearchComponent(GameSearchComponent component) {
+        this.searchComponent = component;
     }
 }
