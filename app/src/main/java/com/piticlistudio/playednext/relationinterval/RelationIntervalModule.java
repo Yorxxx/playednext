@@ -6,6 +6,8 @@ import com.piticlistudio.playednext.relationinterval.model.entity.datasource.Rel
 import com.piticlistudio.playednext.relationinterval.model.repository.RelationIntervalRepository;
 import com.piticlistudio.playednext.relationinterval.model.repository.datasource.RealmRelationIntervalRepositoryImpl;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -27,6 +29,7 @@ public class RelationIntervalModule {
         return new RealmRelationIntervalRepositoryImpl();
     }
 
+    @Singleton
     @Provides
     public RelationIntervalRepository provideRepository(RealmRelationIntervalRepositoryImpl realmImpl) {
         return new RelationIntervalRepository(realmImpl);

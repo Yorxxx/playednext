@@ -31,7 +31,6 @@ public class AppModule {
         return Picasso.with(context);
     }
 
-    @Singleton
     @Provides
     public PlatformUIUtils providePlatformUtils() {
         return new PlatformUIUtils();

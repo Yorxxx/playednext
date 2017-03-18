@@ -118,9 +118,7 @@ public class AndroidApplication extends Application {
 
     private void initializeComponents() {
 
-        appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .build();
+
         gameComponent = DaggerGameComponent.builder()
                 .platformModule(new PlatformModule())
                 .genreModule(new GenreModule())
@@ -133,6 +131,10 @@ public class AndroidApplication extends Application {
                 .gameComponent(gameComponent)
                 .gameRelationModule(new GameRelationModule())
                 .relationIntervalModule(new RelationIntervalModule())
+                .build();
+
+        appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
                 .build();
 
         try {

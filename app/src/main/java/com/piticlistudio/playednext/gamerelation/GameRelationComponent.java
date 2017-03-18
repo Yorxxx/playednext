@@ -6,8 +6,11 @@ import com.piticlistudio.playednext.gamerelation.model.repository.IGameRelationR
 import com.piticlistudio.playednext.relationinterval.RelationIntervalModule;
 import com.piticlistudio.playednext.relationinterval.model.repository.RelationIntervalRepository;
 
+import javax.inject.Singleton;
+
 import dagger.Component;
 
+@Singleton
 @Component(dependencies = {GameComponent.class},
         modules = {GameRelationModule.class, RelationIntervalModule.class})
 public interface GameRelationComponent {

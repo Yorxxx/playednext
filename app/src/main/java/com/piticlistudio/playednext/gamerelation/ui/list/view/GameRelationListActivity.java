@@ -104,8 +104,8 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         presenter.detachView(false);
         component = null;
     }
