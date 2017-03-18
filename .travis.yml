@@ -38,8 +38,19 @@ before_install:
   #- export JAVA_HOME=$JAVA8_HOME
   - chmod +x gradlew
 
+before_script:
+  - echo no | android create avd --force -n test -t android-25 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+  - adb shell svc power stayon true
+  - adb shell settings put global window_animation_scale 0
+  - adb shell settings put global transition_animation_scale 0
+  - adb shell settings put global animator_duration_scale 0
+
 script:
   - ./gradlew jacocoDebugReport
+  - ./gradlew connectedAndroidTest
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
