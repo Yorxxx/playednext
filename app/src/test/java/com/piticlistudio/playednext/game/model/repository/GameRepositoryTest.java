@@ -18,6 +18,7 @@ import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 import com.piticlistudio.playednext.game.model.repository.datasource.IGamedataRepository;
+import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
 import com.piticlistudio.playednext.gamerelease.model.entity.datasource.RealmGameRelease;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
@@ -787,6 +788,31 @@ public class GameRepositoryTest extends BaseGameTest {
                 .assertComplete()
                 .assertNoValues();
         verifyZeroInteractions(platformRepository);
+    }
+
+    @Test
+    public void Given_SameAmountofReleasesAsOrigin_When_LoadReleases_Then_EmitsNothing() throws Exception {
+
+        Game to = Game.create(10, "title");
+        List<GameRelease> releases = new ArrayList<>();
+        releases.add(GameRelease.create(Platform.create(10, "name"), ReleaseDate.create(1000, "date")));
+        to.releases = releases;
+
+        RealmGame source = GameFactory.provideRealmGame(10, "title");
+        RealmList<RealmGameRelease> realmReleases = new RealmList<>();
+        RealmPlatform realmPlatform1 = new RealmPlatform(1, "name1");
+        RealmReleaseDate realmDate1 = new RealmReleaseDate("human-date", 1000);
+        realmReleases.add(new RealmGameRelease(realmPlatform1, realmDate1));
+        source.setReleases(realmReleases);
+
+        // Act
+        TestObserver<Game> result = repository.loadReleases(source, to).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertNoValues()
+                .assertComplete();
     }
 
     @Test

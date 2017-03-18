@@ -13,7 +13,10 @@ import com.piticlistudio.playednext.game.model.BaseGameTest;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
+import com.piticlistudio.playednext.gamerelease.model.entity.GameRelease;
 import com.piticlistudio.playednext.gamerelease.model.entity.GameReleaseMapper;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.IGameReleaseDateData;
+import com.piticlistudio.playednext.gamerelease.model.entity.datasource.RealmGameRelease;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
 import com.piticlistudio.playednext.genre.model.entity.GenreMapper;
 import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
@@ -27,6 +30,7 @@ import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.model.entity.PlatformMapper;
 import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
+import com.piticlistudio.playednext.releasedate.model.entity.ReleaseDate;
 
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -563,6 +567,44 @@ public class GameMapperTest extends BaseGameTest {
         assertNotNull(result.get().platforms);
         assertTrue(result.get().platforms.isEmpty());
         verify(platformMapper, times(3)).transform(any());
+    }
+
+    @Test
+    public void Given_ReleaseMapError_When_Transform_Then_ReturnsGameWithoutRelease() throws Exception {
+
+        List<IGameReleaseDateData> releases = new ArrayList<>();
+        RealmGameRelease invalidRelease = new RealmGameRelease();
+        RealmGameRelease validRelease = new RealmGameRelease();
+        releases.add(invalidRelease);
+        releases.add(validRelease);
+
+        IGameDatasource data = mock(IGameDatasource.class);
+        when(data.getName()).thenReturn("name");
+        when(data.getId()).thenReturn(10);
+        when(data.getCollection()).thenReturn(Optional.absent());
+        when(data.getCover()).thenReturn(Optional.absent());
+        when(data.getScreenshots()).thenReturn(new ArrayList<>());
+        when(data.getDevelopers()).thenReturn(new ArrayList<>());
+        when(data.getPublishers()).thenReturn(new ArrayList<>());
+        when(data.getGenres()).thenReturn(new ArrayList<>());
+        when(data.getReleases()).thenReturn(releases);
+        when(data.getPlatforms()).thenReturn(new ArrayList<>());
+
+        when(releaseMapper.transform(invalidRelease)).thenReturn(Optional.absent());
+        GameRelease expectedRelease = GameRelease.create(Platform.create(10, "platform"), ReleaseDate.create(1000, "date"));
+        when(releaseMapper.transform(validRelease)).thenReturn(Optional.of(expectedRelease));
+
+        // Act
+        Optional<Game> result = mapper.transform(data);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isPresent());
+        assertNotNull(result.get().releases);
+        verify(releaseMapper).transform(validRelease);
+        verify(releaseMapper).transform(invalidRelease);
+        assertEquals(1, result.get().releases.size());
+        assertTrue(result.get().releases.contains(expectedRelease));
     }
 
     @Test

@@ -110,7 +110,6 @@ public class GameRepository implements IGameRepository {
         return repository.search(query, offset, limit)
                 .flatMap(sources -> Observable.fromIterable(sources)
                         .map(mapper::transform)
-                        .onErrorReturn(throwable -> Optional.absent())
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .toList().toObservable());
