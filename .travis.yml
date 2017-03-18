@@ -31,15 +31,16 @@ android:
     - '.+'
 
 before_install:
-  # - echo y | sudo apt-get update
-  #- echo y | sudo apt-get install openjdk-7-jre
-  #- export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
-  #- export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
-  #- export JAVA_HOME=$JAVA8_HOME
+   - echo y | sudo apt-get update
+  - echo y | sudo apt-get install openjdk-7-jre
+  - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
+  - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
+  - export JAVA_HOME=$JAVA8_HOME
   - chmod +x gradlew
 
 script:
   - ./gradlew jacocoDebugReport
+  - ./gradlew connectedDebug
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
