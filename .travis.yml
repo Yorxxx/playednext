@@ -40,7 +40,19 @@ before_install:
 
 script:
   - ./gradlew jacocoDebugReport
-  - ./gradlew connectedDebug
+   - android list targets
+
+  - echo no | android create avd --force -n testemulator -t "android-25" --abi armeabi-v7a
+  - emulator -avd testemulator -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+
+  - adb shell input keyevent 82 &
+  - adb shell svc power stayon true
+  - adb shell settings put global window_animation_scale 0
+  - adb shell settings put global transition_animation_scale 0
+  - adb shell settings put global animator_duration_scale 0
+
+  - ./gradlew build connectedCheck
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
