@@ -25,7 +25,7 @@ android:
     - extra-android-m2repository
     #- extra-google-google_play_services
     #- extra-android-support
-    #- sys-img-armeabi-v7a-google_apis-21
+    - sys-img-armeabi-v7a-google_apis-$ANDROID_API_LEVEL
 
   licenses:
     - '.+'
