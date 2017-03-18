@@ -17,7 +17,11 @@ buildscript {
         classpath "io.realm:realm-gradle-plugin:1.2.0"
         classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
+        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
     }
+
+    // Exclude the version that the android plugin depends on.
+    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 allprojects {
