@@ -133,6 +133,8 @@ public class GameSearchFragmentTest {
         // Act
         onView(withId(R.id.closeBtn)).perform(click());
 
+        Thread.sleep(500);
+
         // Assert
         verify(listener).onCloseSearchClicked(any());
     }
@@ -140,6 +142,7 @@ public class GameSearchFragmentTest {
     @Test
     public void Given_Idle_When_ShowLoading_Then_ShowsLoading() throws Throwable {
 
+        Espresso.closeSoftKeyboard();
         activityTestRule.runOnUiThread(() -> getFragment().showLoading());
 
         onView(withId(R.id.progress)).check(matches(CustomMatchers.isVisibleToUser(true)));
@@ -152,6 +155,7 @@ public class GameSearchFragmentTest {
 
         activityTestRule.runOnUiThread(() -> getFragment().showContent());
 
+        Thread.sleep(500);
         // Assert
         onView(withId(R.id.progress)).check(matches(CustomMatchers.isVisibleToUser(false)));
         onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
@@ -232,10 +236,10 @@ public class GameSearchFragmentTest {
             data.add(GameFactory.provide(10, "title"));
         }
         activityTestRule.runOnUiThread(() -> getFragment().setData(data));
-        onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.scrollToPosition(maxItems));
 
         // Assert
-//        onView(withId(R.id.loadmore_progress)).check(matches(isDisplayed()));
+        onView(withId(R.id.loadmore_progress)).check(matches(isDisplayed()));
         verify(presenter).search("", maxItems + 1, maxItems);
     }
 
@@ -251,7 +255,7 @@ public class GameSearchFragmentTest {
             data.add(GameFactory.provide(10, "title"));
         }
         activityTestRule.runOnUiThread(() -> getFragment().setData(data));
-        onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.scrollToPosition(maxItems));
 
         // Assert
         verify(presenter, never()).search("", maxItems + 1, maxItems);
@@ -271,7 +275,7 @@ public class GameSearchFragmentTest {
         }
         activityTestRule.runOnUiThread(() -> getFragment().setData(data));
         onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(maxItems + 1));
-        onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.scrollToPosition(maxItems));
 
 
         // Act
@@ -290,6 +294,7 @@ public class GameSearchFragmentTest {
         Throwable error = new Exception("bla");
         activityTestRule.runOnUiThread(() -> getFragment().showError(error));
 
+        Thread.sleep(500);
         // Assert
         onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
         onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(true)));
@@ -307,6 +312,8 @@ public class GameSearchFragmentTest {
         // Act
         Throwable error = new Exception("bla");
         activityTestRule.runOnUiThread(() -> getFragment().showError(error));
+
+        Thread.sleep(500);
 
         // Assert
         onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
@@ -353,11 +360,13 @@ public class GameSearchFragmentTest {
         }
         activityTestRule.runOnUiThread(() -> getFragment().setData(data));
         onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(maxItems + 1));
-        onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.scrollToPosition(maxItems));
 
         // Act
         Throwable error = new Exception("bla");
         activityTestRule.runOnUiThread(() -> getFragment().showError(error));
+
+        Thread.sleep(1000);
 
         // Assert
         onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(false)));
@@ -382,10 +391,11 @@ public class GameSearchFragmentTest {
             data.add(GameFactory.provide(10, "title"));
         }
         activityTestRule.runOnUiThread(() -> getFragment().setData(data));
-        onView(withId(R.id.searchlist)).perform(ViewActions.swipeUp());
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.scrollToPosition(maxItems));
 
         Throwable error = new Exception("bla");
         activityTestRule.runOnUiThread(() -> getFragment().showError(error));
+        Thread.sleep(1000);
 
         // Act
         onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(false)));

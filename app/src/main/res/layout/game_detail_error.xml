@@ -4,7 +4,7 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:translationY="-5000px"
+            android:alpha="0"
               android:background="@drawable/game_detail_error_background"
               android:gravity="center"
               android:orientation="vertical">
