@@ -244,8 +244,10 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     public void showLoading() {
         if (!isRetrying) {
             this.error.animate().alpha(0).translationY(-5000).setInterpolator(new AnticipateInterpolator()).setDuration(300).start();
+            loading.setVisibility(View.VISIBLE);
             loading.animate().alpha(1).setDuration(300).start();
         } else {
+            loading.setVisibility(View.GONE);
             loading.animate().alpha(0).setDuration(300).start();
             retryBtn.setAlpha(0);
             loadingRetry.setAlpha(1);
@@ -259,6 +261,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     @Override
     public void showContent() {
         isRetrying = false;
+        loading.setVisibility(View.GONE);
         loading.animate().alpha(0).setDuration(300).start();
         this.error.animate().translationY(-5000).alpha(0).setInterpolator(new AnticipateInterpolator()).setDuration(800).start();
     }
@@ -307,6 +310,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
         }
 
         loading.animate().alpha(0).setDuration(300).start();
+        loading.setVisibility(View.GONE);
 
         errorMsg.setText(error.getLocalizedMessage());
         retryBtn.setAlpha(1);
