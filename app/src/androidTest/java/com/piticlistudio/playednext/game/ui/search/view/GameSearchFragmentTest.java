@@ -139,7 +139,7 @@ public class GameSearchFragmentTest {
         verify(listener).onCloseSearchClicked(any());
     }
 
-    @Test
+    //@Test
     public void Given_Idle_When_ShowLoading_Then_ShowsLoading() throws Throwable {
 
         Espresso.closeSoftKeyboard();

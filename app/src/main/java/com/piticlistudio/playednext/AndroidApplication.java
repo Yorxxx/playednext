@@ -185,4 +185,9 @@ public class AndroidApplication extends Application {
     public void setRelationDetailComponent(GameRelationDetailComponent relationDetailComponent) {
         this.relationDetailComponent = relationDetailComponent;
     }
+
+    @VisibleForTesting
+    public void setRelationListComponent(GameRelationListComponent relationListComponent) {
+        this.relationListComponent = relationListComponent;
+    }
 }

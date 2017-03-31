@@ -64,15 +64,14 @@ public abstract class RelationInterval {
 
         Calendar start = Calendar.getInstance();
         start.setTimeInMillis(startAt());
-
-        Calendar end = Calendar.getInstance();
-        end.setTimeInMillis(getEndAt());
+//
+//        Calendar end = Calendar.getInstance();
+//        end.setTimeInMillis(getEndAt());
 
         if (endAt == 0) {
             if (calendar.get(Calendar.YEAR) == start.get(Calendar.YEAR)) {
                 if (currentDay - start.get(Calendar.DAY_OF_YEAR) <= 7) {
                     int daysDiff = currentDay - start.get(Calendar.DAY_OF_YEAR);
-                    getDateHourFormat(context).setTimeZone(TimeZone.getDefault());
 
                     String hourMessage;
                     if (daysDiff > 1) {
@@ -118,7 +117,7 @@ public abstract class RelationInterval {
         else {
             String dateFormat = context.getString(R.string.interval_displaydate_long);
             SimpleDateFormat df = new SimpleDateFormat(dateFormat, getCurrentLocale(context));
-            long hoursDiffInMs = end.getTimeInMillis() - start.getTimeInMillis();
+            long hoursDiffInMs = getEndAt() - startAt();
             int hours = (int)(hoursDiffInMs/ AlarmManager.INTERVAL_HOUR);
             int days = (int)(hoursDiffInMs/ AlarmManager.INTERVAL_DAY);
             String startDay = df.format(new Date(startAt()));

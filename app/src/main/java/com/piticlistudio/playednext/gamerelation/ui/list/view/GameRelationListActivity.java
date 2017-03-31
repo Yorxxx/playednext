@@ -105,9 +105,9 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         presenter.detachView(false);
         component = null;
+        super.onDestroy();
     }
 
     /**
@@ -117,7 +117,7 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     @Override
     public void onBackPressed() {
         if (searchView == null)
-            super.onBackPressed();
+            finish();
         else {
             searchView.onBackPressed();
         }
