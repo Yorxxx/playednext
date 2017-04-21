@@ -4,6 +4,7 @@ import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 import com.piticlistudio.playednext.genre.model.entity.datasource.RealmGenre;
 import com.piticlistudio.playednext.mvp.model.repository.datasource.BaseRealmRepository;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 /**
@@ -36,8 +37,7 @@ public class RealmGenreRepositoryImpl extends BaseRealmRepository<RealmGenre> im
      * @return an Observable that emits the saved data
      */
     @Override
-    public Single<IGenreData> save(IGenreData data) {
-        return super.store((RealmGenre) data)
-                .map(value -> value);
+    public Completable save(IGenreData data) {
+        return super.store((RealmGenre) data);
     }
 }

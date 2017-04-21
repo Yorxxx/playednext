@@ -28,7 +28,9 @@ public class AppModule {
 
     @Provides
     public Picasso picasso(Context context) {
-        return Picasso.with(context);
+        Picasso picasso = Picasso.with(context);
+        picasso.setIndicatorsEnabled(true);
+        return picasso;
     }
 
     @Provides

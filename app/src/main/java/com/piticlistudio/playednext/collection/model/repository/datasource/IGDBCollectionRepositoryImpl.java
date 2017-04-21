@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.collection.model.entity.datasource.ICollecti
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 /**
@@ -41,10 +42,9 @@ public class IGDBCollectionRepositoryImpl implements ICollectionRepositoryDataso
      * Saves the data
      *
      * @param data the data to save
-     * @return an Observable that emits the saved data
      */
     @Override
-    public Single<ICollectionData> save(ICollectionData data) {
-        return Single.error(new Exception("Forbidden"));
+    public Completable save(ICollectionData data) {
+        return Completable.error(new Exception("Forbidden"));
     }
 }

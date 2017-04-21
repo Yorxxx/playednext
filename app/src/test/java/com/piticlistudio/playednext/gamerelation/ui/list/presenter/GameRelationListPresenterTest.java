@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 
@@ -275,7 +276,7 @@ public class GameRelationListPresenterTest extends BaseTest {
         data.getStatuses().add(currentInterval);
         assertEquals(0, currentInterval.getEndAt());
 
-        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+        when(interactor.save(data)).thenReturn(Completable.complete().delay(1, TimeUnit.SECONDS));
         RelationInterval newInterval = RelationInterval.create(2, RelationInterval.RelationType.PLAYING, System.currentTimeMillis());
         when(interactor.create(RelationInterval.RelationType.PLAYING)).thenReturn(newInterval);
 
@@ -308,7 +309,7 @@ public class GameRelationListPresenterTest extends BaseTest {
         data.setUpdatedAt(1500);
         assertFalse(data.getCurrent().isPresent());
 
-        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+        when(interactor.save(data)).thenReturn(Completable.complete().delay(1, TimeUnit.SECONDS));
         RelationInterval newInterval = RelationInterval.create(2, RelationInterval.RelationType.PLAYING, System.currentTimeMillis());
         when(interactor.create(RelationInterval.RelationType.PLAYING)).thenReturn(newInterval);
 

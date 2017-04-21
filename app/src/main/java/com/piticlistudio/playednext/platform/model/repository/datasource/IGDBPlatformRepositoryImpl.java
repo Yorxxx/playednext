@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformDa
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 /**
@@ -45,7 +46,7 @@ public class IGDBPlatformRepositoryImpl implements IPlatformRepositoryDatasource
      * @return an Observable that emits the saved data
      */
     @Override
-    public Single<IPlatformData> save(IPlatformData data) {
-        return Single.error(new Exception("Forbidden"));
+    public Completable save(IPlatformData data) {
+        return Completable.error(new Exception("Forbidden"));
     }
 }

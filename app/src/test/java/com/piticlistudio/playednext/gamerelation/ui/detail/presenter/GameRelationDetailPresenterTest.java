@@ -19,6 +19,7 @@ import org.mockito.stubbing.Answer;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.plugins.RxJavaPlugins;
@@ -259,7 +260,7 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         Game game = Game.create(10, "name");
         GameRelation data = GameRelation.create(game, 1);
         long updatedAt = data.getUpdatedAt();
-        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+        when(interactor.save(data)).thenReturn(Completable.complete().delay(1, TimeUnit.SECONDS));
         doAnswer(invocation -> {
             RelationInterval.RelationType type = (RelationInterval.RelationType)invocation.getArguments()[0];
             return RelationInterval.create(10, type, System.currentTimeMillis());
@@ -293,7 +294,7 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
         long updatedAt = data.getUpdatedAt();
         data.getStatuses().add(RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000));
-        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+        when(interactor.save(data)).thenReturn(Completable.complete().delay(1, TimeUnit.SECONDS));
         doAnswer(invocation -> {
             RelationInterval.RelationType type = (RelationInterval.RelationType)invocation.getArguments()[0];
             return RelationInterval.create(10, type, System.currentTimeMillis());
@@ -326,7 +327,7 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
         long updatedAt = data.getUpdatedAt();
         data.getStatuses().add(RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000));
-        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+        when(interactor.save(data)).thenReturn(Completable.complete().delay(1, TimeUnit.SECONDS));
 
         // Act
         presenter.save(data, RelationInterval.RelationType.PENDING, false);
@@ -373,7 +374,7 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         Game game = Game.create(10, "name");
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
         data.getStatuses().add(RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000));
-        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+        when(interactor.save(data)).thenReturn(Completable.complete().delay(1, TimeUnit.SECONDS));
         doAnswer(invocation -> {
             RelationInterval.RelationType type = (RelationInterval.RelationType)invocation.getArguments()[0];
             return RelationInterval.create(10, type, System.currentTimeMillis());
@@ -400,7 +401,7 @@ public class GameRelationDetailPresenterTest extends BaseTest {
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
         long updatedAt = data.getUpdatedAt();
         data.getStatuses().add(RelationInterval.create(1, RelationInterval.RelationType.PENDING, 1000));
-        when(interactor.save(data)).thenReturn(Observable.just(data).delay(1, TimeUnit.SECONDS));
+        when(interactor.save(data)).thenReturn(Completable.complete().delay(1, TimeUnit.SECONDS));
 
         // Act
         presenter.save(data, RelationInterval.RelationType.PENDING, false);

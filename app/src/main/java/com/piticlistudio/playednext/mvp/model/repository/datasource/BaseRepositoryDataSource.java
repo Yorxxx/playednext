@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.mvp.model.repository.datasource;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 /**
@@ -21,7 +22,6 @@ public interface BaseRepositoryDataSource<T> {
      * Saves the data
      *
      * @param data the data to save
-     * @return an Observable that emits the saved data
      */
-    Single<T> save(T data);
+    Completable save(T data);
 }

@@ -28,8 +28,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 
 /**
@@ -122,12 +126,11 @@ public class GameRepository implements IGameRepository {
      * @return the saved data.
      */
     @Override
-    public Observable<Game> save(Game data) {
+    public Completable save(Game data) {
         Optional<RealmGame> model = realmMapper.transform(data);
         if (model.isPresent()) {
-            return repository.save(model.get())
-                    .flatMap(this::mapSource);
-        } else return Observable.error(new Exception("Cannot map"));
+            return repository.save(model.get());
+        } else return Completable.error(new Exception("Cannot map"));
     }
 
     private Observable<Game> mapSource(IGameDatasource iGameDatasource) {

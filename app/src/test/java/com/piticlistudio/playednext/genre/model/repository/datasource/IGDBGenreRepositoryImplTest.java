@@ -113,7 +113,7 @@ public class IGDBGenreRepositoryImplTest extends BaseTest {
         IGDBGenre data = IGDBGenre.create(10, "name", "url", "slug", 1000, 2000);
 
         // Act
-        TestObserver<IGenreData> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert

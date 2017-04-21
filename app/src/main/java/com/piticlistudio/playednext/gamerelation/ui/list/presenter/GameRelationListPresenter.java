@@ -74,7 +74,7 @@ public class GameRelationListPresenter extends MvpPresenter<GameRelationListCont
         data.setUpdatedAt(System.currentTimeMillis());
         Observable.just(data)
                 .delay(100, TimeUnit.MILLISECONDS)
-                .flatMap(interactor::save).subscribe();
+                .flatMapCompletable(interactor::save).subscribe();
     }
 
     void showData(ItemsResult result) {

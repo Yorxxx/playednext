@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 
@@ -79,32 +80,31 @@ public class GameRelationDetailInteractorTest extends BaseTest {
     @Test
     public void given_GameRelation_When_SavesRelation_Then_SavesAndEmitsRelation() throws Exception {
 
-        doAnswer(invocation -> Observable.just(invocation.getArguments()[0])).when(repository).save(any());
+        doAnswer(invocation -> Completable.complete()).when(repository).save(any());
         Game game = Game.create(10, "title");
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
 
         // Act
-        TestObserver<GameRelation> result = interactor.save(data).test();
+        TestObserver<Void> result = interactor.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
         result.assertNoErrors()
                 .assertComplete()
-                .assertValueCount(1)
-                .assertValue(data);
+                .assertNoValues();
         verify(repository).save(data);
     }
 
     @Test
     public void given_SaveError_When_SavesRelation_Then_EmitsError() throws Exception {
         Throwable error = new Exception("bla");
-        doAnswer(invocation -> Observable.error(error)).when(repository).save(any());
+        doAnswer(invocation -> Completable.error(error)).when(repository).save(any());
 
         Game game = Game.create(10, "title");
         GameRelation data = GameRelation.create(game, System.currentTimeMillis());
 
         // Act
-        TestObserver<GameRelation> result = interactor.save(data).test();
+        TestObserver<Void> result = interactor.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert

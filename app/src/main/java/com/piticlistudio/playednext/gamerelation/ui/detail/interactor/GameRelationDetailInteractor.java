@@ -10,6 +10,7 @@ import com.piticlistudio.playednext.relationinterval.model.repository.RelationIn
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 /**
@@ -60,7 +61,7 @@ public class GameRelationDetailInteractor implements GameRelationDetailContract.
      * @return an Observable that returns the saved data
      */
     @Override
-    public Observable<GameRelation> save(GameRelation data) {
+    public Completable save(GameRelation data) {
         return repository.save(data);
     }
 

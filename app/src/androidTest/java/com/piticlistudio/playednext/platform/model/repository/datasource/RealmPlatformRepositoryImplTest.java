@@ -78,13 +78,12 @@ public class RealmPlatformRepositoryImplTest extends BaseAndroidTest {
         RealmPlatform data = new RealmPlatform(50, "name");
 
         // Act
-        TestObserver<IPlatformData> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
         result.assertNoErrors()
-                .assertComplete()
-                .assertValue(data);
+                .assertComplete();
 
     }
 

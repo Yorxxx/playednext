@@ -178,7 +178,7 @@ public class IGDBGameRepositoryImplTest extends BaseTest {
         IGDBGame data = GameFactory.provideNetGame(1, "name");
 
         // Act
-        TestObserver<IGameDatasource> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert

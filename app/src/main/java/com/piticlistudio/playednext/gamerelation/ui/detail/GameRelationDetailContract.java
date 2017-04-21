@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.mvp.ui.IMvpPresenter;
 import com.piticlistudio.playednext.mvp.ui.MvpView;
 import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 public interface GameRelationDetailContract {
@@ -84,9 +85,9 @@ public interface GameRelationDetailContract {
          * Saves the relation.
          *
          * @param data the data to save
-         * @return an Observable that returns the saved data
+         * @return an Observable that returns completion or failure
          */
-        Observable<GameRelation> save(GameRelation data);
+        Completable save(GameRelation data);
 
         /**
          * Creates a new relationInterval

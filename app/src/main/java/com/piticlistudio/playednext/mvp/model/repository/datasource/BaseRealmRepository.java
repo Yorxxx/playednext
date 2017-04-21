@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.mvp.model.repository.datasource;
 
 import java.util.concurrent.Callable;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Single;
@@ -60,16 +61,14 @@ public abstract class BaseRealmRepository<R extends RealmObject> {
      * Saves the data
      *
      * @param data the data to save.
-     * @return an Observable that emits the saved item
      */
-    public Single<R> store(R data) {
-        return getManagedRealm()
-                .map(realm -> {
-                    realm.executeTransaction(realm1 -> {
-                        realm1.copyToRealmOrUpdate(data);
-                    });
-                    return data;
-                }).firstOrError();
+    public Completable store(R data) {
+        return getManagedRealm().map(realm -> {
+            realm.executeTransaction(realm1 -> {
+                realm1.copyToRealmOrUpdate(data);
+            });
+            return data;
+        }).firstOrError().toCompletable();
     }
 }
 

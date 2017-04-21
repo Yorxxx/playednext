@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;
@@ -56,33 +57,13 @@ public class GameRelationRepositoryTest extends BaseTest {
         doReturn(Optional.absent()).when(realmMapper).transform(data);
 
         // Act
-        TestObserver<GameRelation> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
         result.assertNoValues()
                 .assertNotComplete()
                 .assertError(Throwable.class);
-    }
-
-    @Test
-    public void Given_MapErrorAfterSavingData_When_SavesData_Then_EmitsError() throws Exception {
-
-        GameRelation data = GameRelation.create(Game.create(10, "title"), 1000);
-        RealmGameRelation realmData = new RealmGameRelation();
-        doReturn(Optional.of(realmData)).when(realmMapper).transform(data);
-        doReturn(Optional.absent()).when(mapper).transform(realmData);
-        doAnswer(invocation -> Single.just(invocation.getArguments()[0])).when(localImpl).save(any());
-
-        // Act
-        TestObserver<GameRelation> result = repository.save(data).test();
-        result.awaitTerminalEvent();
-
-        // Assert
-        result.assertNoValues()
-                .assertNotComplete()
-                .assertError(Throwable.class);
-        verify(localImpl).save(realmData);
     }
 
     @Test
@@ -93,10 +74,10 @@ public class GameRelationRepositoryTest extends BaseTest {
         doReturn(Optional.of(realmData)).when(realmMapper).transform(data);
         doReturn(Optional.of(data)).when(mapper).transform(realmData);
         Throwable error = new Exception("bla");
-        doAnswer(__ -> Single.error(error)).when(localImpl).save(any());
+        doAnswer(__ -> Completable.error(error)).when(localImpl).save(any());
 
         // Act
-        TestObserver<GameRelation> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
@@ -114,15 +95,14 @@ public class GameRelationRepositoryTest extends BaseTest {
         doReturn(Optional.of(realmData)).when(realmMapper).transform(data);
         doReturn(Optional.of(data)).when(mapper).transform(realmData);
 
-        doAnswer(invocation -> Single.just(invocation.getArguments()[0])).when(localImpl).save(any());
+        doAnswer(invocation -> Completable.complete()).when(localImpl).save(any());
 
         // Act
-        TestObserver<GameRelation> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
-        result.assertValue(data)
-                .assertValueCount(1)
+        result.assertNoValues()
                 .assertComplete()
                 .assertNoErrors();
         verify(localImpl).save(realmData);

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 
@@ -359,17 +360,16 @@ public class GameRelationListInteractorTest extends BaseTest {
     public void given_any_When_Save_Then_RequestsRepository() throws Exception {
 
         GameRelation noneRelation = mock(GameRelation.class);
-        doReturn(Observable.just(noneRelation)).when(relationRepository).save(noneRelation);
+        doReturn(Completable.complete()).when(relationRepository).save(noneRelation);
 
         // Act
-        TestObserver<GameRelation> result = interactor.save(noneRelation).test();
+        TestObserver<Void> result = interactor.save(noneRelation).test();
         result.awaitTerminalEvent();
 
         // Assert
         result.assertNoErrors()
                 .assertComplete()
-                .assertValueCount(1)
-                .assertValue(noneRelation);
+                .assertNoValues();
     }
 
     @Test

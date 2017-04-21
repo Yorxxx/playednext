@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 /**
@@ -41,10 +42,10 @@ public class IGDBCompanyRepositoryImpl implements ICompanyRepositoryDataSource {
      * Saves the data
      *
      * @param data the data to save
-     * @return an Observable that emits the saved data
+     * @return an Observable that emits completion or failure
      */
     @Override
-    public Single<ICompanyData> save(ICompanyData data) {
-        return Single.error(new Exception("Forbidden"));
+    public Completable save(ICompanyData data) {
+        return Completable.error(new Exception("Forbidden"));
     }
 }

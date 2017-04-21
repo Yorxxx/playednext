@@ -29,7 +29,6 @@ public class RelationIntervalRepository implements IRelationIntervalRepository {
     @Override
     public RelationInterval create(RelationInterval.RelationType relationType) {
         int id = localImpl.getAutoincrementId();
-        Log.w("VIRUTA", "Returned Interval Id: " + id);
         return RelationInterval.create(id, relationType, System.currentTimeMillis());
     }
 }
