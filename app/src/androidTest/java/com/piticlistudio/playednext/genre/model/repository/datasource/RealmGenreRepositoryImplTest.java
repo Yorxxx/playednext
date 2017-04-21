@@ -79,13 +79,12 @@ public class RealmGenreRepositoryImplTest extends BaseAndroidTest {
         RealmGenre data = new RealmGenre(50, "name");
 
         // Act
-        TestObserver<IGenreData> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
         result.assertNoErrors()
-                .assertComplete()
-                .assertValue(data);
+                .assertComplete();
 
     }
 

@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 /**
@@ -40,12 +41,11 @@ public class GameRelationRepository implements IGameRelationRepository {
      * @return the saved data.
      */
     @Override
-    public Observable<GameRelation> save(GameRelation data) {
+    public Completable save(GameRelation data) {
         Optional<RealmGameRelation> result = realmMapper.transform(data);
         if (!result.isPresent())
-            return Observable.error(new Exception("Could not map " + data + " into Realm entity"));
-        return dbImpl.save(result.get()).toObservable()
-                .flatMap(this::mapSource);
+            return Completable.error(new Exception("Could not map " + data + " into Realm entity"));
+        return dbImpl.save(result.get());
     }
 
     /**

@@ -78,13 +78,12 @@ public class RealmCollectionRepositoryImplTest extends BaseAndroidTest {
         RealmCollection data = new RealmCollection(50, "name");
 
         // Act
-        TestObserver<ICollectionData> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
         result.assertNoErrors()
-                .assertComplete()
-                .assertValue(data);
+                .assertComplete();
 
     }
 

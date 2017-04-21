@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 /**
@@ -60,7 +61,7 @@ public class GamedataRepository implements IGamedataRepository {
      * @return an Observable that emits the saved data.
      */
     @Override
-    public Observable<IGameDatasource> save(IGameDatasource data) {
-        return dbImpl.save(data).toObservable();
+    public Completable save(IGameDatasource data) {
+        return dbImpl.save(data);
     }
 }

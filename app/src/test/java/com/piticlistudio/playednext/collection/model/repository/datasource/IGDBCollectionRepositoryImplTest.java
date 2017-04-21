@@ -112,7 +112,7 @@ public class IGDBCollectionRepositoryImplTest {
         IGDBCollection data = IGDBCollection.create(50, "name", "url", 1000, 2000, new ArrayList<>());
 
         // Act
-        TestObserver<ICollectionData> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert

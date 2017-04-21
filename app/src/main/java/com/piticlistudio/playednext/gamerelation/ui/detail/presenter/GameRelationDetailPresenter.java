@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
@@ -42,7 +44,7 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
     public void attachView(GameRelationDetailContract.View view) {
         super.attachView(view);
         saveDisposable = saveSubject.debounce(250, TimeUnit.MILLISECONDS)
-                .map(value -> {
+                .flatMapSingle(value -> {
                     GameRelation data = value.getData();
                     RelationInterval.RelationType type = value.getType();
                     for (RelationInterval interval : data.getStatuses()) {
@@ -53,9 +55,14 @@ public class GameRelationDetailPresenter extends MvpPresenter<GameRelationDetail
                         data.getStatuses().add(interactor.create(type));
                     }
                     data.setUpdatedAt(System.currentTimeMillis());
-                    return data;
+                    return interactor.save(data)
+                            .andThen(new SingleSource<GameRelation>() {
+                                @Override
+                                public void subscribe(SingleObserver<? super GameRelation> observer) {
+                                    observer.onSuccess(data);
+                                }
+                            });
                 })
-                .flatMap(interactor::save)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::showData, this::showError);
 

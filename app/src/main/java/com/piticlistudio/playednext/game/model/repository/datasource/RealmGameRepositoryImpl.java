@@ -7,6 +7,7 @@ import com.piticlistudio.playednext.mvp.model.repository.datasource.BaseRealmRep
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.realm.Case;
 import io.realm.RealmResults;
@@ -67,8 +68,7 @@ public class RealmGameRepositoryImpl extends BaseRealmRepository<RealmGame> impl
      * @return an Observable that emits the saved data
      */
     @Override
-    public Single<IGameDatasource> save(IGameDatasource data) {
-        return super.store((RealmGame)data)
-                .map(result -> result);
+    public Completable save(IGameDatasource data) {
+        return super.store((RealmGame)data);
     }
 }

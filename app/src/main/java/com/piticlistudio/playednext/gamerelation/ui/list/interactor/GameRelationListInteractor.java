@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 /**
@@ -66,10 +67,10 @@ public class GameRelationListInteractor implements GameRelationListContract.Inte
      * Saves the relation.
      *
      * @param data the data to save
-     * @return an Observable that returns the saved data
+     * @return an Observable that returns completion or failure
      */
     @Override
-    public Observable<GameRelation> save(GameRelation data) {
+    public Completable save(GameRelation data) {
         return repository.save(data);
     }
 

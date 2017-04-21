@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.game.model.entity.Game;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 /**
@@ -36,8 +37,8 @@ public interface IGameRepository {
      * Saves the data
      *
      * @param data the data to save
-     * @return the saved data.
+     * @return the completion
      */
-    Observable<Game> save(Game data);
+    Completable save(Game data);
 }
 

@@ -9,6 +9,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -60,9 +61,8 @@ public class RealmGameRelationRepositoryImpl extends BaseRealmRepository<RealmGa
      * @return an Observable that emits the saved data
      */
     @Override
-    public Single<IGameRelationDatasource> save(IGameRelationDatasource data) {
-        return super.store((RealmGameRelation) data)
-                .map(result -> result);
+    public Completable save(IGameRelationDatasource data) {
+        return super.store((RealmGameRelation) data);
     }
 
     /**

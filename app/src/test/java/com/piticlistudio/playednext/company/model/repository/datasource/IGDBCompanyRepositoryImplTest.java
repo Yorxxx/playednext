@@ -112,7 +112,7 @@ public class IGDBCompanyRepositoryImplTest {
         IGDBCompany data = IGDBCompany.create(10, "name", "url", "slug", 1000, 2000);
 
         // Act
-        TestObserver<ICompanyData> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert

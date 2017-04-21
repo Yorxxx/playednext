@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.genre.model.entity.datasource.IGenreData;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 /**
@@ -42,10 +43,10 @@ public class IGDBGenreRepositoryImpl implements IGenreRepositoryDatasource {
      * Saves the data
      *
      * @param data the data to save
-     * @return an Observable that emits the saved data
+     * @return an Observable that emits completion or failure
      */
     @Override
-    public Single<IGenreData> save(IGenreData data) {
-        return Single.error(new Exception("Forbidden"));
+    public Completable save(IGenreData data) {
+        return Completable.error(new Exception("Forbidden"));
     }
 }

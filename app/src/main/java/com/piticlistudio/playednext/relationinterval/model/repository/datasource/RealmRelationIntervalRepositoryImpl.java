@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.relationinterval.model.entity.datasource.Rea
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -54,10 +55,9 @@ public class RealmRelationIntervalRepositoryImpl extends BaseRealmRepository<Rea
      * Saves the data
      *
      * @param data the data to save
-     * @return an Observable that emits the saved data
      */
     @Override
-    public Single<RealmRelationInterval> save(RealmRelationInterval data) {
+    public Completable save(RealmRelationInterval data) {
         return super.store(data);
     }
 }

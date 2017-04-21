@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
@@ -68,7 +69,7 @@ public class IGDBGameRepositoryImpl implements IGamedatasourceRepository {
      * @return an Observable that emits the saved data
      */
     @Override
-    public Single<IGameDatasource> save(IGameDatasource data) {
-        return Single.error(new Exception("Forbidden"));
+    public Completable save(IGameDatasource data) {
+        return Completable.error(new Exception("Forbidden"));
     }
 }

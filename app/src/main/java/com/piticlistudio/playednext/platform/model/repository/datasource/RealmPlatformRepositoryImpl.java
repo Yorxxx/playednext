@@ -4,6 +4,7 @@ import com.piticlistudio.playednext.mvp.model.repository.datasource.BaseRealmRep
 import com.piticlistudio.playednext.platform.model.entity.datasource.IPlatformData;
 import com.piticlistudio.playednext.platform.model.entity.datasource.RealmPlatform;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 /**
@@ -33,11 +34,10 @@ public class RealmPlatformRepositoryImpl extends BaseRealmRepository<RealmPlatfo
      * Saves the data
      *
      * @param data the data to save
-     * @return an Observable that emits the saved data
+     * @return an Observable that emits completion or failure
      */
     @Override
-    public Single<IPlatformData> save(IPlatformData data) {
-        return super.store((RealmPlatform) data)
-                .map(value -> value);
+    public Completable save(IPlatformData data) {
+        return super.store((RealmPlatform) data);
     }
 }

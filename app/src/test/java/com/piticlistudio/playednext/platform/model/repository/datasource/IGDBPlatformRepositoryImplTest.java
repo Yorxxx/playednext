@@ -111,7 +111,7 @@ public class IGDBPlatformRepositoryImplTest extends BaseTest {
     public void save() throws Exception {
 
         // Act
-        TestObserver<IPlatformData> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert

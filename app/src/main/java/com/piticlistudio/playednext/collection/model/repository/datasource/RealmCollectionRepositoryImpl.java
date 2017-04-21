@@ -4,6 +4,7 @@ import com.piticlistudio.playednext.collection.model.entity.datasource.ICollecti
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
 import com.piticlistudio.playednext.mvp.model.repository.datasource.BaseRealmRepository;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 public class RealmCollectionRepositoryImpl extends BaseRealmRepository<RealmCollection> implements ICollectionRepositoryDatasource {
@@ -31,8 +32,7 @@ public class RealmCollectionRepositoryImpl extends BaseRealmRepository<RealmColl
      * @return an Observable that emits the saved data
      */
     @Override
-    public Single<ICollectionData> save(ICollectionData data) {
-        return super.store((RealmCollection) data)
-                .map(result -> result);
+    public Completable save(ICollectionData data) {
+        return super.store((RealmCollection) data);
     }
 }

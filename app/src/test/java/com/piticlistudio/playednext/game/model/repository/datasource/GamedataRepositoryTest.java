@@ -19,10 +19,9 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
-import it.cosenonjaviste.daggermock.InjectFromComponent;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -152,17 +151,16 @@ public class GamedataRepositoryTest extends BaseTest {
     public void Given_data_When_Save_Then_SavesOnlyLocally() throws Exception {
 
         IGameDatasource data = GameFactory.provideRealmGame(50, "title");
-        when(dbImpl.save(data)).thenReturn(Single.just(data));
+        when(dbImpl.save(data)).thenReturn(Completable.complete());
 
         // Act
-        TestObserver<IGameDatasource> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
         result.assertNoErrors()
                 .assertComplete()
-                .assertValueCount(1)
-                .assertValue(data);
+                .assertNoValues();
         verifyZeroInteractions(netImpl);
     }
 }

@@ -4,6 +4,7 @@ import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData
 import com.piticlistudio.playednext.company.model.entity.datasource.RealmCompany;
 import com.piticlistudio.playednext.mvp.model.repository.datasource.BaseRealmRepository;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 /**
@@ -36,8 +37,7 @@ public class RealmCompanyRepositoryImpl extends BaseRealmRepository<RealmCompany
      * @return an Observable that emits the saved data
      */
     @Override
-    public Single<ICompanyData> save(ICompanyData data) {
-        return super.store((RealmCompany) data)
-                .map(result -> result);
+    public Completable save(ICompanyData data) {
+        return super.store((RealmCompany) data);
     }
 }

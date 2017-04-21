@@ -142,7 +142,7 @@
             layout="@layout/gamerelation_detail_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="@dimen/game_detail_fab_margin"/>
 
         <!--<include-->

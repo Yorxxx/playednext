@@ -4,6 +4,7 @@ import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 /**
@@ -27,7 +28,7 @@ public interface IGameRelationRepository {
      * @param data the data to save
      * @return the saved data.
      */
-    Observable<GameRelation> save(GameRelation data);
+    Completable save(GameRelation data);
 
     /**
      * Loads all items from the repository

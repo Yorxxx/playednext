@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import io.realm.RealmList;
@@ -105,7 +106,7 @@ public class GameRepositoryTest extends BaseGameTest {
         when(realmGameMapper.transform(data)).thenReturn(Optional.absent());
 
         // Act
-        TestObserver<Game> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
@@ -123,10 +124,10 @@ public class GameRepositoryTest extends BaseGameTest {
         when(realmGameMapper.transform(data)).thenReturn(Optional.of(expectedData));
 
         Throwable error = new Exception("bla");
-        doReturn(Observable.error(error)).when(dataRepository).save(expectedData);
+        doReturn(Completable.error(error)).when(dataRepository).save(expectedData);
 
         // Act
-        TestObserver<Game> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
@@ -135,29 +136,6 @@ public class GameRepositoryTest extends BaseGameTest {
                 .assertNotComplete();
         verify(dataRepository).save(expectedData);
         verify(realmGameMapper).transform(data);
-    }
-
-    @Test
-    public void Given_MapError_When_Save_Then_EmitsError() throws Exception {
-
-        Game data = GameFactory.provide(50, "name");
-        RealmGame expectedData = GameFactory.provideRealmGame(50, "name");
-        when(realmGameMapper.transform(data)).thenReturn(Optional.of(expectedData));
-        when(mapper.transform(expectedData)).thenReturn(Optional.absent());
-
-        doAnswer(invocation -> Observable.just(invocation.getArguments()[0])).when(dataRepository).save(any());
-
-        // Act
-        TestObserver<Game> result = repository.save(data).test();
-        result.awaitTerminalEvent();
-
-        // Assert
-        result.assertError(Throwable.class)
-                .assertNoValues()
-                .assertNotComplete();
-        verify(dataRepository).save(expectedData);
-        verify(realmGameMapper).transform(data);
-        verify(mapper).transform(expectedData);
     }
 
     @Test
@@ -168,20 +146,18 @@ public class GameRepositoryTest extends BaseGameTest {
         when(realmGameMapper.transform(data)).thenReturn(Optional.of(expectedData));
         when(mapper.transform(expectedData)).thenReturn(Optional.of(data));
 
-        doAnswer(invocation -> Observable.just(invocation.getArguments()[0])).when(dataRepository).save(any());
+        doAnswer(invocation -> Completable.complete()).when(dataRepository).save(any());
 
         // Act
-        TestObserver<Game> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
-        result.assertValue(data)
-                .assertComplete()
-                .assertValueCount(1)
+        result.assertComplete()
+                .assertNoValues()
                 .assertNoErrors();
         verify(dataRepository).save(expectedData);
         verify(realmGameMapper).transform(data);
-        verify(mapper).transform(expectedData);
     }
 
     @Test

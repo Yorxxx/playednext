@@ -105,13 +105,12 @@ public class RealmGameRelationRepositoryImplTest extends BaseAndroidTest {
         realm.close();
 
         // Act
-        TestObserver<IGameRelationDatasource> result = repository.save(data).test();
+        TestObserver<Void> result = repository.save(data).test();
         result.awaitTerminalEvent();
 
         // Assert
         result.assertNoErrors()
-                .assertComplete()
-                .assertValue(data);
+                .assertComplete();
         realm = Realm.getDefaultInstance();
         assertEquals(1, realm.where(RealmGameRelation.class).count());
         realm.close();
