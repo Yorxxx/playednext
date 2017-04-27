@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.di.component.AppComponent;
-import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
@@ -33,7 +32,7 @@ import com.piticlistudio.playednext.gamerelation.ui.detail.DaggerGameRelationDet
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailModule;
-import com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.GameDetailAdapter;
+import com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.GameRelationDetailAdapter;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.ui.grid.adapter.PlatformLabelGridAdapter;
 import com.piticlistudio.playednext.utils.UIUtils;
@@ -65,7 +64,7 @@ public class GameRelationDetailFragment extends Fragment implements GameRelation
     @Inject
     public GameRelationDetailContract.Presenter presenter;
     @Inject
-    public GameDetailAdapter adapter;
+    public GameRelationDetailAdapter adapter;
     @BindView(R.id.listview)
     RecyclerView listview;
     @BindView(R.id.backdrop)
@@ -129,6 +128,7 @@ public class GameRelationDetailFragment extends Fragment implements GameRelation
         component = ((AndroidApplication)getActivity().getApplication()).getRelationDetailComponent();
         if (component == null) {
             component = DaggerGameRelationDetailComponent.builder()
+                    .appComponent(getAppComponent())
                     .gameRelationComponent(getGameRelationComponent())
                     .gameRelationDetailModule(new GameRelationDetailModule())
                     .build();
@@ -176,8 +176,11 @@ public class GameRelationDetailFragment extends Fragment implements GameRelation
         getComponent().inject(this);
         presenter.attachView(this);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        listview.setLayoutManager(layoutManager);
+        adapter.setSpanCount(3);
+        GridLayoutManager gm = new GridLayoutManager(getActivity(), 3);
+        gm.setSpanSizeLookup(adapter.getSpanSizeLookup());
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        listview.setLayoutManager(gm);
         listview.setAdapter(adapter);
 
         int spanScount = getSpanCount();
@@ -282,7 +285,7 @@ public class GameRelationDetailFragment extends Fragment implements GameRelation
                         getAppComponent().picasso().load(imageData.getFullUrl()).into(backdrop);
                     });
         }
-        adapter.setData(data.game());
+        adapter.setData(data);
         platformAdapter.setData(data.game().platforms);
         mCallbacks.onDataLoaded(data.game());
         relationDetailLayout.loadData(data.id());
