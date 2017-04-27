@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Entity defining a relation status interval
@@ -170,6 +171,18 @@ public abstract class RelationInterval {
             //noinspection deprecation
             return context.getResources().getConfiguration().locale;
         }
+    }
+
+    /**
+     * Returns the number of hours the interval has.
+     * If interval has not ended, will use up to current time
+     * @return the number of hours
+     */
+    public double getHours() {
+        if (endAt == 0)
+            endAt = System.currentTimeMillis();
+        long value = endAt-startAt();
+        return value/ TimeUnit.HOURS.toMillis(1);
     }
 
     public enum RelationType {

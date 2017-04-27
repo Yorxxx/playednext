@@ -8,6 +8,7 @@ import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterv
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -147,5 +148,71 @@ public class GameRelationTest {
         // Assert
         assertNotNull(result.getStatuses());
         assertTrue(result.getStatuses().isEmpty());
+    }
+
+    @Test
+    public void given_emptyStatus_When_getTotalHoursWithStatus_Then_Returns0() throws Exception {
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+
+        // Assert
+        assertEquals(0, result.getTotalHoursWithStatus(RelationInterval.RelationType.DONE));
+    }
+
+    @Test
+    public void given_multipleStatus_When_getTotalHoursWithStatus_Then_ReturnsHoursCount() throws Exception {
+
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+        RelationInterval interval1 = RelationInterval.create(1, RelationInterval.RelationType.DONE, 5000);
+        interval1.setEndAt(5000+ TimeUnit.HOURS.toMillis(2));
+        RelationInterval interval2 = RelationInterval.create(2, RelationInterval.RelationType.PLAYING, 5000);
+        interval2.setEndAt(5000+ TimeUnit.HOURS.toMillis(5));
+        RelationInterval interval3 = RelationInterval.create(3, RelationInterval.RelationType.PENDING, 5000);
+        interval3.setEndAt(5000+ TimeUnit.HOURS.toMillis(1));
+        RelationInterval interval4 = RelationInterval.create(4, RelationInterval.RelationType.PLAYING, 5000);
+        interval4.setEndAt(5000+ TimeUnit.HOURS.toMillis(14));
+        result.getStatuses().add(interval1);
+        result.getStatuses().add(interval2);
+        result.getStatuses().add(interval3);
+        result.getStatuses().add(interval4);
+
+        // Assert
+        assertEquals(2, result.getTotalHoursWithStatus(RelationInterval.RelationType.DONE));
+        assertEquals(19, result.getTotalHoursWithStatus(RelationInterval.RelationType.PLAYING));
+        assertEquals(1, result.getTotalHoursWithStatus(RelationInterval.RelationType.PENDING));
+    }
+
+    @Test
+    public void given_emptyStatus_When_getNumberOfTimesInStatus_Then_Returns0() throws Exception {
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+
+        // Assert
+        assertEquals(0, result.getNumberOfTimesInStatus(RelationInterval.RelationType.DONE));
+    }
+
+    @Test
+    public void given_multipleStatus_When_getNumberOfTimesInStatus_Then_ReturnsTimesCount() throws Exception {
+
+        Game game = GameFactory.provide(10, "title");
+        GameRelation result = GameRelation.create(game, 100);
+        RelationInterval interval1 = RelationInterval.create(1, RelationInterval.RelationType.DONE, 5000);
+        RelationInterval interval2 = RelationInterval.create(2, RelationInterval.RelationType.PLAYING, 5000);
+        RelationInterval interval3 = RelationInterval.create(3, RelationInterval.RelationType.PENDING, 5000);
+        RelationInterval interval4 = RelationInterval.create(4, RelationInterval.RelationType.PLAYING, 5000);
+        RelationInterval interval5 = RelationInterval.create(5, RelationInterval.RelationType.PLAYING, 5000);
+        RelationInterval interval6 = RelationInterval.create(5, RelationInterval.RelationType.PENDING, 5000);
+        result.getStatuses().add(interval1);
+        result.getStatuses().add(interval2);
+        result.getStatuses().add(interval3);
+        result.getStatuses().add(interval4);
+        result.getStatuses().add(interval5);
+        result.getStatuses().add(interval6);
+
+        // Assert
+        assertEquals(1, result.getNumberOfTimesInStatus(RelationInterval.RelationType.DONE));
+        assertEquals(3, result.getNumberOfTimesInStatus(RelationInterval.RelationType.PLAYING));
+        assertEquals(2, result.getNumberOfTimesInStatus(RelationInterval.RelationType.PENDING));
     }
 }

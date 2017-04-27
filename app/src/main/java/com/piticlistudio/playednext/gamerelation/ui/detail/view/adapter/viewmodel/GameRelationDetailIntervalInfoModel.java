@@ -1,9 +1,11 @@
 package com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.viewmodel;
 
+import android.support.annotation.DrawableRes;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.epoxy.EpoxyAttribute;
@@ -23,6 +25,10 @@ public class GameRelationDetailIntervalInfoModel extends EpoxyModelWithHolder<Ga
     @EpoxyAttribute
     String description;
 
+    @EpoxyAttribute
+    @DrawableRes
+    int icon;
+
     /**
      * This should return a new instance of your {@link EpoxyHolder} class.
      */
@@ -38,6 +44,7 @@ public class GameRelationDetailIntervalInfoModel extends EpoxyModelWithHolder<Ga
 
     @Override
     public void bind(Holder holder) {
+        holder.status.setImageResource(icon);
         final SpannableString spannableString = new SpannableString(description);
         int start = -1;
         int end = -1;
@@ -46,17 +53,17 @@ public class GameRelationDetailIntervalInfoModel extends EpoxyModelWithHolder<Ga
             if ((c >= '0' && c <= '9')) {
                 if (start == -1) {
                     start = i;
-                    end = i;
                 }
                 else {
                     end = i;
                 }
             }
         }
-        if (end == start)
-            end++;
+        if (end == -1)
+            end = start;
+        end++;
 
-        spannableString.setSpan(new RelativeSizeSpan(3.0f), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new RelativeSizeSpan(2.0f), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         holder.text.setText(spannableString, TextView.BufferType.SPANNABLE);
     }
 
@@ -64,6 +71,10 @@ public class GameRelationDetailIntervalInfoModel extends EpoxyModelWithHolder<Ga
 
         @BindView(R.id.text)
         TextView text;
+
+
+        @BindView(R.id.status)
+        ImageView status;
 
         @Override
         protected void bindView(View itemView) {
