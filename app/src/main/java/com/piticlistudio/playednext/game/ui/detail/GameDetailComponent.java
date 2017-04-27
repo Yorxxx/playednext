@@ -11,5 +11,5 @@ import dagger.Component;
 @Component(dependencies = GameComponent.class, modules = GameDetailModule.class)
 public interface GameDetailComponent {
 
-    void inject(GameDetailFragment fragment);
+    //void inject(GameDetailFragment fragment);
 }

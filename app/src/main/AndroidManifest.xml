@@ -23,7 +23,7 @@
         </activity>
 
         <activity
-            android:name=".game.ui.detail.view.GameDetailActivity"
+            android:name=".gamerelation.ui.detail.view.GameRelationDetailActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/GameDetailTheme">
         </activity>
