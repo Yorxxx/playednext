@@ -23,7 +23,6 @@ import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
-import com.piticlistudio.playednext.game.ui.detail.view.GameDetailActivity;
 import com.piticlistudio.playednext.game.ui.search.DaggerGameSearchComponent;
 import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
 import com.piticlistudio.playednext.game.ui.search.GameSearchContract;

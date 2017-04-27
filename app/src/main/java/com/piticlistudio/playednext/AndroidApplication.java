@@ -11,7 +11,6 @@ import com.piticlistudio.playednext.di.module.AppModule;
 import com.piticlistudio.playednext.game.DaggerGameComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
-import com.piticlistudio.playednext.game.ui.detail.GameDetailComponent;
 import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
 import com.piticlistudio.playednext.gamerelation.DaggerGameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
@@ -37,7 +36,6 @@ public class AndroidApplication extends Application {
     private static final String TAG = "AndroidApplication";
     public AppComponent appComponent;
     public GameComponent gameComponent;
-    private GameDetailComponent detailComponent;
     private GameSearchComponent searchComponent;
     public GameRelationComponent relationComponent;
     private GameRelationDetailComponent relationDetailComponent;
@@ -152,10 +150,6 @@ public class AndroidApplication extends Application {
         return this.gameComponent;
     }
 
-    public GameDetailComponent getGameDetailComponent() {
-        return this.detailComponent;
-    }
-
     public GameSearchComponent getSearchComponent() {
         return this.searchComponent;
     }
@@ -169,11 +163,6 @@ public class AndroidApplication extends Application {
     @VisibleForTesting
     public void setGameComponent(GameComponent component) {
         this.gameComponent = component;
-    }
-
-    @VisibleForTesting
-    public void setGameDetailComponent(GameDetailComponent component) {
-        this.detailComponent = component;
     }
 
     @VisibleForTesting

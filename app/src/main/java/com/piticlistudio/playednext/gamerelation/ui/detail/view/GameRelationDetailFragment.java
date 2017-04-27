@@ -27,13 +27,13 @@ import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
-import com.piticlistudio.playednext.game.ui.detail.view.adapter.GameDetailAdapter;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.detail.DaggerGameRelationDetailComponent;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailModule;
+import com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.GameDetailAdapter;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.ui.grid.adapter.PlatformLabelGridAdapter;
 import com.piticlistudio.playednext.utils.UIUtils;
@@ -110,10 +110,6 @@ public class GameRelationDetailFragment extends Fragment implements GameRelation
         args.putInt(ARG_GAMEID, gameId);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    private GameComponent getGameComponent() {
-        return ((AndroidApplication) getActivity().getApplication()).gameComponent;
     }
 
     private GameRelationComponent getGameRelationComponent() {

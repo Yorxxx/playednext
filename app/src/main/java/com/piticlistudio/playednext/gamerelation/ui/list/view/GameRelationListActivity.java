@@ -17,7 +17,6 @@ import android.view.View;
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.di.component.AppComponent;
-import com.piticlistudio.playednext.game.ui.detail.view.GameDetailActivity;
 import com.piticlistudio.playednext.game.ui.search.view.GameSearchFragment;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
