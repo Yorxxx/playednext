@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import com.github.zagum.switchicon.SwitchIconView;
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
-import com.piticlistudio.playednext.game.ui.detail.GameDetailModule;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.detail.DaggerGameRelationDetailComponent;

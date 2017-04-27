@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.piticlistudio.playednext.game.model.entity.Game;
-import com.piticlistudio.playednext.game.ui.detail.view.GameDetailFragment;
 import com.piticlistudio.playednext.image.model.entity.ImageData;
 import com.piticlistudio.playednext.image.ui.viewer.ImageViewerActivity;
 
