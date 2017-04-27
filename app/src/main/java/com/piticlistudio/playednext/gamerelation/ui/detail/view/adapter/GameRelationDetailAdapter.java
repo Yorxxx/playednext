@@ -1,16 +1,23 @@
 package com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter;
 
+import android.content.Context;
+
 import com.airbnb.epoxy.EpoxyAdapter;
 import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.game.model.entity.Game;
+import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.viewmodel.GameDetailDescriptionModel;
 import com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.viewmodel.GameDetailDescriptionModel_;
 import com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.viewmodel.GameDetailInfoModel;
 import com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.viewmodel.GameDetailInfoModel_;
+import com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.viewmodel.GameRelationDetailIntervalInfoModel;
+import com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.viewmodel.GameRelationDetailIntervalInfoModel_;
 import com.piticlistudio.playednext.genre.model.entity.Genre;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 import com.piticlistudio.playednext.utils.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,23 +27,27 @@ import javax.inject.Inject;
  * Created by jorge.garcia on 16/02/2017.
  */
 
-public class GameDetailAdapter extends EpoxyAdapter {
+public class GameRelationDetailAdapter extends EpoxyAdapter {
 
-    private Game data = null;
+    private GameRelation data = null;
     private GameDetailInfoModel infoModel;
     private GameDetailDescriptionModel descriptionModel;
+    private GameRelationDetailIntervalInfoModel intervalInfoModel;
+    private final Context ctx;
 
     @Inject
-    public GameDetailAdapter() {
+    public GameRelationDetailAdapter(Context ctx) {
         enableDiffing();
+        this.ctx = ctx;
         infoModel = new GameDetailInfoModel_();
         descriptionModel = new GameDetailDescriptionModel_();
     }
 
-    public void setData(Game data) {
+    public void setData(GameRelation data) {
 
-        bindDescriptionModel(data);
-        bindInfoModel(data);
+        bindDescriptionModel(data.game());
+        bindInfoModel(data.game());
+        bindIntervalModel(data);
 
         if (this.data != null)
             notifyModelsChanged();
@@ -89,5 +100,15 @@ public class GameDetailAdapter extends EpoxyAdapter {
         if (this.data == null)
             addModel(infoModel);
         infoModel.show(saga != null || developer != null || publisher != null || genre != null);
+    }
+
+    private void bindIntervalModel(GameRelation relation) {
+        if (relation.getCurrent().isPresent()) {
+            RelationInterval current = relation.getCurrent().get();
+            String msg = current.getDisplayDate(ctx, Calendar.getInstance(), false);
+            GameRelationDetailIntervalInfoModel_ model = new GameRelationDetailIntervalInfoModel_()
+                    .description(msg);
+            addModel(model);
+        }
     }
 }

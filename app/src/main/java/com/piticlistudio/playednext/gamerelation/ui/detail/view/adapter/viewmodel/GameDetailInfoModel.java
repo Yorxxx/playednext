@@ -55,6 +55,19 @@ public class GameDetailInfoModel extends EpoxyModelWithHolder<GameDetailInfoMode
         return R.layout.game_detail_info;
     }
 
+    /**
+     * Subclasses can override this if they want their view to take up more than one span in a grid
+     * layout.
+     *
+     * @param totalSpanCount The number of spans in the grid
+     * @param position       The position of the model
+     * @param itemCount      The total number of items in the adapter
+     */
+    @Override
+    public int getSpanSize(int totalSpanCount, int position, int itemCount) {
+        return totalSpanCount;
+    }
+
     @Override
     public void bind(Holder holder) {
         holder.developer.setText(developer);

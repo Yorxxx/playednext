@@ -76,6 +76,7 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
         }
         if (component == null) {
             component = DaggerGameRelationDetailComponent.builder()
+                    .appComponent(getApplicationComponent())
                     .gameRelationComponent(getRelationComponent())
                     .gameRelationDetailModule(new GameRelationDetailModule())
                     .build();
