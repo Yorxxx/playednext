@@ -21,6 +21,7 @@ import com.piticlistudio.playednext.game.ui.detail.view.GameDetailActivity;
 import com.piticlistudio.playednext.game.ui.search.view.GameSearchFragment;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
+import com.piticlistudio.playednext.gamerelation.ui.detail.view.GameRelationDetailActivity;
 import com.piticlistudio.playednext.gamerelation.ui.list.DaggerGameRelationListComponent;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListComponent;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListContract;
@@ -240,7 +241,7 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
      */
     @Override
     public void onGameRelationClicked(GameRelation clickedRelation) {
-        startActivity(GameDetailActivity.init(this, clickedRelation.game()));
+        startActivity(GameRelationDetailActivity.init(this, clickedRelation.game()));
     }
 
     /**

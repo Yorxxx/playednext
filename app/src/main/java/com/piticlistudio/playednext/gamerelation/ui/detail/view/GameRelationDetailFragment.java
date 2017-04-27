@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.game.ui.detail.view;
+package com.piticlistudio.playednext.gamerelation.ui.detail.view;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnticipateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,7 +34,6 @@ import com.piticlistudio.playednext.gamerelation.ui.detail.DaggerGameRelationDet
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailModule;
-import com.piticlistudio.playednext.gamerelation.ui.detail.view.GameRelationDetailView;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.ui.grid.adapter.PlatformLabelGridAdapter;
 import com.piticlistudio.playednext.utils.UIUtils;
@@ -54,13 +52,13 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
 /**
- * Fragment that displays a detailed game
+ * Fragment that displays a detailed gamerelation (along with its game)
  * Created by jorge.garcia on 16/02/2017.
  */
 
-public class GameDetailFragment extends Fragment implements GameRelationDetailContract.View, PlatformLabelGridAdapter.Callbacks {
+public class GameRelationDetailFragment extends Fragment implements GameRelationDetailContract.View, PlatformLabelGridAdapter.Callbacks {
 
-    public static final String TAG = "GameDetail";
+    public static final String TAG = "GameRelationDetail";
     private final static String ARG_GAMEID = "gameId";
     private static Callbacks sDummyCallbacks = data -> {
     };
@@ -106,8 +104,8 @@ public class GameDetailFragment extends Fragment implements GameRelationDetailCo
     private int requestedGameId = 0;
     public GameRelationDetailComponent component;
 
-    public static GameDetailFragment newInstance(int gameId) {
-        GameDetailFragment fragment = new GameDetailFragment();
+    public static GameRelationDetailFragment newInstance(int gameId) {
+        GameRelationDetailFragment fragment = new GameRelationDetailFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_GAMEID, gameId);
         fragment.setArguments(args);
@@ -179,7 +177,7 @@ public class GameDetailFragment extends Fragment implements GameRelationDetailCo
 
         backdrop.getLayoutParams().height = UIUtils.getScreenHeight(getContext());
 
-        //getComponent().inject(this);
+        getComponent().inject(this);
         presenter.attachView(this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
