@@ -15,12 +15,4 @@ import dagger.Component;
 public interface GameComponent {
 
     IGameRepository repository();
-
-//    GameDetailContract.Presenter detailPresenter();
-//
-//    GameDetailAdapter detailAdapter();
-//
-//    GameSearchContract.Presenter searchPresenter();
-//
-//    GameSearchAdapter searchAdapter();
 }
