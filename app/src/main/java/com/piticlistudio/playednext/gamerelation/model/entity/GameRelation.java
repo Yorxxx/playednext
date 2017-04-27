@@ -67,4 +67,34 @@ public abstract class GameRelation {
         }
         return Optional.absent();
     }
+
+    /**
+     * Returns the number of hours the relation has been in the specified status
+     * @param type the status
+     * @return the number of hours in this status
+     */
+    public int getTotalHoursWithStatus(RelationInterval.RelationType type) {
+        int sum = 0;
+        for (RelationInterval relationInterval : getStatuses()) {
+            if (relationInterval.type() == type) {
+                sum += relationInterval.getHours();
+            }
+        }
+        return sum;
+    }
+
+    /**
+     * Returns the number of times the relation has been in the specified status
+     * @param status the status to check the number of times
+     * @return the number of times in this status
+     */
+    public int getNumberOfTimesInStatus(RelationInterval.RelationType status) {
+        int sum = 0;
+        for (RelationInterval relationInterval : getStatuses()) {
+            if (relationInterval.type() == status) {
+                sum++;
+            }
+        }
+        return sum;
+    }
 }

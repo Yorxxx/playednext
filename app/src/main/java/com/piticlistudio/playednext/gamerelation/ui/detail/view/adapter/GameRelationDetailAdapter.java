@@ -1,8 +1,10 @@
 package com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import com.airbnb.epoxy.EpoxyAdapter;
+import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.company.model.entity.Company;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
@@ -103,12 +105,35 @@ public class GameRelationDetailAdapter extends EpoxyAdapter {
     }
 
     private void bindIntervalModel(GameRelation relation) {
-        if (relation.getCurrent().isPresent()) {
-            RelationInterval current = relation.getCurrent().get();
-            String msg = current.getDisplayDate(ctx, Calendar.getInstance(), false);
-            GameRelationDetailIntervalInfoModel_ model = new GameRelationDetailIntervalInfoModel_()
-                    .description(msg);
-            addModel(model);
+        if (relation.getStatuses().size() > 0) {
+            for (RelationInterval.RelationType relationType : RelationInterval.RelationType.values()) {
+                String message = null;
+                Resources res = ctx.getResources();
+                int iconRes = 0;
+                switch (relationType) {
+                    case DONE:
+                        int value = relation.getNumberOfTimesInStatus(relationType);
+                        message = res.getQuantityString(R.plurals.game_detail_relationcompleted_count, value, value);
+                        iconRes = R.drawable.gamerelation_completed_status_accentcolor;
+                        break;
+                    case PLAYING:
+                        int hours = relation.getTotalHoursWithStatus(relationType);
+                        message = res.getQuantityString(R.plurals.game_detail_relationplaying_count, hours, hours);
+                        iconRes = R.drawable.gamerelation_waiting_status;
+                        break;
+                    case PENDING:
+                        int pending = relation.getTotalHoursWithStatus(relationType);
+                        message = res.getQuantityString(R.plurals.game_detail_relationwaiting_count, pending, pending);
+                        iconRes = R.drawable.gamerelation_playing_status;
+                        break;
+                }
+                if (message != null) {
+                    GameRelationDetailIntervalInfoModel_ model = new GameRelationDetailIntervalInfoModel_()
+                            .description(message)
+                            .icon(iconRes);
+                    addModel(model);
+                }
+            }
         }
     }
 }
