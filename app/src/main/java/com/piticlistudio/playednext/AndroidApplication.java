@@ -12,14 +12,10 @@ import com.piticlistudio.playednext.game.DaggerGameComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
-import com.piticlistudio.playednext.gamerelation.DaggerGameRelationComponent;
-import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
-import com.piticlistudio.playednext.gamerelation.GameRelationModule;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListComponent;
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
-import com.piticlistudio.playednext.relationinterval.RelationIntervalModule;
 
 import java.io.IOException;
 
@@ -37,7 +33,7 @@ public class AndroidApplication extends Application {
     public AppComponent appComponent;
     public GameComponent gameComponent;
     private GameSearchComponent searchComponent;
-    public GameRelationComponent relationComponent;
+    //public GameRelationComponent relationComponent;
     private GameRelationDetailComponent relationDetailComponent;
     private GameRelationListComponent relationListComponent;
 
@@ -125,11 +121,11 @@ public class AndroidApplication extends Application {
                 .collectionModule(new CollectionModule())
                 .build();
 
-        relationComponent = DaggerGameRelationComponent.builder()
-                .gameComponent(gameComponent)
-                .gameRelationModule(new GameRelationModule())
-                .relationIntervalModule(new RelationIntervalModule())
-                .build();
+//        relationComponent = DaggerGameRelationComponent.builder()
+//                .gameComponent(gameComponent)
+//                .gameRelationModule(new GameRelationModule())
+//                .relationIntervalModule(new RelationIntervalModule())
+//                .build();
 
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
@@ -173,5 +169,10 @@ public class AndroidApplication extends Application {
     @VisibleForTesting
     public void setRelationDetailComponent(GameRelationDetailComponent relationDetailComponent) {
         this.relationDetailComponent = relationDetailComponent;
+    }
+
+    @VisibleForTesting
+    public void setRelationListComponent(GameRelationListComponent component) {
+        this.relationListComponent = component;
     }
 }

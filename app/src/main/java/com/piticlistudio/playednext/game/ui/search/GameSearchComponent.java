@@ -9,7 +9,7 @@ import com.piticlistudio.playednext.game.ui.search.view.GameSearchFragment;
 import dagger.Component;
 
 @PerActivity
-@Component(dependencies = {AppComponent.class, GameComponent.class}, modules = GameSearchModule.class)
+@Component(dependencies = {AppComponent.class}, modules = GameSearchModule.class)
 public interface GameSearchComponent {
 
     void inject(GameSearchFragment fragment);
