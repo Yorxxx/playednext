@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.game.ui.detail.view.adapter.viewmodel;
+package com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.viewmodel;
 
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -35,6 +35,19 @@ public class GameDetailDescriptionModel extends EpoxyModelWithHolder<GameDetailD
     @Override
     protected int getDefaultLayout() {
         return R.layout.game_detail_description;
+    }
+
+    /**
+     * Subclasses can override this if they want their view to take up more than one span in a grid
+     * layout.
+     *
+     * @param totalSpanCount The number of spans in the grid
+     * @param position       The position of the model
+     * @param itemCount      The total number of items in the adapter
+     */
+    @Override
+    public int getSpanSize(int totalSpanCount, int position, int itemCount) {
+        return totalSpanCount;
     }
 
     @Override

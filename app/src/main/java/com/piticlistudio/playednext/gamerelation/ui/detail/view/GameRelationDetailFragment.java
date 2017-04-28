@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.game.ui.detail.view;
+package com.piticlistudio.playednext.gamerelation.ui.detail.view;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnticipateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,17 +25,17 @@ import android.widget.TextView;
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.di.component.AppComponent;
-import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
-import com.piticlistudio.playednext.game.ui.detail.DaggerGameDetailComponent;
-import com.piticlistudio.playednext.game.ui.detail.GameDetailComponent;
-import com.piticlistudio.playednext.game.ui.detail.GameDetailContract;
-import com.piticlistudio.playednext.game.ui.detail.GameDetailModule;
-import com.piticlistudio.playednext.game.ui.detail.presenter.GameDetailPresenter;
-import com.piticlistudio.playednext.game.ui.detail.view.adapter.GameDetailAdapter;
-import com.piticlistudio.playednext.gamerelation.ui.detail.view.GameRelationDetailView;
+import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
+import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
+import com.piticlistudio.playednext.gamerelation.ui.detail.DaggerGameRelationDetailComponent;
+import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
+import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailContract;
+import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailModule;
+import com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.GameRelationDetailAdapter;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.ui.grid.adapter.PlatformLabelGridAdapter;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 import com.piticlistudio.playednext.utils.UIUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -53,20 +52,20 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
 /**
- * Fragment that displays a detailed game
+ * Fragment that displays a detailed gamerelation (along with its game)
  * Created by jorge.garcia on 16/02/2017.
  */
 
-public class GameDetailFragment extends Fragment implements GameDetailContract.View, PlatformLabelGridAdapter.Callbacks {
+public class GameRelationDetailFragment extends Fragment implements GameRelationDetailContract.View, PlatformLabelGridAdapter.Callbacks, GameRelationDetailView.GameRelationDetailCallback {
 
-    public static final String TAG = "GameDetail";
+    public static final String TAG = "GameRelationDetail";
     private final static String ARG_GAMEID = "gameId";
     private static Callbacks sDummyCallbacks = data -> {
     };
     @Inject
-    public GameDetailContract.Presenter presenter;
+    public GameRelationDetailContract.Presenter presenter;
     @Inject
-    public GameDetailAdapter adapter;
+    public GameRelationDetailAdapter adapter;
     @BindView(R.id.listview)
     RecyclerView listview;
     @BindView(R.id.backdrop)
@@ -103,18 +102,18 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     private PublishSubject<View> doubleClickSubject = PublishSubject.create();
     private Callbacks mCallbacks = sDummyCallbacks;
     private int requestedGameId = 0;
-    public GameDetailComponent component;
+    public GameRelationDetailComponent component;
 
-    public static GameDetailFragment newInstance(int gameId) {
-        GameDetailFragment fragment = new GameDetailFragment();
+    public static GameRelationDetailFragment newInstance(int gameId) {
+        GameRelationDetailFragment fragment = new GameRelationDetailFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_GAMEID, gameId);
         fragment.setArguments(args);
         return fragment;
     }
 
-    private GameComponent getGameComponent() {
-        return ((AndroidApplication) getActivity().getApplication()).gameComponent;
+    private GameRelationComponent getGameRelationComponent() {
+        return ((AndroidApplication)getActivity().getApplication()).relationComponent;
     }
 
     private AppComponent getAppComponent() {
@@ -126,12 +125,13 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
      *
      * @return the component
      */
-    private GameDetailComponent getComponent() {
-        component = ((AndroidApplication)getActivity().getApplication()).getGameDetailComponent();
+    private GameRelationDetailComponent getComponent() {
+        component = ((AndroidApplication)getActivity().getApplication()).getRelationDetailComponent();
         if (component == null) {
-            component = DaggerGameDetailComponent.builder()
-                    .gameComponent(getGameComponent())
-                    .gameDetailModule(new GameDetailModule())
+            component = DaggerGameRelationDetailComponent.builder()
+                    .appComponent(getAppComponent())
+                    .gameRelationComponent(getGameRelationComponent())
+                    .gameRelationDetailModule(new GameRelationDetailModule())
                     .build();
         }
         return component;
@@ -177,8 +177,11 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
         getComponent().inject(this);
         presenter.attachView(this);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        listview.setLayoutManager(layoutManager);
+        adapter.setSpanCount(3);
+        GridLayoutManager gm = new GridLayoutManager(getActivity(), 3);
+        gm.setSpanSizeLookup(adapter.getSpanSizeLookup());
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        listview.setLayoutManager(gm);
         listview.setAdapter(adapter);
 
         int spanScount = getSpanCount();
@@ -209,6 +212,7 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
                     barLayout.setExpanded(false);
                 });
 
+        relationDetailLayout.setListener(this);
         if (getArguments().containsKey(ARG_GAMEID)) {
             requestedGameId = getArguments().getInt(ARG_GAMEID);
             loadData(requestedGameId);
@@ -269,14 +273,14 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
      * @param data the data to show
      */
     @Override
-    public void setData(Game data) {
-        toolbar.setTitle(data.title());
-        title.setText(data.title());
+    public void setData(GameRelation data) {
+        toolbar.setTitle(data.game().title());
+        title.setText(data.game().title());
 
-        if (data.screenshots.size() > 0 && (screenshotViewerDisposable == null || screenshotViewerDisposable.isDisposed())) {
+        if (data.game().screenshots.size() > 0 && (screenshotViewerDisposable == null || screenshotViewerDisposable.isDisposed())) {
             screenshotViewerDisposable = Observable.interval(5, TimeUnit.SECONDS)
-                    .take(data.screenshots.size())
-                    .map(aLong -> data.screenshots.get(aLong.intValue()))
+                    .take(data.game().screenshots.size())
+                    .map(aLong -> data.game().screenshots.get(aLong.intValue()))
                     .repeat()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(imageData -> {
@@ -284,9 +288,9 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
                     });
         }
         adapter.setData(data);
-        platformAdapter.setData(data.platforms);
-        mCallbacks.onDataLoaded(data);
-        relationDetailLayout.loadData(data.id());
+        platformAdapter.setData(data.game().platforms);
+        mCallbacks.onDataLoaded(data.game());
+        relationDetailLayout.setData(data);
     }
 
     /**
@@ -350,6 +354,11 @@ public class GameDetailFragment extends Fragment implements GameDetailContract.V
     @Override
     public void onPlatformClicked(Platform data, View v) {
         Snackbar.make(content, data.name(), Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRelationTypeChange(GameRelation data, RelationInterval.RelationType newType, boolean isActive) {
+        presenter.save(data, newType, isActive);
     }
 
     public interface Callbacks {

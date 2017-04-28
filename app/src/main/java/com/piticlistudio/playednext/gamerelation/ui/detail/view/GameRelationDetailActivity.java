@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.game.ui.detail.view;
+package com.piticlistudio.playednext.gamerelation.ui.detail.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,16 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Activity that displays a detailed game
+ * Activity that displays a detailed game relation
  * Created by jorge.garcia on 16/02/2017.
  */
 
-public class GameDetailActivity extends AppCompatActivity implements GameDetailFragment.Callbacks {
+public class GameRelationDetailActivity extends AppCompatActivity implements GameRelationDetailFragment.Callbacks {
 
     private final static String EXTRA_GAMEID = "gameId";
     private Game currentData = null;
 
-    GameDetailFragment currentFragment;
+    GameRelationDetailFragment currentFragment;
 
     /**
      * Initializes a new intent to launch this activity
@@ -36,7 +36,7 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailF
      * @return an Intent ready to be launched
      */
     public static Intent init(Activity activity, Game game) {
-        Intent intent = new Intent(activity, GameDetailActivity.class);
+        Intent intent = new Intent(activity, GameRelationDetailActivity.class);
         intent.putExtra(EXTRA_GAMEID, game.id());
         return intent;
     }
@@ -49,7 +49,7 @@ public class GameDetailActivity extends AppCompatActivity implements GameDetailF
         if (savedInstanceState == null) {
             if (getIntent().hasExtra(EXTRA_GAMEID)) {
                 int gameId = getIntent().getIntExtra(EXTRA_GAMEID, 0);
-                currentFragment = GameDetailFragment.newInstance(gameId);
+                currentFragment = GameRelationDetailFragment.newInstance(gameId);
                 getSupportFragmentManager().beginTransaction().replace(android.R.id.content, currentFragment).commit();
             }
         }

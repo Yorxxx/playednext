@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import com.github.zagum.switchicon.SwitchIconView;
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
-import com.piticlistudio.playednext.game.ui.detail.GameDetailModule;
 import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.detail.DaggerGameRelationDetailComponent;
@@ -44,6 +43,8 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
     private GameRelation data;
     private GameRelationDetailComponent component;
 
+    private GameRelationDetailCallback listener;
+
     public GameRelationDetailView(Context context) {
         super(context);
         if (!isInEditMode())
@@ -70,6 +71,10 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
         return null;
     }
 
+    public void setListener(GameRelationDetailCallback listener) {
+        this.listener = listener;
+    }
+
     protected GameRelationDetailComponent getComponent() {
         Activity activity = getActivity();
         if (activity != null) {
@@ -77,6 +82,7 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
         }
         if (component == null) {
             component = DaggerGameRelationDetailComponent.builder()
+                    .appComponent(getApplicationComponent())
                     .gameRelationComponent(getRelationComponent())
                     .gameRelationDetailModule(new GameRelationDetailModule())
                     .build();
@@ -170,25 +176,55 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
 
     @OnClick(R.id.waitingSwitchBtn)
     public void setRelationAsWaiting() {
-        presenter.save(this.data, RelationInterval.RelationType.PENDING, !waitingBtn.isIconEnabled());
+        boolean active = !waitingBtn.isIconEnabled();
         waitingBtn.switchState(true);
         playingBtn.setIconEnabled(false, true);
         doneBtn.setIconEnabled(false, true);
+        if (listener != null) {
+            listener.onRelationTypeChange(data, RelationInterval.RelationType.PENDING, active);
+        }
+        else {
+            presenter.save(data, RelationInterval.RelationType.PENDING, active);
+        }
     }
 
     @OnClick(R.id.playingSwitchBtn)
     public void setRelationAsPlaying() {
-        presenter.save(this.data, RelationInterval.RelationType.PLAYING, !playingBtn.isIconEnabled());
+        boolean active = !playingBtn.isIconEnabled();
         playingBtn.switchState(true);
         doneBtn.setIconEnabled(false, true);
         waitingBtn.setIconEnabled(false, true);
+        if (listener != null) {
+            listener.onRelationTypeChange(data, RelationInterval.RelationType.PLAYING, active);
+        }
+        else {
+            presenter.save(data, RelationInterval.RelationType.PENDING, active);
+        }
     }
 
     @OnClick(R.id.doneSwitchBtn)
     public void setRelationAsCompleted() {
-        presenter.save(this.data, RelationInterval.RelationType.DONE, !doneBtn.isIconEnabled());
+        boolean active = !doneBtn.isIconEnabled();
         doneBtn.switchState(true);
         waitingBtn.setIconEnabled(false, true);
         playingBtn.setIconEnabled(false, true);
+        if (listener != null) {
+            // TODO avoid callbacks. Our listener could be notified directly from database changes
+            listener.onRelationTypeChange(data, RelationInterval.RelationType.DONE, active);
+        }
+        else {
+            presenter.save(data, RelationInterval.RelationType.PENDING, active);
+        }
+    }
+
+    public interface GameRelationDetailCallback {
+
+        /**
+         * Notifies that the relation has been requested to change.
+         * @param data the data to change
+         * @param newType the type to change
+         * @param isActive boolean indicating if the type is active or not
+         */
+        void onRelationTypeChange(GameRelation data, RelationInterval.RelationType newType, boolean isActive);
     }
 }
