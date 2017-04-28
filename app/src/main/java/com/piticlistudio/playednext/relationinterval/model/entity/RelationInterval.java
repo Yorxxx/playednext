@@ -179,9 +179,10 @@ public abstract class RelationInterval {
      * @return the number of hours
      */
     public double getHours() {
-        if (endAt == 0)
-            endAt = System.currentTimeMillis();
-        long value = endAt-startAt();
+        long max = endAt;
+        if (max == 0)
+            max = System.currentTimeMillis();
+        long value = max-startAt();
         return value/ TimeUnit.HOURS.toMillis(1);
     }
 
