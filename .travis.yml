@@ -53,8 +53,9 @@ before_script:
   - adb shell svc power stayon true
 
 script:
-  - ./gradlew jacocoDebugReport
-  - ./gradlew build connectedCheck
+  #- ./gradlew jacocoDebugReport
+  #- ./gradlew build connectedCheck
+  - ./gradlew createDebugCoverageReport jacocoDebugReport
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
