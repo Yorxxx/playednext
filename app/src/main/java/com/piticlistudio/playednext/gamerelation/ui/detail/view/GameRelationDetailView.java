@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import com.github.zagum.switchicon.SwitchIconView;
 import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
-import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.detail.DaggerGameRelationDetailComponent;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
@@ -63,14 +62,6 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
             init();
     }
 
-    protected GameRelationComponent getRelationComponent() {
-        Activity activity = getActivity();
-        if (activity != null) {
-            return ((AndroidApplication) activity.getApplication()).relationComponent;
-        }
-        return null;
-    }
-
     public void setListener(GameRelationDetailCallback listener) {
         this.listener = listener;
     }
@@ -83,7 +74,6 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
         if (component == null) {
             component = DaggerGameRelationDetailComponent.builder()
                     .appComponent(getApplicationComponent())
-                    .gameRelationComponent(getRelationComponent())
                     .gameRelationDetailModule(new GameRelationDetailModule())
                     .build();
         }

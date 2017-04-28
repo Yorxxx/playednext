@@ -18,7 +18,6 @@ import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.ui.search.view.GameSearchFragment;
-import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.detail.view.GameRelationDetailActivity;
 import com.piticlistudio.playednext.gamerelation.ui.list.DaggerGameRelationListComponent;
@@ -61,10 +60,6 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     public GameRelationListAdapter adapter;
     private GameRelationListComponent component;
 
-    protected GameRelationComponent getRelationComponent() {
-        return ((AndroidApplication) getApplication()).relationComponent;
-    }
-
     protected AppComponent getAppComponent() {
         return ((AndroidApplication) getApplication()).appComponent;
     }
@@ -74,7 +69,6 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
         if (component == null) {
             component = DaggerGameRelationListComponent.builder()
                     .appComponent(getAppComponent())
-                    .gameRelationComponent(getRelationComponent())
                     .gameRelationListModule(new GameRelationListModule())
                     .build();
         }

@@ -109,7 +109,6 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
         if (component == null) {
             component = DaggerGameSearchComponent.builder()
                     .appComponent(getAppComponent())
-                    .gameComponent(getGameComponent())
                     .gameSearchModule(new GameSearchModule())
                     .build();
         }

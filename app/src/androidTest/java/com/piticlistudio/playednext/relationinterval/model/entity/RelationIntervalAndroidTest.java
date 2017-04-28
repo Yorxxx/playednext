@@ -57,7 +57,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, false);
-        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_completed_zero, "5:00 PM");
+        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_completed_zero, "6:00 PM");
 
         // Assert
         assertNotNull(result);
@@ -78,7 +78,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, true);
-        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_completed_zero, "17:00");
+        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_completed_zero, "18:00");
 
         // Assert
         assertNotNull(result);
@@ -99,7 +99,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, false);
-        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_playing_start_zero, "5:00 PM");
+        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_playing_start_zero, "6:00 PM");
 
         // Assert
         assertNotNull(result);
@@ -120,7 +120,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, true);
-        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_playing_start_zero, "17:00");
+        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_playing_start_zero, "18:00");
 
         // Assert
         assertNotNull(result);
@@ -141,7 +141,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, false);
-        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_waiting_start_zero, "5:00 PM");
+        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_waiting_start_zero, "6:00 PM");
 
         // Assert
         assertNotNull(result);
@@ -162,7 +162,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, true);
-        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_waiting_start_zero, "17:00");
+        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_waiting_start_zero, "18:00");
 
         // Assert
         assertNotNull(result);
@@ -183,7 +183,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, false);
-        String expected = res.getQuantityString(R.plurals.interval_displaydate_completed, 1, "5:00 PM");
+        String expected = res.getQuantityString(R.plurals.interval_displaydate_completed, 1, "6:00 PM");
 
         // Assert
         assertNotNull(result);
@@ -204,7 +204,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, true);
-        String expected = res.getQuantityString(R.plurals.interval_displaydate_completed, 1, "17:00");
+        String expected = res.getQuantityString(R.plurals.interval_displaydate_completed, 1, "18:00");
 
         // Assert
         assertNotNull(result);
@@ -225,7 +225,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, false);
-        String expected = res.getQuantityString(R.plurals.interval_displaydate_playing_start, 1, "5:00 PM");
+        String expected = res.getQuantityString(R.plurals.interval_displaydate_playing_start, 1, "6:00 PM");
 
         // Assert
         assertNotNull(result);
@@ -246,7 +246,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, true);
-        String expected = res.getQuantityString(R.plurals.interval_displaydate_playing_start, 1, "17:00");
+        String expected = res.getQuantityString(R.plurals.interval_displaydate_playing_start, 1, "18:00");
 
         // Assert
         assertNotNull(result);
@@ -267,7 +267,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, false);
-        String expected = res.getQuantityString(R.plurals.interval_displaydate_waiting_start, 1, "5:00 PM");
+        String expected = res.getQuantityString(R.plurals.interval_displaydate_waiting_start, 1, "6:00 PM");
 
         // Assert
         assertNotNull(result);
@@ -288,7 +288,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
         // Act
         String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, true);
-        String expected = res.getQuantityString(R.plurals.interval_displaydate_waiting_start, 1, "17:00");
+        String expected = res.getQuantityString(R.plurals.interval_displaydate_waiting_start, 1, "18:00");
 
         // Assert
         assertNotNull(result);
