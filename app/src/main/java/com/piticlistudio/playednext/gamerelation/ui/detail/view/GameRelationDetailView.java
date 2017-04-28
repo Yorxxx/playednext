@@ -183,6 +183,9 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
         if (listener != null) {
             listener.onRelationTypeChange(data, RelationInterval.RelationType.PENDING, active);
         }
+        else {
+            presenter.save(data, RelationInterval.RelationType.PENDING, active);
+        }
     }
 
     @OnClick(R.id.playingSwitchBtn)
@@ -194,6 +197,9 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
         if (listener != null) {
             listener.onRelationTypeChange(data, RelationInterval.RelationType.PLAYING, active);
         }
+        else {
+            presenter.save(data, RelationInterval.RelationType.PENDING, active);
+        }
     }
 
     @OnClick(R.id.doneSwitchBtn)
@@ -203,7 +209,11 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
         waitingBtn.setIconEnabled(false, true);
         playingBtn.setIconEnabled(false, true);
         if (listener != null) {
+            // TODO avoid callbacks. Our listener could be notified directly from database changes
             listener.onRelationTypeChange(data, RelationInterval.RelationType.DONE, active);
+        }
+        else {
+            presenter.save(data, RelationInterval.RelationType.PENDING, active);
         }
     }
 
