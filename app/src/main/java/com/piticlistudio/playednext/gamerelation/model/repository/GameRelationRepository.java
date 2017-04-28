@@ -80,11 +80,4 @@ public class GameRelationRepository implements IGameRelationRepository {
                         .toList()
                         .toObservable());
     }
-
-    private Observable<GameRelation> mapSource(IGameRelationDatasource datasource) {
-        Optional<GameRelation> result = mapper.transform(datasource);
-        if (!result.isPresent())
-            return Observable.error(new Exception("Cannot map entity " + datasource + " into GameRelation entity"));
-        return Observable.just(result.get());
-    }
 }
