@@ -35,6 +35,7 @@ import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailMod
 import com.piticlistudio.playednext.gamerelation.ui.detail.view.adapter.GameRelationDetailAdapter;
 import com.piticlistudio.playednext.platform.model.entity.Platform;
 import com.piticlistudio.playednext.platform.ui.grid.adapter.PlatformLabelGridAdapter;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 import com.piticlistudio.playednext.utils.UIUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -55,7 +56,7 @@ import io.reactivex.subjects.PublishSubject;
  * Created by jorge.garcia on 16/02/2017.
  */
 
-public class GameRelationDetailFragment extends Fragment implements GameRelationDetailContract.View, PlatformLabelGridAdapter.Callbacks {
+public class GameRelationDetailFragment extends Fragment implements GameRelationDetailContract.View, PlatformLabelGridAdapter.Callbacks, GameRelationDetailView.GameRelationDetailCallback {
 
     public static final String TAG = "GameRelationDetail";
     private final static String ARG_GAMEID = "gameId";
@@ -211,6 +212,7 @@ public class GameRelationDetailFragment extends Fragment implements GameRelation
                     barLayout.setExpanded(false);
                 });
 
+        relationDetailLayout.setListener(this);
         if (getArguments().containsKey(ARG_GAMEID)) {
             requestedGameId = getArguments().getInt(ARG_GAMEID);
             loadData(requestedGameId);
@@ -288,7 +290,7 @@ public class GameRelationDetailFragment extends Fragment implements GameRelation
         adapter.setData(data);
         platformAdapter.setData(data.game().platforms);
         mCallbacks.onDataLoaded(data.game());
-        relationDetailLayout.loadData(data.id());
+        relationDetailLayout.setData(data);
     }
 
     /**
@@ -352,6 +354,11 @@ public class GameRelationDetailFragment extends Fragment implements GameRelation
     @Override
     public void onPlatformClicked(Platform data, View v) {
         Snackbar.make(content, data.name(), Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRelationTypeChange(GameRelation data, RelationInterval.RelationType newType, boolean isActive) {
+        presenter.save(data, newType, isActive);
     }
 
     public interface Callbacks {

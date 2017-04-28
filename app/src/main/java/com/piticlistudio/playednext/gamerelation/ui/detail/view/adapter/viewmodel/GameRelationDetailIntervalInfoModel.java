@@ -12,6 +12,7 @@ import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyHolder;
 import com.airbnb.epoxy.EpoxyModelWithHolder;
 import com.piticlistudio.playednext.R;
+import com.piticlistudio.playednext.relationinterval.model.entity.RelationInterval;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +30,10 @@ public class GameRelationDetailIntervalInfoModel extends EpoxyModelWithHolder<Ga
     @DrawableRes
     int icon;
 
+    public GameRelationDetailIntervalInfoModel(RelationInterval.RelationType type) {
+        super((long)type.ordinal());
+    }
+
     /**
      * This should return a new instance of your {@link EpoxyHolder} class.
      */
@@ -45,26 +50,27 @@ public class GameRelationDetailIntervalInfoModel extends EpoxyModelWithHolder<Ga
     @Override
     public void bind(Holder holder) {
         holder.status.setImageResource(icon);
-        final SpannableString spannableString = new SpannableString(description);
-        int start = -1;
-        int end = -1;
-        for (int i = 0; i < description.length(); i++) {
-            char c = description.charAt(i);
-            if ((c >= '0' && c <= '9')) {
-                if (start == -1) {
-                    start = i;
-                }
-                else {
-                    end = i;
+        if (description != null) {
+            final SpannableString spannableString = new SpannableString(description);
+            int start = -1;
+            int end = -1;
+            for (int i = 0; i < description.length(); i++) {
+                char c = description.charAt(i);
+                if ((c >= '0' && c <= '9')) {
+                    if (start == -1) {
+                        start = i;
+                    } else {
+                        end = i;
+                    }
                 }
             }
-        }
-        if (end == -1)
-            end = start;
-        end++;
+            if (end == -1)
+                end = start;
+            end++;
 
-        spannableString.setSpan(new RelativeSizeSpan(2.0f), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        holder.text.setText(spannableString, TextView.BufferType.SPANNABLE);
+            spannableString.setSpan(new RelativeSizeSpan(2.0f), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.text.setText(spannableString, TextView.BufferType.SPANNABLE);
+        }
     }
 
     static class Holder extends EpoxyHolder {
