@@ -143,13 +143,21 @@ public class GameRelationDetailAdapter extends EpoxyAdapter {
                         break;
                     case PLAYING:
                         int hours = relation.getTotalHoursWithStatus(relationType);
-                        message = res.getQuantityString(R.plurals.game_detail_relationplaying_count, hours, hours);
+                        if (hours > 24) {
+                            message = res.getQuantityString(R.plurals.game_detail_relationplaying_count_days, hours/24, hours/24);
+                        }
+                        else
+                            message = res.getQuantityString(R.plurals.game_detail_relationplaying_count_hours, hours, hours);
                         ((GameRelationDetailIntervalInfoModel_) playingInfoModel).description(message)
                                 .icon(R.drawable.gamerelation_playing_status);
                         break;
                     case PENDING:
                         int pending = relation.getTotalHoursWithStatus(relationType);
-                        message = res.getQuantityString(R.plurals.game_detail_relationwaiting_count, pending, pending);
+                        if (pending > 24) {
+                            message = res.getQuantityString(R.plurals.game_detail_relationplaying_count_days, pending/24, pending/24);
+                        }
+                        else
+                            message = res.getQuantityString(R.plurals.game_detail_relationwaiting_count_hours, pending, pending);
                         ((GameRelationDetailIntervalInfoModel_) pendingInfoModel).description(message)
                                 .icon(R.drawable.gamerelation_waiting_status);
                         break;
