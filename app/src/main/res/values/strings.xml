@@ -15,13 +15,21 @@
         <item quantity="one">%1$d time</item>
         <item quantity="other">%1$d times</item>
     </plurals>
-    <plurals name="game_detail_relationwaiting_count">
-        <item quantity="one">%1$d hours</item>
+    <plurals name="game_detail_relationwaiting_count_hours">
+        <item quantity="one">%1$d hour</item>
         <item quantity="other">%1$d hours</item>
     </plurals>
-    <plurals name="game_detail_relationplaying_count">
-        <item quantity="one">%1$d hours</item>
+    <plurals name="game_detail_relationwaiting_count_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <plurals name="game_detail_relationplaying_count_hours">
+        <item quantity="one">%1$d hour</item>
         <item quantity="other">%1$d hours</item>
+    </plurals>
+    <plurals name="game_detail_relationplaying_count_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
     </plurals>
     <!-- game detail screen end -->
 
