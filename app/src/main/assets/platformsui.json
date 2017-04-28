@@ -166,5 +166,37 @@
   "3DO Interactive Multiplayer": {
     "color": "#424242",
     "acronym": "3D0"
+  },
+  "Arcade": {
+    "color": "#343434",
+    "acronym": "ARCADE"
+  },
+  "WonderSwan": {
+    "color": "#8D8D8D",
+    "acronym": "WS"
+  },
+  "Super Famicom": {
+    "color": "#A99EE8",
+    "acronym": "SFC"
+  },
+  "Atari 2600": {
+    "color": "#212121",
+    "acronym": "A2600"
+  },
+  "Atari 7800": {
+    "color": "#131313",
+    "acronym": "A7800"
+  },
+  "Atari Lynx": {
+    "color": "#7A7A7A",
+    "acronym": "LYNX"
+  },
+  "Atari Jaguar": {
+    "color": "#000000",
+    "acronym": "JAGUAR"
+  },
+  "Sega Master System": {
+    "color": "#888888",
+    "acronym": "MS"
   }
 }

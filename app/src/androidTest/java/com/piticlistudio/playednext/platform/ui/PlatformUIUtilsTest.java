@@ -443,4 +443,84 @@ public class PlatformUIUtilsTest {
     public void Given_3DOInteractiveMultiplayer_When_GetColor_Then_Returns3D0Color() throws Exception {
         assertEquals(Color.parseColor("#424242"), utils.getColor("3DO Interactive Multiplayer"));
     }
+
+    @Test
+    public void given_Arcade_When_getAcronym_Then_ReturnsArcade() throws Exception {
+        assertEquals("ARCADE", utils.getAcronym("Arcade"));
+    }
+
+    @Test
+    public void given_Arcade_When_getColor_Then_ReturnsArcadeColor() throws Exception {
+        assertEquals(Color.parseColor("#343434"), utils.getColor("Arcade"));
+    }
+
+    @Test
+    public void given_WonderSwan_When_getAcronym_Then_ReturnsWS() throws Exception {
+        assertEquals("WS", utils.getAcronym("WonderSwan"));
+    }
+
+    @Test
+    public void given_WonderSwan_When_getColor_Then_ReturnsWonderSwanColor() throws Exception {
+        assertEquals(Color.parseColor("#8D8D8D"), utils.getColor("WonderSwan"));
+    }
+
+    @Test
+    public void given_SuperFamicom_When_getAcronym_Then_ReturnsSFC() throws Exception {
+        assertEquals("SFC", utils.getAcronym("Super Famicom"));
+    }
+
+    @Test
+    public void given_SuperFamicom_When_getColor_Then_ReturnsSFColor() throws Exception {
+        assertEquals(Color.parseColor("#A99EE8"), utils.getColor("Super Famicom"));
+    }
+
+    @Test
+    public void given_Atari2600_When_getAcronym_Then_ReturnsA2600() throws Exception {
+        assertEquals("A2600", utils.getAcronym("Atari 2600"));
+    }
+
+    @Test
+    public void given_Atari2600_When_GetColor_Then_ReturnsAtariColor() throws Exception {
+        assertEquals(Color.parseColor("#212121"), utils.getColor("Atari 2600"));
+    }
+
+    @Test
+    public void given_Atari7800_When_getAcronym_Then_ReturnsA7800() throws Exception {
+        assertEquals("A7800", utils.getAcronym("Atari 7800"));
+    }
+
+    @Test
+    public void given_Atari7800_When_getColor_Then_ReturnsAtariColor() throws Exception {
+        assertEquals(Color.parseColor("#131313"), utils.getColor("Atari 7800"));
+    }
+
+    @Test
+    public void given_AtariLynx_When_getAcronym_Then_ReturnsLynx() throws Exception {
+        assertEquals("LYNX", utils.getAcronym("Atari Lynx"));
+    }
+
+    @Test
+    public void given_AtariLynx_When_getAcronym_Then_ReturnsLynxColor() throws Exception {
+        assertEquals(Color.parseColor("#7A7A7A"), utils.getColor("Atari Lynx"));
+    }
+
+    @Test
+    public void given_AtariJaguar_When_getAcronym_Then_ReturnsJaguar() throws Exception {
+        assertEquals("JAGUAR", utils.getAcronym("Atari Jaguar"));
+    }
+
+    @Test
+    public void given_AtariJaguar_When_getColor_Then_ReturnsBlack() throws Exception {
+        assertEquals(Color.BLACK, utils.getColor("Atari Jaguar"));
+    }
+
+    @Test
+    public void given_SegaMasterSystem_When_getAcronym_Then_ReturnsMS() throws Exception {
+        assertEquals("MS", utils.getAcronym("Sega Master System"));
+    }
+
+    @Test
+    public void given_SegaMasterSystem_When_getColor_Then_ReturnsGray() throws Exception {
+        assertEquals(Color.GRAY, utils.getColor("Sega Master System"));
+    }
 }
