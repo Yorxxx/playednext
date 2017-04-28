@@ -10,7 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -26,7 +25,6 @@ import com.piticlistudio.playednext.AndroidApplication;
 import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
-import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
 import com.piticlistudio.playednext.gamerelation.model.entity.GameRelation;
 import com.piticlistudio.playednext.gamerelation.ui.detail.DaggerGameRelationDetailComponent;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
@@ -112,10 +110,6 @@ public class GameRelationDetailFragment extends Fragment implements GameRelation
         return fragment;
     }
 
-    private GameRelationComponent getGameRelationComponent() {
-        return ((AndroidApplication)getActivity().getApplication()).relationComponent;
-    }
-
     private AppComponent getAppComponent() {
         return ((AndroidApplication) getActivity().getApplication()).appComponent;
     }
@@ -130,7 +124,6 @@ public class GameRelationDetailFragment extends Fragment implements GameRelation
         if (component == null) {
             component = DaggerGameRelationDetailComponent.builder()
                     .appComponent(getAppComponent())
-                    .gameRelationComponent(getGameRelationComponent())
                     .gameRelationDetailModule(new GameRelationDetailModule())
                     .build();
         }

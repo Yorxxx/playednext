@@ -22,11 +22,13 @@ public class AppModule {
     }
 
     @Provides
+    @Singleton
     public Context provideContext() {
         return this.application;
     }
 
     @Provides
+    @Singleton
     public Picasso picasso(Context context) {
         Picasso picasso = Picasso.with(context);
         picasso.setIndicatorsEnabled(true);
@@ -34,6 +36,7 @@ public class AppModule {
     }
 
     @Provides
+    @Singleton
     public PlatformUIUtils providePlatformUtils() {
         return new PlatformUIUtils();
     }

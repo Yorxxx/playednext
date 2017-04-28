@@ -1,5 +1,7 @@
 package com.piticlistudio.playednext;
 
+import android.support.test.InstrumentationRegistry;
+
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
@@ -14,5 +16,10 @@ public class BaseAndroidTest {
             consumer.accept(t);
             return true;
         };
+    }
+
+    protected AndroidApplication getApp() {
+        return (AndroidApplication) InstrumentationRegistry.getInstrumentation()
+                .getTargetContext().getApplicationContext();
     }
 }

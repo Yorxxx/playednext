@@ -5,14 +5,15 @@ import android.support.test.rule.ActivityTestRule;
 import com.piticlistudio.playednext.BaseAndroidTest;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.di.module.AppModule;
-import com.piticlistudio.playednext.game.GameComponent;
-import com.piticlistudio.playednext.gamerelation.GameRelationComponent;
-import com.piticlistudio.playednext.gamerelation.GameRelationModule;
-import com.piticlistudio.playednext.gamerelation.ui.list.presenter.GameRelationListPresenter;
+import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListComponent;
+import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListContract;
+import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListModule;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
@@ -24,39 +25,17 @@ import static org.mockito.Mockito.verify;
  */
 public class GameRelationListActivityTest extends BaseAndroidTest {
 
-    @Mock
-    GameRelationListPresenter presenter;
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
 
-//    @Rule
-//    public DaggerMockRule<GameRelationComponent> mockRule = new DaggerMockRule<>(GameRelationComponent.class, new
-//            GameRelationModule())
-//            .addComponentDependency(AppComponent.class, new AppModule(null))
-//            .addComponentDependency(GamedataComponent.class, GameComponent.class)
-//            .set(component -> {
-//                presenter = component.listPresenter();
-//            });
+    @Mock
+    GameRelationListContract.Presenter presenter;
 
     @Rule
-    public DaggerMockRule<GameRelationComponent> mockRule = new DaggerMockRule<>(GameRelationComponent.class, new
-            GameRelationModule())
-            .addComponentDependency(AppComponent.class, new AppModule(null))
-            .addComponentDependency(GameComponent.class);
-
-//    @Rule
-//    public DaggerMockRule<GamedataComponent> componentDaggerMockRule = new DaggerMockRule<>(GamedataComponent.class)
-//            .set(component -> {
-//                AndroidApplication app = (AndroidApplication) InstrumentationRegistry.getInstrumentation().getTargetContext()
-//                        .getApplicationContext();
-//                GameComponent gameComponent = component.plus(new AppModule(app), new GameModule(), new CollectionModule(), new
-//                        CompanyModule(), new GenreModule(), new PlatformModule());
-//                app.setGameComponent(gameComponent);
-//            })
-//            .set(GameRelationComponent.class, new DaggerMockRule.ComponentSetter<GameRelationComponent>() {
-//                @Override
-//                public void setComponent(GameRelationComponent component) {
-//                    presenter = component.listPresenter();
-//                }
-//            });
+    public DaggerMockRule<GameRelationListComponent> mockRule = new DaggerMockRule<>(GameRelationListComponent.class, new
+            GameRelationListModule())
+            .addComponentDependency(AppComponent.class, new AppModule(getApp()))
+            .set(component -> getApp().setRelationListComponent(component));
 
     @Rule
     public ActivityTestRule<GameRelationListActivity> activityTestRule = new ActivityTestRule<>(GameRelationListActivity.class, false, false);
