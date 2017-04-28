@@ -8,6 +8,7 @@ env:
     - EMULATOR_API_LEVEL=22
     - ANDROID_ABI=armeabi-v7a
     - ANDROID_TAG=google_apis
+    - ADB_INSTALL_TIMEOUT=10
 android:
   components:
     # Uncomment the lines below if you want to
@@ -64,6 +65,9 @@ cache:
     - $HOME/.m2
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    - $HOME/.gradle/native      #Cache library downloaded from the gradle dependency
+    - $HOME/.gradle/daemon      #Cache daemon logs
+    - $HOME/.android/build-cache
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
