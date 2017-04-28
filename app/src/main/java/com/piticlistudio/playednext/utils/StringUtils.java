@@ -15,8 +15,6 @@ import java.util.List;
 
 public class StringUtils {
 
-    // TODO: 12/01/2017 test cases
-
     /**
      * Safety string comparison with null checking.
      *
