@@ -43,6 +43,8 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
     private GameRelation data;
     private GameRelationDetailComponent component;
 
+    private GameRelationDetailCallback listener;
+
     public GameRelationDetailView(Context context) {
         super(context);
         if (!isInEditMode())
@@ -67,6 +69,10 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
             return ((AndroidApplication) activity.getApplication()).relationComponent;
         }
         return null;
+    }
+
+    public void setListener(GameRelationDetailCallback listener) {
+        this.listener = listener;
     }
 
     protected GameRelationDetailComponent getComponent() {
@@ -170,25 +176,45 @@ public class GameRelationDetailView extends BaseLinearLayout implements GameRela
 
     @OnClick(R.id.waitingSwitchBtn)
     public void setRelationAsWaiting() {
-        presenter.save(this.data, RelationInterval.RelationType.PENDING, !waitingBtn.isIconEnabled());
+        boolean active = !waitingBtn.isIconEnabled();
         waitingBtn.switchState(true);
         playingBtn.setIconEnabled(false, true);
         doneBtn.setIconEnabled(false, true);
+        if (listener != null) {
+            listener.onRelationTypeChange(data, RelationInterval.RelationType.PENDING, active);
+        }
     }
 
     @OnClick(R.id.playingSwitchBtn)
     public void setRelationAsPlaying() {
-        presenter.save(this.data, RelationInterval.RelationType.PLAYING, !playingBtn.isIconEnabled());
+        boolean active = !playingBtn.isIconEnabled();
         playingBtn.switchState(true);
         doneBtn.setIconEnabled(false, true);
         waitingBtn.setIconEnabled(false, true);
+        if (listener != null) {
+            listener.onRelationTypeChange(data, RelationInterval.RelationType.PLAYING, active);
+        }
     }
 
     @OnClick(R.id.doneSwitchBtn)
     public void setRelationAsCompleted() {
-        presenter.save(this.data, RelationInterval.RelationType.DONE, !doneBtn.isIconEnabled());
+        boolean active = !doneBtn.isIconEnabled();
         doneBtn.switchState(true);
         waitingBtn.setIconEnabled(false, true);
         playingBtn.setIconEnabled(false, true);
+        if (listener != null) {
+            listener.onRelationTypeChange(data, RelationInterval.RelationType.DONE, active);
+        }
+    }
+
+    public interface GameRelationDetailCallback {
+
+        /**
+         * Notifies that the relation has been requested to change.
+         * @param data the data to change
+         * @param newType the type to change
+         * @param isActive boolean indicating if the type is active or not
+         */
+        void onRelationTypeChange(GameRelation data, RelationInterval.RelationType newType, boolean isActive);
     }
 }
