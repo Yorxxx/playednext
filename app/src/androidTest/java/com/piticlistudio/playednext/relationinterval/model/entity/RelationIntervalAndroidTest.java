@@ -24,7 +24,7 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
 
     Resources res = InstrumentationRegistry.getTargetContext().getResources();
 
-    @Test
+    /*@Test
     public void given_noneStatusType_when_getDisplayDate_Then_ReturnsNull() throws Exception {
 
         Calendar calendar = mock(Calendar.class);
@@ -516,5 +516,5 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
         // Assert
         assertNotNull(result);
         assertEquals(expected, result);
-    }
+    }*/
 }
