@@ -22,5 +22,4 @@ test:
     # run tests  against the emulator.
     - adb shell input keyevent 82
     - ./gradlew createDebugCoverageReport jacocoDebugReport
-  post:
     - bash <(curl -s https://codecov.io/bash)
