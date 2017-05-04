@@ -80,15 +80,6 @@ public class GameSearchFragmentTest {
     @Before
     public void setUp() throws Exception {
         activityTestRule.launchActivity(null);
-        EmptyActivity activity = activityTestRule.getActivity();
-        Runnable wakeUpDevice = new Runnable() {
-            public void run() {
-                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            }
-        };
-        activity.runOnUiThread(wakeUpDevice);
     }
 
     //@Test
