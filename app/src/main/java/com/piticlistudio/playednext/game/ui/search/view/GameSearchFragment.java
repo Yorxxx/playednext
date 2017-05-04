@@ -90,11 +90,6 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
         return v;
     }
 
-
-    private GameComponent getGameComponent() {
-        return ((AndroidApplication) getActivity().getApplication()).gameComponent;
-    }
-
     private AppComponent getAppComponent() {
         return ((AndroidApplication) getActivity().getApplication()).appComponent;
     }
