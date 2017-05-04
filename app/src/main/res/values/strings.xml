@@ -19,10 +19,6 @@
         <item quantity="one">%1$d hour</item>
         <item quantity="other">%1$d hours</item>
     </plurals>
-    <plurals name="game_detail_relationwaiting_count_days">
-        <item quantity="one">%1$d day</item>
-        <item quantity="other">%1$d days</item>
-    </plurals>
     <plurals name="game_detail_relationplaying_count_hours">
         <item quantity="one">%1$d hour</item>
         <item quantity="other">%1$d hours</item>
@@ -51,46 +47,8 @@
     <string name="gamerelation_list_swipetodelete">Delete</string>
     <!-- gamerelation list screen end -->
 
-    <string name="interval_displaydate_completed_zero">Completed today at %1$s</string>
-    <plurals name="interval_displaydate_completed">
-        <!-- NOTE: This "zero" value is never accessed, but kept for better understanding while translating it -->
-        <item quantity="zero">@string/interval_displaydate_completed_zero</item>
-        <item quantity="one">Completed yesterday at %1$s</item>
-        <item quantity="other">Completed %1$s days ago</item>
-    </plurals>
-    <string name="interval_displaydate_completed_ended">Completed on %1$s</string>
+    <string name="interval_displaydate_completed">Completed %1$s</string>
+    <string name="interval_displaydate_playing">Started playing %1$s</string>
+    <string name="interval_displaydate_waiting">Backlogged %1$s</string>
 
-    <string name="interval_displaydate_playing_start_zero">Started playing today at %1$s</string>
-    <plurals name="interval_displaydate_playing_start">
-        <!-- NOTE: This "zero" value is never accessed, but kept for better understanding while translating it -->
-        <item quantity="zero">@string/interval_displaydate_playing_start_zero</item>
-        <item quantity="one">Started playing yesterday at %1$s</item>
-        <item quantity="other">Started playing %1$s days ago</item>
-    </plurals>
-    <string name="interval_displaydate_playing_ended_hours">Played from %1$s to %2$s (%3$d hours)</string>
-    <string name="interval_displaydate_playing_ended_days">Played from %1$s to %2$s (%3$d days)</string>
-
-    <string name="interval_displaydate_waiting_start_zero">Backlogged today at %1$s</string>
-    <plurals name="interval_displaydate_waiting_start">
-        <item quantity="zero">@string/interval_displaydate_waiting_start_zero</item>
-        <item quantity="one">Backlogged yesterday at %1$s</item>
-        <item quantity="other">Backlogged %1$s days ago</item>
-    </plurals>
-    <string name="interval_displaydate_waiting_ended_hours">Backlogged from %1$s to %2$s (%3$d hours)</string>
-    <string name="interval_displaydate_waiting_ended_days">Backlogged from %1$s to %2$s (%3$d days)</string>
-
-    <string name="interval_displaydate_completed_yesterday">Completed yesterday at %1$s</string>
-    <string name="interval_displaydate_completed_daysago">Completed %1$d days ago</string>
-    <string name="interval_displaydate_completed_longago">Completed on %1$s</string>
-    <string name="interval_displaydate_playing_start_today">Started playing today at %1$s</string>
-    <string name="interval_displaydate_playing_start_yesterday">Started playing yesterday at %1$s</string>
-    <string name="interval_displaydate_playing_start_daysago">Started playing %1$d days ago</string>
-    <string name="interval_displaydate_playing_start_longago">Started playing on %1$s</string>
-    <string name="interval_displaydate_waiting_start_today">Backlogged today at %1$s</string>
-    <string name="interval_displaydate_waiting_start_yesterday">Backlogged yesterday at %1$s</string>
-    <string name="interval_displaydate_waiting_start_daysago">Backlogged %1$d days ago</string>
-    <string name="interval_displaydate_waiting_start_longago">Backlogged on %1$s</string>
-    <string name="interval_displaydate_playing_end">Played from %1$s to %2$s</string>
-    <string name="gamerelation_currentinterval_yesterday">Yesterday</string>
-    <string name="interval_displaydate_long">MM/dd/yy</string>
 </resources>
