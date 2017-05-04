@@ -359,7 +359,7 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
             case DONE:
                 return new CompletedItemModel_()
                         .title(item.game().title())
-                        .subtitle(item.getCurrent().get().getDisplayDate(ctx, Calendar.getInstance(), is24hFormat()))
+                        .subtitle(item.getCurrent().get().getDisplayDate(ctx))
                         .imageURL(item.game().getThumbCoverUrl())
                         .imageloader(picasso)
                         .rightSwipeMessage(ctx.getString(R.string.gamerelation_list_swipetodelete))
@@ -370,7 +370,7 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
             case PLAYING:
                 return new CurrentItemModel_()
                         .title(item.game().title())
-                        .subtitle(item.getCurrent().get().getDisplayDate(ctx, Calendar.getInstance(), is24hFormat()))
+                        .subtitle(item.getCurrent().get().getDisplayDate(ctx))
                         .imageURL(item.game().getThumbCoverUrl())
                         .imageloader(picasso)
                         .rightSwipeMessage(ctx.getString(R.string.gamerelation_list_swipetodelete))
@@ -382,7 +382,7 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
             case PENDING:
                 return new WaitingItemModel_()
                         .title(item.game().title())
-                        .subtitle(item.getCurrent().get().getDisplayDate(ctx, Calendar.getInstance(), is24hFormat()))
+                        .subtitle(item.getCurrent().get().getDisplayDate(ctx))
                         .imageURL(item.game().getThumbCoverUrl())
                         .imageloader(picasso)
                         .rightSwipeMessage(ctx.getString(R.string.gamerelation_list_swipetodelete))
@@ -393,10 +393,6 @@ public class GameRelationListAdapter extends EpoxyAdapter implements SwipeableAd
                         });
         }
         return null;
-    }
-
-    private boolean is24hFormat() {
-        return android.text.format.DateFormat.is24HourFormat(ctx);
     }
 
     private int backgroundColorForTodoItemAtIndex(int index, int total) {
