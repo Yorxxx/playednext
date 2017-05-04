@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
 
 import com.google.auto.value.AutoValue;
 import com.piticlistudio.playednext.R;
@@ -61,7 +62,35 @@ public abstract class RelationInterval {
         if (type() == RelationType.NONE)
             return null;
 
-        int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
+        int stringRes = 0;
+        switch (type()) {
+            case DONE:
+                stringRes = R.string.interval_displaydate_completed;
+            case PLAYING:
+                stringRes = R.string.interval_displaydate_playing;
+        }
+        long diff = System.currentTimeMillis() -startAt();
+        if (diff <= AlarmManager.INTERVAL_HOUR*24) {
+            String value = DateUtils.getRelativeTimeSpanString(startAt(), System.currentTimeMillis(),
+                    DateUtils.SECOND_IN_MILLIS,
+                    DateUtils.FORMAT_NO_YEAR).toString();
+
+            return context.getString(stringRes, value);
+        }
+        else if (diff <= AlarmManager.INTERVAL_DAY*7) {
+            String value = DateUtils.getRelativeDateTimeString(context,
+                    startAt(),
+                    DateUtils.HOUR_IN_MILLIS,
+                    DateUtils.WEEK_IN_MILLIS,
+                    DateUtils.FORMAT_NO_YEAR).toString();
+            return context.getString(stringRes, value);
+        }
+        else {
+            String value = DateUtils.getRelativeTimeSpanString(context, startAt(), true).toString();
+            return context.getString(stringRes, value);
+        }
+
+        /*int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
 
         Calendar start = Calendar.getInstance();
         start.setTimeInMillis(startAt());
@@ -147,7 +176,7 @@ public abstract class RelationInterval {
         }
         String dateFormat = context.getString(R.string.interval_displaydate_long);
         SimpleDateFormat df = new SimpleDateFormat(dateFormat, getCurrentLocale(context));
-        return df.format(new Date(startAt()));
+        return df.format(new Date(startAt()));*/
     }
 
     /**
