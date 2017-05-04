@@ -1,11 +1,11 @@
 package com.piticlistudio.playednext.game.ui.search.view;
 
+import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
-import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.piticlistudio.playednext.AndroidApplication;
@@ -16,11 +16,11 @@ import com.piticlistudio.playednext.R;
 import com.piticlistudio.playednext.RecyclerViewItemCountAssertion;
 import com.piticlistudio.playednext.di.component.AppComponent;
 import com.piticlistudio.playednext.di.module.AppModule;
-import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.model.entity.Game;
 import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
 import com.piticlistudio.playednext.game.ui.search.GameSearchContract;
 import com.piticlistudio.playednext.game.ui.search.GameSearchModule;
+import com.piticlistudio.playednext.gamerelation.ui.detail.view.GameRelationDetailActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,6 +36,7 @@ import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -44,11 +45,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFro
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -82,12 +86,12 @@ public class GameSearchFragmentTest {
         activityTestRule.launchActivity(null);
     }
 
-    //@Test
+    @Test
     public void Given_Launched_When_Attaches_Then_AttachesPresenter() throws Exception {
         verify(presenter).attachView(getFragment());
     }
 
-    //@Test
+    @Test
     public void Given_Launched_When_onDestroyView_Then_DetachesPresenter() throws Exception {
         // Act
         getFragment().onDestroyView();
@@ -96,7 +100,7 @@ public class GameSearchFragmentTest {
         verify(presenter).detachView(false);
     }
 
-    //@Test
+    @Test
     public void Given_Idle_When_ActivityCreated_Then_ShowsInitialView() throws Exception {
 
         onView(withId(R.id.progress)).check(matches(not(isDisplayed())));
@@ -110,7 +114,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.searchview)).check(matches(CustomMatchers.isSearchIconified(false)));
     }
 
-    //@Test
+    @Test
     public void Given_SearchInput_When_InputsText_Then_RequestsPresenter() throws Exception {
 
         onView(withId(R.id.searchview)).perform(click());
@@ -123,7 +127,23 @@ public class GameSearchFragmentTest {
         verify(presenter).search("mario", 0, getFragment().loadLimit);
     }
 
-    //@Test
+    @Test
+    public void Given_SearchInput_When_SubmitText_Then_RequestsPresenter() throws Exception {
+
+        onView(withId(R.id.searchview)).perform(click());
+        onView(isAssignableFrom(EditText.class)).perform(typeText("mario"));
+
+        verify(presenter).search("m", 0, getFragment().loadLimit);
+        verify(presenter).search("ma", 0, getFragment().loadLimit);
+        verify(presenter).search("mar", 0, getFragment().loadLimit);
+        verify(presenter).search("mari", 0, getFragment().loadLimit);
+        verify(presenter).search("mario", 0, getFragment().loadLimit);
+
+        onView(withId(R.id.search_src_text)).perform(pressImeActionButton());
+        verify(presenter, times(2)).search("mario", 0, getFragment().loadLimit);
+    }
+
+    @Test
     public void Given_Idle_When_PressCloseButton_Then_NotifiesListener() throws Exception {
 
         GameSearchFragment.IGameSearchFragmentListener listener = mock(GameSearchFragment.IGameSearchFragmentListener.class);
@@ -139,7 +159,7 @@ public class GameSearchFragmentTest {
         verify(listener).onCloseSearchClicked(any());
     }
 
-    //@Test
+    @Test
     public void Given_Idle_When_ShowLoading_Then_ShowsLoading() throws Throwable {
 
         Espresso.closeSoftKeyboard();
@@ -148,7 +168,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.progress)).check(matches(CustomMatchers.isVisibleToUser(true)));
     }
 
-    //@Test
+    @Test
     public void Given_InitialViewState_When_ShowContent_Then_HidesInitialView() throws Throwable {
 
         onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
@@ -161,7 +181,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
     }
 
-    //@Test
+    @Test
     public void Given_ErrorViewState_When_ShowContent_Then_HidesErrorView() throws Throwable {
 
         activityTestRule.runOnUiThread(() -> getFragment().showError(new Exception("bla")));
@@ -175,7 +195,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(false)));
     }
 
-    //@Test
+    @Test
     public void Given_EmptyList_When_SetData_Then_ShowsData() throws Throwable {
 
         List<Game> data = new ArrayList<>();
@@ -192,7 +212,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
     }
 
-    //@Test
+    @Test
     public void Given_EmptyList_When_SetEmptyData_Then_ShowsEmptyStateView() throws Throwable {
 
         List<Game> data = new ArrayList<>();
@@ -206,7 +226,30 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
     }
 
-    //@Test
+    @Test
+    public void Given_EmptyStateView_When_SetFilledData_Then_ShowsData() throws Throwable {
+
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            data.add(GameFactory.provide(10, "title"));
+        }
+
+        activityTestRule.runOnUiThread(() -> getFragment().setData(new ArrayList<>()));
+
+        Thread.sleep(500);
+        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
+
+        // Act
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
+        Thread.sleep(500);
+
+        // Assert
+        onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(10));
+        onView(withId(R.id.loadmore_progress)).check(doesNotExist());
+        onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
+    }
+
+    @Test
     public void Given_settingMaxItems_When_SetData_Then_ShowDataAndLoadMoreRow() throws Throwable {
 
         Espresso.closeSoftKeyboard();
@@ -224,7 +267,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(maxItems + 1)); // Plus load more item
     }
 
-    //@Test
+    @Test
     public void Given_MaxLoadedList_When_SwipingDown_Then_RequestsMoreData() throws Throwable {
 
         int maxItems = getFragment().loadLimit;
@@ -243,7 +286,7 @@ public class GameSearchFragmentTest {
         verify(presenter).search("", maxItems + 1, maxItems);
     }
 
-    //@Test
+    @Test
     public void Given_NotFilledList_When_SwipingDown_Then_DoesNotRequestMoreData() throws Throwable {
 
         int maxItems = getFragment().loadLimit;
@@ -261,7 +304,7 @@ public class GameSearchFragmentTest {
         verify(presenter, never()).search("", maxItems + 1, maxItems);
     }
 
-    //@Test
+    @Test
     public void Given_FilledList_When_SetData_Then_AppendsData() throws Throwable {
 
         // Arrange
@@ -285,7 +328,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(maxItems * 2));
     }
 
-    //@Test
+    @Test
     public void Given_InitialViewState_When_ShowError_Then_ShowsErrorAndHideInitialView() throws Throwable {
 
         onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
@@ -301,7 +344,7 @@ public class GameSearchFragmentTest {
         onView(withText("bla")).check(matches(isDisplayed()));
     }
 
-    //@Test
+    @Test
     public void Given_EmptyViewState_When_ShowError_Then_ShowsErrorAndHidesEmptyView() throws Throwable {
 
         // Arrange
@@ -321,7 +364,7 @@ public class GameSearchFragmentTest {
         onView(withText("bla")).check(matches(isDisplayed()));
     }
 
-    //@Test
+    @Test
     public void Given_IdleList_When_ShowError_Then_ShowsError() throws Throwable {
 
         // Arrange
@@ -347,7 +390,7 @@ public class GameSearchFragmentTest {
 
     }
 
-    //@Test
+    @Test
     public void Given_LoadingMoreItems_When_ShowError_Then_ShowsSnackbarError() throws Throwable {
 
         int maxItems = getFragment().loadLimit;
@@ -378,7 +421,7 @@ public class GameSearchFragmentTest {
         onView(withId(android.support.design.R.id.snackbar_action)).check(matches(isDisplayed()));
     }
 
-    //@Test
+    @Test
     public void Given_LoadingMoreErrorIsDisplayed_When_ClickOnRetry_Then_RetriesRequest() throws Throwable {
 
         // Arrange
@@ -407,7 +450,7 @@ public class GameSearchFragmentTest {
         verify(presenter).search("", maxItems + 1, maxItems);
     }
 
-    //@Test
+    @Test
     public void Given_FilledList_When_ClickOnItem_Then_LaunchesDetailView() throws Throwable {
 
 // Arrange
