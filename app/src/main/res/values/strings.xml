@@ -51,6 +51,9 @@
     <string name="gamerelation_list_swipetodelete">Delete</string>
     <!-- gamerelation list screen end -->
 
+    <string name="interval_displaydate_completed">Completed %1$s</string>
+    <string name="interval_displaydate_playing">Playing %1$s</string>
+    <string name="interval_displaydate_completed_on">Completed %1$s</string>
     <string name="interval_displaydate_completed_zero">Completed today at %1$s</string>
     <plurals name="interval_displaydate_completed">
         <!-- NOTE: This "zero" value is never accessed, but kept for better understanding while translating it -->

@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.relationinterval.model.entity;
 
+import android.app.AlarmManager;
 import android.content.res.Resources;
 import android.support.test.InstrumentationRegistry;
 
@@ -11,8 +12,10 @@ import org.junit.Test;
 import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -44,20 +47,14 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
     }
 
     @Test
-    public void given_completedTodayIntervalIn12hourFormat_when_getDisplayDate_Then_ReturnsCompletionTime() throws Exception {
+    public void given_completedToday_when_getDisplayDate_Then_ReturnsRelativeCompletionTime() throws Exception {
 
-        Calendar calendar = mock(Calendar.class);
-        long currentTime = 1488387610545L; // 03/01/2017 17:00PM
+        long currentTime = System.currentTimeMillis() - AlarmManager.INTERVAL_HOUR;
         RelationInterval interval = RelationInterval.create(10, RelationInterval.RelationType.DONE, currentTime);
-        when(calendar.get(Calendar.YEAR)).thenReturn(2017);
-        when(calendar.get(Calendar.MONTH)).thenReturn(Calendar.MARCH);
-        when(calendar.get(Calendar.DAY_OF_MONTH)).thenReturn(3);
-        when(calendar.get(Calendar.HOUR_OF_DAY)).thenReturn(17);
-        when(calendar.get(Calendar.DAY_OF_YEAR)).thenReturn(60);
 
         // Act
-        String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, false);
-        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_completed_zero, "6:00 PM");
+        String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), null, false);
+        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_completed, "1 hour ago");
 
         // Assert
         assertNotNull(result);
@@ -65,41 +62,45 @@ public class RelationIntervalAndroidTest extends BaseAndroidTest {
     }
 
     @Test
-    public void given_completedTodayIntervalIn24hourFormat_when_getDisplayDate_Then_ReturnsCompletionTime() throws Exception {
+    public void given_completedMoreThan24hoursago_when_getDisplayDate_Then_ReturnsAbsoluteCompletionTime() throws Exception {
 
-        Calendar calendar = mock(Calendar.class);
-        long currentTime = 1488387610545L; // 03/01/2017 17:00PM
+        long currentTime = System.currentTimeMillis() - AlarmManager.INTERVAL_HOUR * 30;
         RelationInterval interval = RelationInterval.create(10, RelationInterval.RelationType.DONE, currentTime);
-        when(calendar.get(Calendar.YEAR)).thenReturn(2017);
-        when(calendar.get(Calendar.MONTH)).thenReturn(Calendar.MARCH);
-        when(calendar.get(Calendar.DAY_OF_MONTH)).thenReturn(3);
-        when(calendar.get(Calendar.HOUR_OF_DAY)).thenReturn(17);
-        when(calendar.get(Calendar.DAY_OF_YEAR)).thenReturn(60);
 
         // Act
-        String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, true);
-        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_completed_zero, "18:00");
+        String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), null, true);
+        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_completed, "Yesterday");
 
         // Assert
         assertNotNull(result);
-        assertEquals(expected, result);
+        assertTrue(result.matches("^(" + expected + ").*[0-9].*(AM|PM)"));
     }
 
     @Test
-    public void given_startedPlayingTodayIntervalIn12hourFormat_when_getDisplayDate_Then_ReturnsPlayingToday() throws Exception {
+    public void given_completedMoreThanAWeekAgo_when_getDisplayDate_Then_ReturnsAbsoluteCompletionTime() throws Exception {
 
-        Calendar calendar = mock(Calendar.class);
-        long currentTime = 1488387610545L; // 03/01/2017 17:00PM
+        long currentTime = System.currentTimeMillis() - AlarmManager.INTERVAL_DAY * 30;
+        RelationInterval interval = RelationInterval.create(10, RelationInterval.RelationType.DONE, currentTime);
+
+        // Act
+        String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), null, true);
+        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_completed, "");
+
+        // Assert
+        assertNotNull(result);
+        assertFalse(result.matches("^(" + expected + ").*[0-9].*(AM|PM)"));
+        assertFalse(result.contains("ago"));
+    }
+
+    @Test
+    public void given_playingToday_when_getDisplayDate_Then_ReturnsRelativePlayingTime() throws Exception {
+
+        long currentTime = System.currentTimeMillis() - AlarmManager.INTERVAL_HOUR;
         RelationInterval interval = RelationInterval.create(10, RelationInterval.RelationType.PLAYING, currentTime);
-        when(calendar.get(Calendar.YEAR)).thenReturn(2017);
-        when(calendar.get(Calendar.MONTH)).thenReturn(Calendar.MARCH);
-        when(calendar.get(Calendar.DAY_OF_MONTH)).thenReturn(3);
-        when(calendar.get(Calendar.HOUR_OF_DAY)).thenReturn(17);
-        when(calendar.get(Calendar.DAY_OF_YEAR)).thenReturn(60);
 
         // Act
-        String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), calendar, false);
-        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_playing_start_zero, "6:00 PM");
+        String result = interval.getDisplayDate(InstrumentationRegistry.getTargetContext(), null, false);
+        String expected = InstrumentationRegistry.getTargetContext().getString(R.string.interval_displaydate_playing, "1 hour ago");
 
         // Assert
         assertNotNull(result);
