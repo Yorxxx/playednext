@@ -23,6 +23,7 @@ test:
     # wait for it to have booted
     - circle-android wait-for-boot
     # run tests  against the emulator.
+    - sleep 30
     - adb shell input keyevent 82
     - adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > $CIRCLE_ARTIFACTS/screen-$(date +"%T").png
     - ./gradlew createDebugCoverageReport jacocoDebugReport
