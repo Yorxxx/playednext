@@ -4,6 +4,7 @@ machine:
     environment:
         ANDROID_HOME: /usr/local/android-sdk-linux
         JAVA_OPTS: "-Xms518m -Xmx2048m"
+        QEMU_AUDIO_DRV: none
 
 dependencies:
   pre:
