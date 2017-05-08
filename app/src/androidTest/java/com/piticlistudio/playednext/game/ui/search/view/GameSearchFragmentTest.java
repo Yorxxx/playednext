@@ -166,6 +166,17 @@ public class GameSearchFragmentTest {
     }
 
     @Test
+    public void Given_NoListener_When_PressCloseButton_Then_DoesNothing() throws Exception {
+
+        getFragment().setListener(null);
+
+        // Act
+        onView(withId(R.id.closeBtn)).perform(click());
+
+        Thread.sleep(500);
+    }
+
+    @Test
     public void Given_Idle_When_ShowLoading_Then_ShowsLoading() throws Throwable {
 
         Espresso.closeSoftKeyboard();
@@ -289,6 +300,31 @@ public class GameSearchFragmentTest {
 
         // Assert
         onView(withId(R.id.loadmore_progress)).check(matches(isDisplayed()));
+        verify(presenter).search("", maxItems + 1, maxItems);
+    }
+
+    @Test
+    public void given_alreadyLoadingMoreData_When_SwipesDown_Then_DoesNotRequestMoreData() throws Throwable {
+
+        int maxItems = getFragment().loadLimit;
+
+        Espresso.closeSoftKeyboard();
+
+        List<Game> data = new ArrayList<>();
+        for (int i = 0; i < maxItems; i++) {
+            data.add(GameFactory.provide(10, "title"));
+        }
+        activityTestRule.runOnUiThread(() -> getFragment().setData(data));
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.scrollToPosition(maxItems));
+        onView(withId(R.id.loadmore_progress)).check(matches(isDisplayed()));
+
+        // Scroll up again
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.scrollToPosition(0));
+
+        // Act
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.scrollToPosition(maxItems));
+
+        // Assert
         verify(presenter).search("", maxItems + 1, maxItems);
     }
 
@@ -474,7 +510,7 @@ public class GameSearchFragmentTest {
         });
 
         // ACt
-        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItem(hasDescendant(withText("title_5")), click()));
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItem(hasDescendant(withText("title_3")), click()));
 
         // Assert
         onView(withId(R.id.searchlist)).check(doesNotExist());
