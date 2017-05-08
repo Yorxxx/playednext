@@ -125,7 +125,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.searchview)).check(matches(CustomMatchers.isSearchIconified(false)));
     }
 
-    //@Test
+    @Test
     public void Given_SearchInput_When_InputsText_Then_RequestsPresenter() throws Exception {
 
         onView(withId(R.id.searchview)).perform(click());
@@ -138,7 +138,7 @@ public class GameSearchFragmentTest {
         verify(presenter).search("mario", 0, getFragment().loadLimit);
     }
 
-    //@Test
+    @Test
     public void Given_SearchInput_When_SubmitText_Then_RequestsPresenter() throws Exception {
 
         onView(withId(R.id.searchview)).perform(click());
@@ -154,7 +154,7 @@ public class GameSearchFragmentTest {
         verify(presenter, times(2)).search("mario", 0, getFragment().loadLimit);
     }
 
-    //@Test
+    @Test
     public void Given_Idle_When_PressCloseButton_Then_NotifiesListener() throws Exception {
 
         GameSearchFragment.IGameSearchFragmentListener listener = mock(GameSearchFragment.IGameSearchFragmentListener.class);
