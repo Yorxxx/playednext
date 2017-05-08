@@ -181,7 +181,7 @@ public class GameSearchFragmentTest {
         Thread.sleep(500);
     }
 
-    //@Test
+    @Test
     public void Given_Idle_When_ShowLoading_Then_ShowsLoading() throws Throwable {
 
         Espresso.closeSoftKeyboard();
@@ -190,7 +190,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.progress)).check(matches(CustomMatchers.isVisibleToUser(true)));
     }
 
-    //@Test
+    @Test
     public void Given_InitialViewState_When_ShowContent_Then_HidesInitialView() throws Throwable {
 
         onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
