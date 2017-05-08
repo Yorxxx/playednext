@@ -25,9 +25,8 @@ test:
     # run tests  against the emulator.
     - sleep 30
     - adb shell input keyevent 82
-    # - adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > $CIRCLE_ARTIFACTS/screen-$(date +"%T").png
-    # - ./gradlew createDebugCoverageReport jacocoDebugReport
-    - ./gradlew connectedAndroidTest
+    - adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > $CIRCLE_ARTIFACTS/screen-$(date +"%T").png
+    - ./gradlew createDebugCoverageReport jacocoDebugReport
 
   post:
     - bash <(curl -s https://codecov.io/bash)
