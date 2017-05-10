@@ -8,8 +8,10 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.piticlistudio.playednext.AndroidApplication;
+import com.piticlistudio.playednext.BaseAndroidTest;
 import com.piticlistudio.playednext.CustomMatchers;
 import com.piticlistudio.playednext.EmptyActivity;
 import com.piticlistudio.playednext.GameFactory;
@@ -183,6 +185,8 @@ public class GameSearchFragmentTest {
 
     @Test
     public void Given_Idle_When_ShowLoading_Then_ShowsLoading() throws Throwable {
+
+        onView(isAssignableFrom(ProgressBar.class)).perform(BaseAndroidTest.replaceProgressBarDrawable());
 
         Espresso.closeSoftKeyboard();
         activityTestRule.runOnUiThread(() -> getFragment().showLoading());
