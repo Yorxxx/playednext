@@ -18,6 +18,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -76,6 +77,31 @@ public class RealmGameRepositoryImplTest extends BaseAndroidTest {
     }
 
     @Test
+    public void given_nullSearchQuery_When_search_Then_RequestsEmptyString() throws Exception {
+
+        RealmGame data = GameFactory.provideRealmGame(0, "name1");
+        RealmGame data2 = GameFactory.provideRealmGame(1, "name2");
+        RealmGame data3 = GameFactory.provideRealmGame(2, "another");
+        Realm.getDefaultInstance().beginTransaction();
+        Realm.getDefaultInstance().copyToRealmOrUpdate(data);
+        Realm.getDefaultInstance().copyToRealmOrUpdate(data2);
+        Realm.getDefaultInstance().copyToRealmOrUpdate(data3);
+        Realm.getDefaultInstance().commitTransaction();
+
+        // Act
+        TestObserver<List<IGameDatasource>> result = repository.search(null, 0, 10).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(1)
+                .assertValue(check(realmGames -> {
+                    assertEquals(3, realmGames.size());
+                }));
+    }
+
+    @Test
     public void search() throws Exception {
         RealmGame data = GameFactory.provideRealmGame(0, "name1");
         RealmGame data2 = GameFactory.provideRealmGame(1, "name2");
@@ -102,6 +128,34 @@ public class RealmGameRepositoryImplTest extends BaseAndroidTest {
                     assertEquals(data2.getName(), realmGames.get(1).getName());
                     for (IGameDatasource realmGame : realmGames) {
                         assertTrue(realmGame.getName().startsWith("na"));
+                    }
+                }));
+    }
+
+    @Test
+    public void given_offset_when_search_then_skipsInitialItems() throws Exception {
+        Realm.getDefaultInstance().beginTransaction();
+        for (int i = 0; i < 50; i++) {
+            RealmGame data = GameFactory.provideRealmGame(0, "name" + i);
+            Realm.getDefaultInstance().copyToRealmOrUpdate(data);
+        }
+        Realm.getDefaultInstance().commitTransaction();
+
+        // Act
+        TestObserver<List<IGameDatasource>> result = repository.search("na", 10, 100).test();
+        result.awaitTerminalEvent();
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(1)
+                .assertValue(check(realmGames -> {
+                    assertEquals(40, realmGames.size());
+                    for (IGameDatasource realmGame : realmGames) {
+                        for (int i = 0; i < 10; i++) {
+
+                        }
+                        assertFalse(realmGame.getName().startsWith("na"));
                     }
                 }));
     }
