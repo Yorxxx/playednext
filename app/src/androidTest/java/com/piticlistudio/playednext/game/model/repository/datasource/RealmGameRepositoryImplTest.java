@@ -136,7 +136,7 @@ public class RealmGameRepositoryImplTest extends BaseAndroidTest {
     public void given_offset_when_search_then_skipsInitialItems() throws Exception {
         Realm.getDefaultInstance().beginTransaction();
         for (int i = 0; i < 50; i++) {
-            RealmGame data = GameFactory.provideRealmGame(0, "name" + i);
+            RealmGame data = GameFactory.provideRealmGame(i, "name" + i);
             Realm.getDefaultInstance().copyToRealmOrUpdate(data);
         }
         Realm.getDefaultInstance().commitTransaction();
@@ -153,9 +153,9 @@ public class RealmGameRepositoryImplTest extends BaseAndroidTest {
                     assertEquals(40, realmGames.size());
                     for (IGameDatasource realmGame : realmGames) {
                         for (int i = 0; i < 10; i++) {
-
+                            assertFalse(i == realmGame.getId());
                         }
-                        assertFalse(realmGame.getName().startsWith("na"));
+                        assertTrue(realmGame.getName().startsWith("na"));
                     }
                 }));
     }
