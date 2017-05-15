@@ -207,7 +207,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
     }
 
-    //@Test
+    @Test
     public void Given_ErrorViewState_When_ShowContent_Then_HidesErrorView() throws Throwable {
 
         activityTestRule.runOnUiThread(() -> getFragment().showError(new Exception("bla")));
@@ -221,7 +221,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(false)));
     }
 
-    //@Test
+    @Test
     public void Given_EmptyList_When_SetData_Then_ShowsData() throws Throwable {
 
         List<Game> data = new ArrayList<>();
@@ -238,7 +238,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
     }
 
-    //@Test
+    @Test
     public void Given_EmptyList_When_SetEmptyData_Then_ShowsEmptyStateView() throws Throwable {
 
         List<Game> data = new ArrayList<>();
@@ -252,7 +252,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
     }
 
-    //@Test
+    @Test
     public void Given_EmptyStateView_When_SetFilledData_Then_ShowsData() throws Throwable {
 
         List<Game> data = new ArrayList<>();
