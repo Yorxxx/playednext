@@ -212,9 +212,11 @@ public class GameSearchFragmentTest {
 
         activityTestRule.runOnUiThread(() -> getFragment().showError(new Exception("bla")));
 
+        Thread.sleep(1000);
         onView(withId(R.id.gamesearch_error)).check(matches(CustomMatchers.isVisibleToUser(true)));
 
         activityTestRule.runOnUiThread(() -> getFragment().showContent());
+        Thread.sleep(1000);
 
         // Assert
         onView(withId(R.id.progress)).check(matches(CustomMatchers.isVisibleToUser(false)));
