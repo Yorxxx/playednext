@@ -277,7 +277,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
     }
 
-    //@Test
+    @Test
     public void Given_settingMaxItems_When_SetData_Then_ShowDataAndLoadMoreRow() throws Throwable {
 
         Espresso.closeSoftKeyboard();
@@ -290,12 +290,14 @@ public class GameSearchFragmentTest {
         // Act
         activityTestRule.runOnUiThread(() -> getFragment().setData(data));
 
+        Thread.sleep(500);
+
         // Assert
         onView(withId(R.id.emptystateview)).check(matches(CustomMatchers.isVisibleToUser(false)));
         onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(maxItems + 1)); // Plus load more item
     }
 
-    //@Test
+    @Test
     public void Given_MaxLoadedList_When_SwipingDown_Then_RequestsMoreData() throws Throwable {
 
         int maxItems = getFragment().loadLimit;
@@ -307,6 +309,8 @@ public class GameSearchFragmentTest {
             data.add(GameFactory.provide(10, "title"));
         }
         activityTestRule.runOnUiThread(() -> getFragment().setData(data));
+
+        Thread.sleep(1000);
         onView(withId(R.id.searchlist)).perform(RecyclerViewActions.scrollToPosition(maxItems));
 
         // Assert
@@ -314,7 +318,7 @@ public class GameSearchFragmentTest {
         verify(presenter).search("", maxItems + 1, maxItems);
     }
 
-    //@Test
+    @Test
     public void given_alreadyLoadingMoreData_When_SwipesDown_Then_DoesNotRequestMoreData() throws Throwable {
 
         int maxItems = getFragment().loadLimit;
@@ -326,6 +330,8 @@ public class GameSearchFragmentTest {
             data.add(GameFactory.provide(10, "title"));
         }
         activityTestRule.runOnUiThread(() -> getFragment().setData(data));
+        Thread.sleep(1000);
+
         onView(withId(R.id.searchlist)).perform(RecyclerViewActions.scrollToPosition(maxItems));
         onView(withId(R.id.loadmore_progress)).check(matches(isDisplayed()));
 
