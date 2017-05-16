@@ -4,7 +4,7 @@ machine:
     environment:
         ANDROID_HOME: /usr/local/android-sdk-linux
         JAVA_OPTS: "-Xms512m -Xmx1024m"
-        GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+        GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
         QEMU_AUDIO_DRV: none
 
 dependencies:
@@ -27,7 +27,8 @@ test:
     # run tests  against the emulator.
     - sleep 30
     - adb shell input keyevent 82
-    - ./gradlew createDebugCoverageReport jacocoDebugReport
+    - ./gradlew createDebugCoverageReport
+    - ./gradlew jacocoDebugReport
 
   post:
     - bash <(curl -s https://codecov.io/bash)
