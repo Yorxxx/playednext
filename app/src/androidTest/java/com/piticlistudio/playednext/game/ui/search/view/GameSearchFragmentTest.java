@@ -529,7 +529,7 @@ public class GameSearchFragmentTest {
         Thread.sleep(1500);
 
         // ACt
-        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
 
         Thread.sleep(1500);
 
