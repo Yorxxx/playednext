@@ -387,7 +387,7 @@ public class GameSearchFragmentTest {
         onView(withId(R.id.searchlist)).check(new RecyclerViewItemCountAssertion(maxItems * 2));
     }
 
-    //@Test
+    @Test
     public void Given_InitialViewState_When_ShowError_Then_ShowsErrorAndHideInitialView() throws Throwable {
 
         onView(withId(R.id.initialstateview)).check(matches(CustomMatchers.isVisibleToUser(true)));
@@ -403,7 +403,7 @@ public class GameSearchFragmentTest {
         onView(withText("bla")).check(matches(isDisplayed()));
     }
 
-    //@Test
+    @Test
     public void Given_EmptyViewState_When_ShowError_Then_ShowsErrorAndHidesEmptyView() throws Throwable {
 
         // Arrange
@@ -423,7 +423,7 @@ public class GameSearchFragmentTest {
         onView(withText("bla")).check(matches(isDisplayed()));
     }
 
-    //@Test
+    @Test
     public void Given_IdleList_When_ShowError_Then_ShowsError() throws Throwable {
 
         // Arrange
@@ -449,7 +449,7 @@ public class GameSearchFragmentTest {
 
     }
 
-    //@Test
+    @Test
     public void Given_LoadingMoreItems_When_ShowError_Then_ShowsSnackbarError() throws Throwable {
 
         int maxItems = getFragment().loadLimit;
@@ -480,7 +480,7 @@ public class GameSearchFragmentTest {
         onView(withId(android.support.design.R.id.snackbar_action)).check(matches(isDisplayed()));
     }
 
-    //@Test
+    @Test
     public void Given_LoadingMoreErrorIsDisplayed_When_ClickOnRetry_Then_RetriesRequest() throws Throwable {
 
         // Arrange
@@ -509,10 +509,10 @@ public class GameSearchFragmentTest {
         verify(presenter).search("", maxItems + 1, maxItems);
     }
 
-    //@Test
+    @Test
     public void Given_FilledList_When_ClickOnItem_Then_LaunchesDetailView() throws Throwable {
 
-// Arrange
+        // Arrange
         int maxItems = getFragment().loadLimit;
 
         Espresso.closeSoftKeyboard();
@@ -527,7 +527,7 @@ public class GameSearchFragmentTest {
         });
 
         // ACt
-        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
 
         // Assert
         onView(withId(R.id.searchlist)).check(doesNotExist());

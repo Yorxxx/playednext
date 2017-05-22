@@ -8,7 +8,7 @@
               android:gravity="center"
               android:orientation="vertical">
 
-    <ProgressBar
+    <com.piticlistudio.playednext.ui.widget.CustomProgressBar
         android:layout_width="@dimen/game_detail_loading_size"
         android:layout_height="@dimen/game_detail_loading_size"
         android:layout_gravity="center"/>
