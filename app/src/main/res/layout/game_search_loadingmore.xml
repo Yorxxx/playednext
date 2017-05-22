@@ -4,7 +4,7 @@
              android:layout_height="wrap_content"
              android:orientation="vertical">
 
-    <ProgressBar
+    <com.piticlistudio.playednext.ui.widget.CustomProgressBar
         android:id="@+id/loadmore_progress"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"

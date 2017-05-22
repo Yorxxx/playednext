@@ -345,7 +345,7 @@ public class GameSearchFragmentTest {
         verify(presenter).search("", maxItems + 1, maxItems);
     }
 
-    //@Test
+    @Test
     public void Given_NotFilledList_When_SwipingDown_Then_DoesNotRequestMoreData() throws Throwable {
 
         int maxItems = getFragment().loadLimit;
@@ -363,7 +363,7 @@ public class GameSearchFragmentTest {
         verify(presenter, never()).search("", maxItems + 1, maxItems);
     }
 
-    //@Test
+    @Test
     public void Given_FilledList_When_SetData_Then_AppendsData() throws Throwable {
 
         // Arrange
