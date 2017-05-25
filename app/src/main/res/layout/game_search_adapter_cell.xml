@@ -6,7 +6,7 @@
                                     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="@dimen/game_search_adapter_cell_width"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
@@ -18,7 +18,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:padding="8dp"
+            android:paddingBottom="8dp"
             android:scaleType="centerCrop"
             android:src="@drawable/sample_cover"/>
 
@@ -27,11 +27,12 @@
             style="@style/GameSearch.Cell.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
+            android:padding="3dp"
+            android:layout_marginBottom="2dp"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:text="@string/lorem"/>
+            android:text="string/lorem"/>
 
     </LinearLayout>
 
