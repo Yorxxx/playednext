@@ -526,8 +526,12 @@ public class GameSearchFragmentTest {
             getFragment().showContent();
         });
 
+        Thread.sleep(1000);
+
         // ACt
         onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        Thread.sleep(1000);
 
         // Assert
         onView(withId(R.id.searchlist)).check(doesNotExist());
