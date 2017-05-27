@@ -27,7 +27,9 @@ test:
     # run tests  against the emulator.
     - sleep 30
     - adb shell input keyevent 82
-    - ./gradlew createDebugCoverageReport jacocoDebugReport
+    - ./gradlew createDebugCoverageReport
+    - adb devices | grep emulator | cut -f1 | while read line; do adb -s $line emu kill; done
+    - ./gradlew jacocoDebugReport
 
   post:
     - bash <(curl -s https://codecov.io/bash)
