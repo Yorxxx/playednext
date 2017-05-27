@@ -66,7 +66,7 @@
                 android:text="@string/game_detail_retry_button"
                 android:textStyle="bold"/>
 
-            <ProgressBar
+            <com.piticlistudio.playednext.ui.widget.CustomProgressBar
                 android:id="@+id/retryLoading"
                 android:layout_width="72dp"
                 android:layout_height="wrap_content"
