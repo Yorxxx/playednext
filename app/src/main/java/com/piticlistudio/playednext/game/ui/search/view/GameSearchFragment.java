@@ -156,10 +156,14 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
                     isLoadingMore = true;
                     search(searchview.getQuery().toString(), totalItemCount, loadLimit);
                 }
+                if (dy > 0) {
+                    searchview.clearFocus();
+                }
             }
         });
 
         searchview.setIconifiedByDefault(false);
+        searchview.setIconified(false);
         // TODO RxBinding
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -207,6 +211,7 @@ public class GameSearchFragment extends Fragment implements GameSearchContract.V
 
     @OnClick(R.id.closeBtn)
     public void closeSearch(View v) {
+        searchview.clearFocus();
         closeBtn.animate()
                 .scaleX(0)
                 .scaleY(0)
