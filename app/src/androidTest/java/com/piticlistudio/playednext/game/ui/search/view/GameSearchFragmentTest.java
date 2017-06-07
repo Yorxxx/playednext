@@ -526,15 +526,15 @@ public class GameSearchFragmentTest {
             getFragment().showContent();
         });
 
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         // ACt
-        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+        onView(withId(R.id.searchlist)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         // Assert
         onView(withId(R.id.searchlist)).check(doesNotExist());
-        onView(withId(R.id.backdrop)).check(matches(CustomMatchers.isVisibleToUser(true)));
+        onView(withId(R.id.detail_content)).check(matches(isDisplayed()));
     }
 }
