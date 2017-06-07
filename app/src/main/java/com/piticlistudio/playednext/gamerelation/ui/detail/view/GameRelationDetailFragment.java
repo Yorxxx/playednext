@@ -78,7 +78,7 @@ public class GameRelationDetailFragment extends Fragment implements GameRelation
     CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.platformslist)
     RecyclerView platformsList;
-    @BindView(R.id.content)
+    @BindView(R.id.detail_content)
     ViewGroup content;
     @BindView(R.id.loading)
     View loading;
