@@ -111,7 +111,7 @@ public class GameRelationListActivity extends AppCompatActivity implements GameR
     @Override
     public void onBackPressed() {
         if (searchView == null)
-            super.onBackPressed();
+            finish();
         else {
             searchView.onBackPressed();
         }
