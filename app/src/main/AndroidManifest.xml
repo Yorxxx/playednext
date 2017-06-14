@@ -30,6 +30,9 @@
 
         <activity
             android:name=".image.ui.viewer.ImageViewerActivity"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c572942635c30d0387125c82986946e74af4d8e6" />
     </application>
 
 </manifest>
