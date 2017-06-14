@@ -3,6 +3,7 @@ package com.piticlistudio.playednext;
 import android.app.Application;
 import android.support.annotation.VisibleForTesting;
 
+import com.crashlytics.android.Crashlytics;
 import com.piticlistudio.playednext.collection.CollectionModule;
 import com.piticlistudio.playednext.company.model.CompanyModule;
 import com.piticlistudio.playednext.di.component.AppComponent;
@@ -17,6 +18,7 @@ import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListCompone
 import com.piticlistudio.playednext.genre.GenreModule;
 import com.piticlistudio.playednext.platform.PlatformModule;
 
+import io.fabric.sdk.android.Fabric;
 import java.io.IOException;
 
 import io.realm.DynamicRealm;
@@ -100,6 +102,7 @@ public class AndroidApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         RealmConfiguration config = new RealmConfiguration.Builder(this)
                 .schemaVersion(7)
