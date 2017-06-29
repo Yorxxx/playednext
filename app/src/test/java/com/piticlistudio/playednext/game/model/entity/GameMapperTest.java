@@ -632,6 +632,25 @@ public class GameMapperTest extends BaseGameTest {
     }
 
     @Test
+    public void given_data_When_Transforms_Then_SetsSyncedAtValues() throws Exception {
+
+        RealmGame data = new RealmGame();
+        data.setName("name");
+        data.setId(10);
+        data.setSyncedAt(5000L);
+
+        when(companyMapper.transform(any())).thenReturn(Optional.absent());
+
+        // Act
+        Optional<Game> result = mapper.transform(data);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isPresent());
+        assertEquals(5000L, result.get().syncedAt);
+    }
+
+    @Test
     public void given_validData_When_Transform_Then_ReturnsGameEntity() throws Exception {
 
         List<NetworkEntityIdRelation<IPlatformData>> platforms = new ArrayList<>();

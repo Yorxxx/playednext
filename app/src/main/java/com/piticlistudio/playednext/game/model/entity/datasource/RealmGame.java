@@ -1,5 +1,7 @@
 package com.piticlistudio.playednext.game.model.entity.datasource;
 
+import android.app.AlarmManager;
+
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.collection.model.entity.datasource.ICollectionData;
 import com.piticlistudio.playednext.collection.model.entity.datasource.RealmCollection;
@@ -46,6 +48,7 @@ public class RealmGame extends RealmObject implements IGameDatasource {
     private RealmList<RealmGenre> genres = new RealmList<>();
     private RealmList<RealmGameRelease> releases = new RealmList<>();
     private RealmList<RealmPlatform> platforms = new RealmList<>();
+    private long syncedAt;
 
     public RealmGame() {
     }
@@ -248,5 +251,19 @@ public class RealmGame extends RealmObject implements IGameDatasource {
 
     public void setPlatforms(RealmList<RealmPlatform> platforms) {
         this.platforms = platforms;
+    }
+
+    public void setSyncedAt(long syncedAt) {
+        this.syncedAt = syncedAt;
+    }
+
+    /**
+     * Returns when this source has been synced with latest data
+     *
+     * @return the time in Unix timestamp
+     */
+    @Override
+    public long syncedAt() {
+        return syncedAt;
     }
 }

@@ -1,5 +1,7 @@
 package com.piticlistudio.playednext.game.model.repository.datasource;
 
+import android.app.AlarmManager;
+
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 
 import java.util.List;
@@ -9,6 +11,10 @@ import javax.inject.Named;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 
 /**
  * A Repository for Gamedatasource
@@ -36,6 +42,12 @@ public class GamedataRepository implements IGamedataRepository {
     @Override
     public Observable<IGameDatasource> load(int id) {
         return dbImpl.load(id)
+                .flatMap(iGameDatasource -> {
+                    if (System.currentTimeMillis() - iGameDatasource.syncedAt() > AlarmManager.INTERVAL_DAY) {
+                        return netImpl.load(id);
+                    }
+                    return Single.just(iGameDatasource);
+                })
                 .onErrorResumeNext(__ -> netImpl.load(id))
                 .toObservable();
     }

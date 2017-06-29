@@ -1,5 +1,7 @@
 package com.piticlistudio.playednext.game.model.entity.datasource;
 
+import android.app.AlarmManager;
+
 import com.fernandocejas.arrow.optional.Optional;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.company.model.entity.datasource.ICompanyData;
@@ -297,6 +299,12 @@ public class RealmGameTest {
             assertTrue(result.get(i).data.isPresent());
             assertEquals(platforms.get(i), result.get(i).getData());
         }
+    }
 
+    @Test
+    public void getSyncedAt() throws Exception {
+        data.setSyncedAt(5000L);
+
+        assertEquals(5000L, data.syncedAt());
     }
 }

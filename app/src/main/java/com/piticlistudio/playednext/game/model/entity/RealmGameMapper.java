@@ -65,6 +65,7 @@ public class RealmGameMapper implements Mapper<RealmGame, Game> {
         result.setName(data.title());
         result.setStoryline(data.storyline);
         result.setSummary(data.summary);
+        result.setSyncedAt(data.syncedAt);
 
         if (data.cover != null && data.cover.isPresent()) {
             Optional<RealmImageData> image = imageMapper.transform(data.cover.get());

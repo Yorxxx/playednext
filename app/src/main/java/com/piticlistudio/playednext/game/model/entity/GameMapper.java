@@ -59,7 +59,7 @@ public class GameMapper implements Mapper<Game, IGameDatasource> {
         Game result = Game.create(data.getId(), data.getName());
         result.storyline = data.getStoryline();
         result.summary = data.getSummary();
-
+        result.syncedAt = data.syncedAt();
         if (data.getCollection().isPresent() && data.getCollection().get().data.isPresent()) {
             result.collection = collectionMapper.transform(data.getCollection().get().getData());
         }

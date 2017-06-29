@@ -220,4 +220,14 @@ public abstract class IGDBGame implements IGameDatasource {
         }
         return data;
     }
+
+    /**
+     * Returns when this source has been synced with latest data
+     *
+     * @return the time in Unix timestamp
+     */
+    @Override
+    public long syncedAt() {
+        return System.currentTimeMillis();
+    }
 }

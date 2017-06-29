@@ -117,6 +117,7 @@ public class GameFactory {
      */
     public static RealmGame provideRealmGame(int id, String title) {
         RealmGame data = new RealmGame();
+        data.setSyncedAt(System.currentTimeMillis());
         data.setId(id);
         data.setName(title);
         data.setStoryline("storyline");

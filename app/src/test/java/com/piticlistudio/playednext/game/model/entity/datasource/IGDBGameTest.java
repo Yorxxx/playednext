@@ -214,6 +214,14 @@ public class IGDBGameTest {
     }
 
     @Test
+    public void syncedAt() throws Exception {
+
+        long currentTime = System.currentTimeMillis();
+
+        assertTrue(data.syncedAt() >= currentTime);
+    }
+
+    @Test
     public void given_nullReleaseDates_When_getReleases_Then_ReturnsEmptyList() throws Exception {
 
         data.release_dates = null;
