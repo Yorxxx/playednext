@@ -1,5 +1,7 @@
 package com.piticlistudio.playednext.game.model.repository.datasource;
 
+import android.app.AlarmManager;
+
 import com.piticlistudio.playednext.BaseTest;
 import com.piticlistudio.playednext.GameFactory;
 import com.piticlistudio.playednext.TestSchedulerRule;
@@ -7,6 +9,7 @@ import com.piticlistudio.playednext.game.model.entity.datasource.IGDBGame;
 import com.piticlistudio.playednext.game.model.entity.datasource.IGameDatasource;
 import com.piticlistudio.playednext.game.model.entity.datasource.RealmGame;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +24,8 @@ import javax.inject.Named;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Predicate;
 import io.reactivex.observers.TestObserver;
 
 import static org.mockito.Matchers.anyInt;
@@ -53,6 +58,11 @@ public class GamedataRepositoryTest extends BaseTest {
         repository = new GamedataRepository(dbImpl, netImpl);
     }
 
+    @After
+    public void tearDown() throws Exception {
+        localData.setSyncedAt(System.currentTimeMillis());
+    }
+
     @Test
     public void Given_AvailableLocally_When_load_Then_EmitsLocalDataOnly() throws Exception {
 
@@ -68,6 +78,27 @@ public class GamedataRepositoryTest extends BaseTest {
                 .assertValueCount(1)
                 .assertValue(localData);
         verifyZeroInteractions(netImpl);
+    }
+
+    @Test
+    public void Given_AvailableLocallyButDataIsOld_When_Load_Then_EmitsRemoteDataOnly() throws Exception {
+
+        localData.setSyncedAt(System.currentTimeMillis() - AlarmManager.INTERVAL_DAY * 30);
+        when(dbImpl.load(1)).thenReturn(Single.just(localData));
+        when(netImpl.load(1)).thenReturn(Single.just((IGameDatasource) remoteData).delay(2, TimeUnit.SECONDS));
+
+        // Act
+        TestObserver<IGameDatasource> result = repository.load(1).test();
+        testSchedulerRule.getTestScheduler().advanceTimeBy(5, TimeUnit.SECONDS);
+
+
+        // Assert
+        result.assertNoErrors()
+                .assertComplete()
+                .assertValueCount(1)
+                .assertValue(remoteData);
+        verify(netImpl).load(1);
+        verify(dbImpl).load(1);
     }
 
     @Test

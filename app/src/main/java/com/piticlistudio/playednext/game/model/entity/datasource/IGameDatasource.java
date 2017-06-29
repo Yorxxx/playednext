@@ -48,6 +48,12 @@ public interface IGameDatasource {
     String getStoryline();
 
     /**
+     * Returns when this source has been synced with latest data
+     * @return the time in Unix timestamp
+     */
+    long syncedAt();
+
+    /**
      * Returns the collection
      *
      * @return the collection

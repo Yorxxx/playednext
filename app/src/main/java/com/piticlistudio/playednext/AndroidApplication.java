@@ -1,6 +1,8 @@
 package com.piticlistudio.playednext;
 
 import android.app.Application;
+import android.app.IntentService;
+import android.content.Intent;
 import android.support.annotation.VisibleForTesting;
 
 import com.crashlytics.android.Crashlytics;
@@ -13,6 +15,7 @@ import com.piticlistudio.playednext.game.DaggerGameComponent;
 import com.piticlistudio.playednext.game.GameComponent;
 import com.piticlistudio.playednext.game.GameModule;
 import com.piticlistudio.playednext.game.ui.search.GameSearchComponent;
+import com.piticlistudio.playednext.gamerelation.service.GameRelationSyncService;
 import com.piticlistudio.playednext.gamerelation.ui.detail.GameRelationDetailComponent;
 import com.piticlistudio.playednext.gamerelation.ui.list.GameRelationListComponent;
 import com.piticlistudio.playednext.genre.GenreModule;
@@ -96,6 +99,10 @@ public class AndroidApplication extends Application {
                 schema.get("RealmGameRelation")
                         .renameField("status", "statuses");
             }
+            if (oldVersion == 7) {
+                schema.get("RealmGame")
+                        .addField("syncedAt", long.class);
+            }
         }
     };
 
@@ -105,12 +112,14 @@ public class AndroidApplication extends Application {
         Fabric.with(this, new Crashlytics());
 
         RealmConfiguration config = new RealmConfiguration.Builder(this)
-                .schemaVersion(7)
+                .schemaVersion(8)
                 .migration(migration)
                 .build();
         Realm.setDefaultConfiguration(config);
 
         initializeComponents();
+
+        startService(new Intent(this, GameRelationSyncService.class));
     }
 
     private void initializeComponents() {

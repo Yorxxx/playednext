@@ -102,6 +102,19 @@ public class RealmGameMapperTest extends BaseGameTest {
     }
 
     @Test
+    public void given_validData_When_Transform_Then_SetsSyncedAtValues() throws Exception {
+
+        Game game = Game.create(10, "title");
+        game.syncedAt = 5000L;
+
+        Optional<RealmGame> result = mapper.transform(game);
+
+        assertNotNull(result);
+        assertTrue(result.isPresent());
+        assertEquals(5000L, result.get().syncedAt());
+    }
+
+    @Test
     public void given_nonPresentCover_When_Transform_Then_ReturnsGameWithoutCover() throws Exception {
         Game game = Game.create(10, "title");
         game.cover = Optional.absent();

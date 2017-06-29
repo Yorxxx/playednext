@@ -20,6 +20,12 @@ apply plugin: 'realm-android'
 apply plugin: "net.ltgt.apt"
 apply from: rootProject.file("gradle/codeQuality.gradle")
 
+ext.versionMajor = 0
+ext.versionMinor = 1
+ext.versionPatch = 0
+ext.versionClassifier = ""
+
+ext.minimumSdkVersion = 16
 
 android {
     compileSdkVersion 25
@@ -28,8 +34,8 @@ android {
         applicationId "com.piticlistudio.playednext"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 1
-        versionName "0.01"
+        versionCode generateVersionCode()
+        versionName generateVersionName()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -44,6 +50,7 @@ android {
         debug {
             testCoverageEnabled = true
         }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -134,4 +141,17 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+}
+
+
+private Integer generateVersionCode() {
+    return ext.minimumSdkVersion * 10000000 + ext.versionMajor * 10000 + ext.versionMinor * 100 + ext.versionPatch
+}
+
+private String generateVersionName() {
+    String versionName = "${ext.versionMajor}.${ext.versionMinor}.${ext.versionPatch}"
+    if (ext.versionClassifier != null && !ext.versionClassifier.isEmpty()) {
+        versionName = versionName + "-" + ext.versionClassifier
+    }
+    return versionName;
 }

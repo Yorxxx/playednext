@@ -31,6 +31,7 @@ public abstract class Game {
     public List<Genre> genres = new ArrayList<>();
     public List<GameRelease> releases = new ArrayList<>();
     public List<Platform> platforms = new ArrayList<>();
+    public long syncedAt;
 
     public static Game create(int id, String title) {
         return new AutoValue_Game(id, title);
