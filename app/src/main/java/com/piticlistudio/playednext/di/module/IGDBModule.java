@@ -22,7 +22,7 @@ public class IGDBModule {
         return new Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(gsonConverterFactory)
-                .baseUrl("https://igdbcom-internet-game-database-v1.p.mashape.com")
+                .baseUrl("https://api-2445582011268.apicast.io/")
                 .build();
     }
 }

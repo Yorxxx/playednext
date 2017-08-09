@@ -10,5 +10,5 @@ public class APIKeys {
     /**
      * API Key to be used for IGDB
      */
-    public final static String IGDB_KEY = "XxTvUubZsDmshGVnDjpP4ZnVFfaLp1FLO7Vjsnzi8CSsAfuObi";
+    public final static String IGDB_KEY = "2106ae8e4425e0cbb182e4742ef5bd36";
 }

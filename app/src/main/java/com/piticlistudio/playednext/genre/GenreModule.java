@@ -57,7 +57,7 @@ public class GenreModule {
 
         @Headers({
                 "Accept: application/json",
-                "X-Mashape-Key: " + APIKeys.IGDB_KEY
+                "user-key: " + APIKeys.IGDB_KEY
         })
         @GET("/genres/{id}/")
         Observable<List<IGDBGenre>> load(@Path("id") int id, @Query("fields") String fields);
