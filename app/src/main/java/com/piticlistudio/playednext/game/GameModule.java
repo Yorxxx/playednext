@@ -94,7 +94,7 @@ public class GameModule {
     public interface NetService {
         @Headers({
                 "Accept: application/json",
-                "X-Mashape-Key: " + APIKeys.IGDB_KEY
+                "user-key: " + APIKeys.IGDB_KEY
         })
         @GET("/games/")
         Observable<List<IGDBGame>> search(@Query("offset") int offset, @Query("search") String query, @Query("fields") String fields,
@@ -102,7 +102,7 @@ public class GameModule {
 
         @Headers({
                 "Accept: application/json",
-                "X-Mashape-Key: " + APIKeys.IGDB_KEY
+                "user-key: " + APIKeys.IGDB_KEY
         })
         @GET("/games/{id}/")
         Observable<List<IGDBGame>> load(@Path("id") int id, @Query("fields") String fields);

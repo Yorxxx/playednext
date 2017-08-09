@@ -34,7 +34,7 @@ public class CollectionModule {
 
         @Headers({
                 "Accept: application/json",
-                "X-Mashape-Key: " + APIKeys.IGDB_KEY
+                "user-key: " + APIKeys.IGDB_KEY
         })
         @GET("/collections/{id}/")
         Observable<List<IGDBCollection>> load(@Path("id") int id, @Query("fields") String fields);

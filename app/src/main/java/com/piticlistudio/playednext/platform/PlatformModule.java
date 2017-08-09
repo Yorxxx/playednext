@@ -57,7 +57,7 @@ public class PlatformModule {
 
         @Headers({
                 "Accept: application/json",
-                "X-Mashape-Key: " + APIKeys.IGDB_KEY
+                "user-key: " + APIKeys.IGDB_KEY
         })
         @GET("/platforms/{id}/")
         Observable<List<IGDBPlatform>> load(@Path("id") int id, @Query("fields") String fields);
